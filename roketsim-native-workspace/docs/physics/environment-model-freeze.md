@@ -929,3 +929,32 @@ Baseline **207 passed**; focused **47 passed**; full suite **254 passed**
 NAT-009B/math behavior değişmedi, dependency eklenmedi. Domain'i orkestrasyonun
 nasıl ele alacağı sonraki katmana aittir; sound speed/viscosity NAT-009D'ye,
 humidity/wind/gravity/geodesy diğer future gate'lere bırakıldı. NAT-009D başlamadı.
+
+## NAT-009D — Air Properties kabul kaydı (2026-09-06)
+
+Frozen NAT-009D kararı: gamma=1.40, Sutherland beta=1.458e-6
+kg/(m s sqrt(K)), S=110.4 K; ikinci mu0/T0 parametrizasyonu yoktur.
+`environment/air_properties.py` içindeki parametresiz
+`DryAirPropertiesCalculator.evaluate(atmosphere_state=...)` yalnız T/rho tüketir;
+R_air doğrudan NAT-009C atmosphere modülündeki tek authoritative sabittir.
+`a=sqrt(gamma*R_air*T)`, `mu=beta*T^(3/2)/(T+S)`, `nu=mu/rho` hesaplanır.
+Ara float taşmasını önlemek için cebirsel eşdeğer çarpanlama kullanılır;
+fiziksel düzeltme veya model domain değişikliği değildir.
+
+Result `DryAirProperties` yalnız üç a/mu/nu alanlı frozen slots snapshot'tır.
+Finite T/rho <= 0 için field_name/value içeren
+`AirPropertiesDomainError(ValueError)`; non-finite prerequisite mevcut generic
+ValueError yolundadır. Sonuç finite/positive olmalıdır; representability
+overflow/underflow hata üretir, fallback yoktur. Pressure okunmaz/density yeniden
+hesaplanmaz. Altitude domain veya yeni downstream fizik eklenmez.
+
+`test_air_properties.py` AIR-T01..AIR-T18 eşlemelerini içerir. Talepteki yaklaşık
+sea-level nu fixture'ı ile C'nin gerçek density'si arasında küçük fark bulunmuştur:
+equation-consistent sonuç yaklaşık `1.4607192342648874e-5 m²/s`.
+AIR-T03 gerçek C state'i ve bağımsız 50-digit Decimal bağıntı referansıyla geçer;
+production formülü veya test toleransı farkı kapatmak için değiştirilmemiştir.
+
+Baseline **254 passed**; focused **51 passed**; environment **155 passed**;
+full suite **305 passed**. **NAT-009D IMPLEMENTATION GATE: PASS.**
+NAT-009B/C source değişmedi; yeni dependency yoktur. Broader atmosphere V&V ve
+OpenRocket exact viscosity parity NAT-009E/later kapsamındadır; başlatılmadı.

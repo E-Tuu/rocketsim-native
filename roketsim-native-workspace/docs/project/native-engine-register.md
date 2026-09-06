@@ -13,3 +13,4 @@
   - [x] NAT-009A Environment Source & Model Freeze
   - [x] NAT-009B Altitude & Geopotential Foundation
   - [x] NAT-009C Dry-Air Atmosphere Core
+  - [x] NAT-009D Air Properties
