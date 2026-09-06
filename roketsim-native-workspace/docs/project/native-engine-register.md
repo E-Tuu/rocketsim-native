@@ -19,6 +19,7 @@
   - [x] NAT-009H Steady Wind Foundation (demo path; G1/G2 deferred)
 - [x] NAT-010A Relative Flow Foundation
 - [x] NAT-010B Basic Flight Conditions
+- [x] NAT-011A Minimal Single-Stage Rocket Geometry
 
 NAT-010A: FLOW-001, WORLD/ENU SI hız çıkarımı; sahiplik `flight_conditions`.
 Başlangıç `49410f7`: 410 test PASS. FLOW-T01..T18 ve overflow guard:
@@ -37,3 +38,18 @@ flight_conditions 98 PASS, environment/V&V 260 PASS, math/V&V 148 PASS,
 full 508 PASS. Önceki production kodu/dependency değişmedi.
 Mass/Propulsion/Aero, AoA/BODY flow, dynamics ve sonraki demo gate'leri
 implement edilmedi. NAT-010B IMPLEMENTATION GATE: PASS.
+
+NAT-011A: `geometry.models` immutable/slotted tasarımları,
+`geometry.resolver` scalar/domain ve yerleşim doğrulamasını sahiplenir.
+Nose-tip x_geo=0, +x_geo nose→tail; BODY/WORLD dönüşümü yoktur.
+Tek airframe çapı D_ref/L_ref/A_ref'i belirler (demo model kararı).
+Root chord tamamen body'ye bağlıdır; signed tip offset ve aft-overhang
+korunur; overall length furthest downstream extent'tir. Clamp yoktur.
+Fin count int>=3; bool/fractional adet sessizce dönüştürülmez.
+Non-finite girdiler/derived numerical failure generic ValueError;
+finite invalid geometry structured GeometryValidationError üretir.
+Başlangıç `6fea345`: 508 PASS. GEO-T01..T25 ve edge testleri: 87 PASS;
+flight_conditions 98 PASS, environment/V&V 260 PASS, math/V&V 148 PASS,
+full 595 PASS. Önceki production modülleri/dependency değişmedi.
+Mass/CG/inertia, propulsion, aero/Barrowman, component tree/staging ve
+dynamics implement edilmedi. NAT-011A IMPLEMENTATION GATE: PASS.
