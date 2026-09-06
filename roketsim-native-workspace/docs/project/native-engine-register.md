@@ -16,3 +16,4 @@
   - [x] NAT-009D Air Properties
   - [x] NAT-009E Atmosphere V&V (standard PASS; OpenRocket NOT_CAPTURED)
   - [x] NAT-009F Constant Gravity Baseline
+  - [x] NAT-009H Steady Wind Foundation (demo path; G1/G2 deferred)

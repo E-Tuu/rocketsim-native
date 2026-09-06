@@ -978,3 +978,31 @@ Baseline **355 passed**; gravity **17 passed**; environment+atmosphere V&V
 **NAT-009F IMPLEMENTATION GATE: PASS.** Önceki production modülleri ve NAT-009E
 evidence değiştirilmedi. WGS84 gravity G1, geodesy/Coriolis G2, wind H için
 hiçbir implementation başlatılmadı; dependency eklenmedi.
+
+## NAT-009H — Steady Wind Foundation kabul kaydı
+
+Kullanıcının frozen NAT-009H kararı: ilk demo `NoWindModel` kullanır;
+G1/G2 demo sonrasına ertelenir. `ConstantWindModel` yalnız keyword-only
+`airmass_velocity_world_m_s` girdisini alır. Her iki modelin `evaluate()`
+metodu runtime input olmadan WORLD/ENU (East/North/Up), SI m/s hız array'i
+döndürür. Bu fiziksel **TOWARD air-mass velocity**'dir; FROM bearing değildir.
+Meteorolojik FROM dönüşümü adapter sınırına aittir ve implement edilmedi.
+
+NAT-005 `(3,)` float64 ndarray ve `as_vector` validation yeniden kullanıldı.
+Dikey hız ve her finite büyüklük kabul edilir; normalization, projection,
+clamp veya fallback yoktur. Constructor kopyası caller mutation'ı, her
+evaluate kopyası result mutation'ı izole eder. Yeni exception/dependency yoktur.
+Bu 3D steady model, önceki source auditindeki stochastic/horizontal model
+limitation'larıyla birleştirilmez; I/J kararları bu görevde değiştirilmedi.
+
+Başlangıç commit: `462cd83`; baseline **372 passed**.
+`test_wind.py` WIND-T01..T20 parametrizasyonla **38 passed**:
+exact vectors, ENU/TOWARD, vertical wind, determinism, iki copy sınırı,
+vector representation, shape/finite validation, no speed limit/normalization,
+no-input/keyword-only API ve scope/error contract.
+Environment + atmosphere V&V **260 passed**; math + foundation V&V
+**148 passed**; full suite **410 passed** (372 existing + 38 yeni).
+
+**NAT-009H IMPLEMENTATION GATE: PASS.** Önceki production modülleri değişmedi.
+Relative Flow, multi-level wind, turbulence, RNG, WGS84/Coriolis ve dynamics
+implementasyonu yapılmadı. NAT-009I/J ve sonraki gate'ler ertelidir.
