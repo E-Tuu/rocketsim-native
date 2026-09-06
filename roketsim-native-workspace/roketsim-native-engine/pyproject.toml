@@ -1,0 +1,17 @@
+[project]
+name = "roketsim-native-engine"
+version = "0.0.0"
+description = "Independent native physics engine foundation for RoketSim"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

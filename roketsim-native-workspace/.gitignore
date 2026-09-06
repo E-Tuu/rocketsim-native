@@ -1,0 +1,36 @@
+# Python environments
+.env
+.env.*
+*.pem
+*.key
+.venv/
+venv/
+
+# Python caches and test artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Build and packaging artifacts
+dist/
+build/
+*.egg-info/
+
+# Runtime and generated outputs
+logs/
+runtime/
+tmp/
+generated/
+validation-output/
+monte-carlo-output/
+
+# IDE and editor caches
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
