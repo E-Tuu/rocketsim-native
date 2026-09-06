@@ -18,9 +18,22 @@
   - [x] NAT-009F Constant Gravity Baseline
   - [x] NAT-009H Steady Wind Foundation (demo path; G1/G2 deferred)
 - [x] NAT-010A Relative Flow Foundation
+- [x] NAT-010B Basic Flight Conditions
 
 NAT-010A: FLOW-001, WORLD/ENU SI hız çıkarımı; sahiplik `flight_conditions`.
 Başlangıç `49410f7`: 410 test PASS. FLOW-T01..T18 ve overflow guard:
 43 test PASS; environment/V&V 260 PASS, math/V&V 148 PASS, full 453 PASS.
 Önceki production modülleri değişmedi. NAT-010B scalar flight conditions,
 BODY transform ve composition implement edilmedi.
+
+NAT-010B: `flight_conditions.basic`, yalnız V=||relative_velocity_W||,
+M=V/a, Re=V*L_ref/nu, q=0.5*rho*V². Upstream rho/a/nu otoriteleri korunur;
+L_ref açık karakteristik uzunluktur. Parametresiz calculator, immutable
+dört-scalar snapshot, finite/positive validation; sıfır hız geçerlidir.
+Tam 3D norm `math.hypot` ile hesaplanır; taşan/underflow ile invariant'ı
+bozan sonuçlar generic ValueError üretir, fallback uygulanmaz.
+Başlangıç `707e295`: 453 PASS. FC-T01..T20 ve edge testler: 55 PASS;
+flight_conditions 98 PASS, environment/V&V 260 PASS, math/V&V 148 PASS,
+full 508 PASS. Önceki production kodu/dependency değişmedi.
+Mass/Propulsion/Aero, AoA/BODY flow, dynamics ve sonraki demo gate'leri
+implement edilmedi. NAT-010B IMPLEMENTATION GATE: PASS.
