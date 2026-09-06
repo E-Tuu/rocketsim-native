@@ -17,3 +17,10 @@
   - [x] NAT-009E Atmosphere V&V (standard PASS; OpenRocket NOT_CAPTURED)
   - [x] NAT-009F Constant Gravity Baseline
   - [x] NAT-009H Steady Wind Foundation (demo path; G1/G2 deferred)
+- [x] NAT-010A Relative Flow Foundation
+
+NAT-010A: FLOW-001, WORLD/ENU SI hız çıkarımı; sahiplik `flight_conditions`.
+Başlangıç `49410f7`: 410 test PASS. FLOW-T01..T18 ve overflow guard:
+43 test PASS; environment/V&V 260 PASS, math/V&V 148 PASS, full 453 PASS.
+Önceki production modülleri değişmedi. NAT-010B scalar flight conditions,
+BODY transform ve composition implement edilmedi.
