@@ -21,6 +21,7 @@
 - [x] NAT-010B Basic Flight Conditions
 - [x] NAT-011A Minimal Single-Stage Rocket Geometry
 - [x] NAT-011A.1 Geometry Construction & Material Volume Extension
+- [x] NAT-011B Materials + Derived Structural Mass & CG
 
 NAT-010A: FLOW-001, WORLD/ENU SI hız çıkarımı; sahiplik `flight_conditions`.
 Başlangıç `49410f7`: 410 test PASS. FLOW-T01..T18 ve overflow guard:
@@ -71,3 +72,20 @@ geometry 125 PASS, flight_conditions 98 PASS, environment/V&V 260 PASS,
 math/V&V 148 PASS; full 633 PASS. Reference/placement convention değişmedi.
 Geometry dışı production/dependency değişmedi; NAT-011B başlatılmadı.
 NAT-011A.1 IMPLEMENTATION GATE: PASS.
+
+NAT-011B başlangıç önkoşulu doğrulandı: `556a853`, temiz commit ve full
+633 PASS. `materials` GEO14 uniform density'yi, Geometry GEO16 volume/volume
+centroid'i sahiplenir. Cardboard=680 ve Polystyrene=1050 kg/m³ yalnız demo
+katalog seçenekleridir; zorunlu nose/body/fins kullanıcı atamalarında default
+yoktur. BulkMaterial construction sırasında finite/positive density ve
+non-blank name doğrular; non-finite input generic ValueError'dır.
+`mass.structural` MASS-001 m=rho*V, MASS-002 sum(m*x)/sum(m) uygular.
+Component CG=volume centroid yalnız uniform-density component varsayımıyla
+geçerlidir; x_geo nose-tip→tail kalır. Seçilen material provenance korunur,
+volume yeniden hesaplanmaz/kopyalanmaz. Structure mass/CG motoru içermez.
+Derived mass/CG invariant ihlalleri MassValidationError'dır; repair yoktur.
+MAT-T01..08: 13 PASS; MASS-T01..28/edge: 31 PASS; geometry 125 PASS,
+flight_conditions 98 PASS, environment/V&V 260 PASS, math/V&V 148 PASS,
+full 677 PASS (633 existing + 44 yeni). Geometry ve diğer önceki production
+kodları/dependency değişmedi. Propulsion, inertia, measured/override ve
+NAT-011C implement edilmedi. NAT-011B IMPLEMENTATION GATE: PASS.
