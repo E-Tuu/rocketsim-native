@@ -958,3 +958,23 @@ Baseline **254 passed**; focused **51 passed**; environment **155 passed**;
 full suite **305 passed**. **NAT-009D IMPLEMENTATION GATE: PASS.**
 NAT-009B/C source değişmedi; yeni dependency yoktur. Broader atmosphere V&V ve
 OpenRocket exact viscosity parity NAT-009E/later kapsamındadır; başlatılmadı.
+
+## NAT-009F — Constant Gravity Baseline kabul kaydı (2026-09-06)
+
+`environment/gravity.py`: parametresiz `ConstantGravityModel.evaluate()` hiçbir
+fiziksel girdi almaz; existing `as_vector(size=3)` ile bağımsız float64 ndarray
+döndürür. GRAV-001 ve WORLD_ENU convention: East=0, North=0, Up=-g0;
+`+z_W=Up` olduğu için ivme aşağı yönlüdür. Standard-g'nin tek production
+otoritesi `atmosphere.STANDARD_GRAVITY_M_S2` olarak kalır; C refactor edilmedi.
+Magnitude ayrı state değildir. Model ilk 3DOF demo gravity baseline'ıdır;
+konum/zaman bağımlılığı, domain error, custom-g veya fallback içermez.
+
+`test_gravity.py` GRAV-T01..T12: exact vector/norm, ENU, determinism, no-input,
+vector representation, shared authority, finite result, test-only analytic
+velocity/position, scope/configuration. Ek mutation testi result isolation'ı
+korur. Analytic fixture'lar production dynamics/integrator değildir.
+Baseline **355 passed**; gravity **17 passed**; environment+atmosphere V&V
+**222 passed**; math+foundation V&V **148 passed**; full **372 passed**.
+**NAT-009F IMPLEMENTATION GATE: PASS.** Önceki production modülleri ve NAT-009E
+evidence değiştirilmedi. WGS84 gravity G1, geodesy/Coriolis G2, wind H için
+hiçbir implementation başlatılmadı; dependency eklenmedi.
