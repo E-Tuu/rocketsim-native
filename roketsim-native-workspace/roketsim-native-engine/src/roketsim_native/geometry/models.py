@@ -2,26 +2,40 @@
 
 Demo profilinde tek çap otoritesi airframe_diameter_m'dir; nose base ve body
 outer diameter bağımsız saklanmaz. Full geometry/component tree ertelenmiştir.
+NAT-011A.1 onaylı schema genişlemesidir: construction aynı component geometry'nin
+parçasıdır; ikinci source yoktur. Volume centroid henüz CG değildir; density ve
+mass yorumu NAT-011B'ye aittir.
 """
 
 from dataclasses import dataclass
+from enum import Enum
 
 __all__ = ("ConicalNoseGeometry", "CylindricalBodyGeometry",
-           "TrapezoidalFinSetGeometry", "SingleStageRocketGeometry")
+           "TrapezoidalFinSetGeometry", "SingleStageRocketGeometry", "NoseConstructionMode")
+
+
+class NoseConstructionMode(str, Enum):
+    """Demo nose construction seçimi; varsayılan fiziksel mod yoktur."""
+
+    SOLID = "SOLID"
+    HOLLOW_SHELL = "HOLLOW_SHELL"
 
 
 @dataclass(frozen=True, slots=True)
 class ConicalNoseGeometry:
-    """Konik nose'un eksenel uzunluğu, m."""
+    """Konik nose; shell kalınlığı lateral yüzeye NORMAL ölçülür, m."""
 
     length_m: float
+    construction_mode: NoseConstructionMode
+    wall_thickness_m: float | None
 
 
 @dataclass(frozen=True, slots=True)
 class CylindricalBodyGeometry:
-    """Sabit çaplı silindirik body'nin eksenel uzunluğu, m."""
+    """Zorunlu duvar kalınlıklı hollow cylindrical tube; solid seçeneği yoktur."""
 
     length_m: float
+    wall_thickness_m: float
 
 
 @dataclass(frozen=True, slots=True)
@@ -30,6 +44,7 @@ class TrapezoidalFinSetGeometry:
 
     Tip LE offset signed'dır: pozitif tailward, negatif forward-swept.
     Root LE nose-tip origin'inden absolute x_geo metre olarak verilir.
+    Fin uniform solid plate'tir; thickness_m tek kalınlık otoritesidir.
     """
 
     fin_count: int

@@ -20,6 +20,7 @@
 - [x] NAT-010A Relative Flow Foundation
 - [x] NAT-010B Basic Flight Conditions
 - [x] NAT-011A Minimal Single-Stage Rocket Geometry
+- [x] NAT-011A.1 Geometry Construction & Material Volume Extension
 
 NAT-010A: FLOW-001, WORLD/ENU SI hız çıkarımı; sahiplik `flight_conditions`.
 Başlangıç `49410f7`: 410 test PASS. FLOW-T01..T18 ve overflow guard:
@@ -53,3 +54,20 @@ flight_conditions 98 PASS, environment/V&V 260 PASS, math/V&V 148 PASS,
 full 595 PASS. Önceki production modülleri/dependency değişmedi.
 Mass/CG/inertia, propulsion, aero/Barrowman, component tree/staging ve
 dynamics implement edilmedi. NAT-011A IMPLEMENTATION GATE: PASS.
+
+NAT-011A.1, NAT-011A'nın onaylı schema evrimidir; ikinci construction source,
+resolver veya resolved wrapper yoktur. Nose construction_mode ve wall_thickness_m
+explicit; SOLID için None, HOLLOW_SHELL için lateral yüzeye normal pozitif
+kalınlık zorunludur. Body explicit kalınlıklı hollow tube, fins uniform solid
+plate'tir. Tek GeometryResolver üç material volume ve absolute x_geo volume
+centroid'i aynı ResolvedRocketGeometry içine ekler. Volume centroid henüz CG
+değildir; density/material catalog/mass yorumu NAT-011B'ye aittir.
+Nose shell normal-offset iç koni çıkarımı, tube annulus ve trapezoid plate
+denklemleri uygulanır; strict thickness limitleri, non-finite/invalid derived
+değerler hata üretir; clamp, repair veya default thickness yoktur.
+Başlangıç `9827531`: 595 PASS. Schema'ya uyarlanan eski geometry testleri
+87 PASS (fiziksel assertions korunur); CGEO-T01..T28/edge 38 PASS;
+geometry 125 PASS, flight_conditions 98 PASS, environment/V&V 260 PASS,
+math/V&V 148 PASS; full 633 PASS. Reference/placement convention değişmedi.
+Geometry dışı production/dependency değişmedi; NAT-011B başlatılmadı.
+NAT-011A.1 IMPLEMENTATION GATE: PASS.

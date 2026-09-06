@@ -7,9 +7,9 @@ Mass/aero, frame transform, component tree ve staging hesaplanmaz.
 """
 
 from dataclasses import dataclass
-from math import pi
+from math import hypot, pi
 
-from roketsim_native.geometry.models import SingleStageRocketGeometry
+from roketsim_native.geometry.models import SingleStageRocketGeometry, NoseConstructionMode
 from roketsim_native.math.numerical import require_finite
 
 __all__ = ("GeometryResolver", "ResolvedRocketGeometry", "GeometryValidationError")
@@ -19,7 +19,7 @@ class GeometryValidationError(ValueError):
     """Finite invalid geometry için deterministik structured hata."""
 
     def __init__(self, *, error_code: str, field_name: str | None = None,
-                 value: float | int | None = None) -> None:
+                 value: float | int | str | None = None) -> None:
         self.error_code = error_code
         self.field_name = field_name
         self.value = value
@@ -43,6 +43,12 @@ class ResolvedRocketGeometry:
     reference_diameter_m: float
     reference_length_m: float
     reference_area_m2: float
+    nose_material_volume_m3: float
+    nose_volume_centroid_x_geo_m: float
+    body_material_volume_m3: float
+    body_volume_centroid_x_geo_m: float
+    fin_set_material_volume_m3: float
+    fin_set_volume_centroid_x_geo_m: float
 
 
 class GeometryResolver:
@@ -97,6 +103,84 @@ class GeometryResolver:
         area = require_finite((pi / 4.0) * diameter * diameter, name="reference_area_m2")
         if area <= 0.0:
             raise ValueError("reference_area_m2 must be positive; numerical underflow")
+
+        # Construction aynı source'tan çözülür; hacimler geometry'ye aittir, mass değildir.
+        nose = geometry.nose
+        nose_thickness = nose.wall_thickness_m
+        body_thickness = geometry.body.wall_thickness_m
+        if nose_thickness is not None:
+            require_finite(nose_thickness, name="nose.wall_thickness_m")
+        require_finite(body_thickness, name="body.wall_thickness_m")
+        if not isinstance(nose.construction_mode, NoseConstructionMode):
+            raise GeometryValidationError(error_code="INVALID_NOSE_CONSTRUCTION",
+                field_name="nose.construction_mode", value=nose.construction_mode)
+        radius = diameter / 2.0
+        if body_thickness <= 0.0:
+            raise GeometryValidationError(error_code="NON_POSITIVE_WALL_THICKNESS",
+                field_name="body.wall_thickness_m", value=body_thickness)
+        if body_thickness >= radius:
+            raise GeometryValidationError(error_code="BODY_WALL_TOO_THICK",
+                field_name="body.wall_thickness_m", value=body_thickness)
+        outer_volume = require_finite(pi * radius * radius * nose_end / 3.0,
+                                      name="nose_outer_volume_m3")
+        outer_centroid = 3.0 * (nose_end / 4.0)
+        if nose.construction_mode is NoseConstructionMode.SOLID:
+            if nose_thickness is not None:
+                raise GeometryValidationError(error_code="UNEXPECTED_WALL_THICKNESS",
+                    field_name="nose.wall_thickness_m", value=nose_thickness)
+            nose_volume, nose_centroid = outer_volume, outer_centroid
+        else:
+            if nose_thickness is None:
+                raise GeometryValidationError(error_code="MISSING_WALL_THICKNESS",
+                    field_name="nose.wall_thickness_m")
+            if nose_thickness <= 0.0:
+                raise GeometryValidationError(error_code="NON_POSITIVE_WALL_THICKNESS",
+                    field_name="nose.wall_thickness_m", value=nose_thickness)
+            slant = require_finite(hypot(nose_end, radius), name="nose_slant_length_m")
+            limit = nose_end * radius / slant
+            if nose_thickness >= limit:
+                raise GeometryValidationError(error_code="NOSE_SHELL_TOO_THICK",
+                    field_name="nose.wall_thickness_m", value=nose_thickness)
+            delta_x = require_finite(nose_thickness * slant / radius, name="nose_inner_tip_offset_m")
+            delta_r = require_finite(nose_thickness * slant / nose_end, name="nose_inner_radius_reduction_m")
+            inner_length, inner_radius = nose_end - delta_x, radius - delta_r
+            if inner_length <= 0.0 or inner_radius <= 0.0:
+                raise GeometryValidationError(error_code="NOSE_SHELL_TOO_THICK",
+                    field_name="nose.wall_thickness_m", value=nose_thickness)
+            inner_volume = require_finite(pi * inner_radius * inner_radius * inner_length / 3.0,
+                                          name="nose_inner_volume_m3")
+            nose_volume = require_finite(outer_volume - inner_volume, name="nose_material_volume_m3")
+            if nose_volume <= 0.0:
+                raise GeometryValidationError(error_code="INVALID_DERIVED_VOLUME",
+                    field_name="nose_material_volume_m3", value=nose_volume)
+            inner_centroid = delta_x + 3.0 * (inner_length / 4.0)
+            nose_centroid = (outer_volume * outer_centroid - inner_volume * inner_centroid) / nose_volume
+
+        body_inner_radius = radius - body_thickness
+        body_volume = pi * (radius * radius - body_inner_radius * body_inner_radius) * geometry.body.length_m
+        body_centroid = nose_end + geometry.body.length_m / 2.0
+        root_chord, tip_chord = fins.root_chord_m, fins.tip_chord_m
+        fin_area = (root_chord + tip_chord) * fins.semi_span_m / 2.0
+        fin_volume = fins.fin_count * fin_area * fins.thickness_m
+        fin_centroid = root_le + (
+            root_chord * root_chord + root_chord * tip_chord + tip_chord * tip_chord
+            + fins.tip_leading_edge_offset_x_m * (root_chord + 2.0 * tip_chord)
+        ) / (3.0 * (root_chord + tip_chord))
+        for name, value in (
+            ("nose_material_volume_m3", nose_volume), ("body_material_volume_m3", body_volume),
+            ("fin_set_material_volume_m3", fin_volume),
+        ):
+            require_finite(value, name=name)
+            if value <= 0.0:
+                raise GeometryValidationError(error_code="INVALID_DERIVED_VOLUME", field_name=name, value=value)
+        for name, value, lower, upper in (
+            ("nose_volume_centroid_x_geo_m", nose_centroid, 0.0, nose_end),
+            ("body_volume_centroid_x_geo_m", body_centroid, nose_end, body_end),
+            ("fin_set_volume_centroid_x_geo_m", fin_centroid, min(root_le, tip_le), max(root_te, tip_te)),
+        ):
+            require_finite(value, name=name)
+            if not lower <= value <= upper:
+                raise GeometryValidationError(error_code="INVALID_DERIVED_CENTROID", field_name=name, value=value)
         return ResolvedRocketGeometry(
             source=geometry,
             nose_start_x_geo_m=0.0, nose_end_x_geo_m=nose_end,
@@ -106,4 +190,7 @@ class GeometryResolver:
             overall_length_m=max(body_end, root_te, tip_te),
             reference_diameter_m=diameter, reference_length_m=diameter,
             reference_area_m2=area,
+            nose_material_volume_m3=nose_volume, nose_volume_centroid_x_geo_m=nose_centroid,
+            body_material_volume_m3=body_volume, body_volume_centroid_x_geo_m=body_centroid,
+            fin_set_material_volume_m3=fin_volume, fin_set_volume_centroid_x_geo_m=fin_centroid,
         )
