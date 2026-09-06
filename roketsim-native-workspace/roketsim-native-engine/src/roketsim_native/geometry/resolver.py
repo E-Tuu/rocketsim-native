@@ -49,6 +49,20 @@ class ResolvedRocketGeometry:
     body_volume_centroid_x_geo_m: float
     fin_set_material_volume_m3: float
     fin_set_volume_centroid_x_geo_m: float
+    body_inner_diameter_m: float
+    motor_mount_inner_diameter_m: float
+    motor_mount_outer_diameter_m: float
+    motor_mount_start_x_geo_m: float
+    motor_mount_end_x_geo_m: float
+    front_centering_ring_start_x_geo_m: float
+    front_centering_ring_end_x_geo_m: float
+    rear_centering_ring_start_x_geo_m: float
+    rear_centering_ring_end_x_geo_m: float
+    motor_aft_reference_x_geo_m: float
+    motor_mount_material_volume_m3: float
+    motor_mount_volume_centroid_x_geo_m: float
+    centering_ring_pair_material_volume_m3: float
+    centering_ring_pair_volume_centroid_x_geo_m: float
 
 
 class GeometryResolver:
@@ -181,6 +195,74 @@ class GeometryResolver:
             require_finite(value, name=name)
             if not lower <= value <= upper:
                 raise GeometryValidationError(error_code="INVALID_DERIVED_CENTROID", field_name=name, value=value)
+        # NAT-011A.2: aynı geometry source/resolver; motor fit veya mass yorumu yok.
+        attachment = geometry.motor_attachment
+        mount = attachment.mount_tube
+        ring_thickness = attachment.centering_rings.axial_thickness_m
+        mount_dimensions = (
+            ("motor_attachment.mount_tube.length_m", mount.length_m, "NON_POSITIVE_MOUNT_LENGTH"),
+            ("motor_attachment.mount_tube.inner_diameter_m", mount.inner_diameter_m, "NON_POSITIVE_MOUNT_INNER_DIAMETER"),
+            ("motor_attachment.mount_tube.wall_thickness_m", mount.wall_thickness_m, "NON_POSITIVE_MOUNT_WALL_THICKNESS"),
+            ("motor_attachment.centering_rings.axial_thickness_m", ring_thickness, "NON_POSITIVE_CENTERING_RING_THICKNESS"),
+        )
+        for name, value, _ in mount_dimensions:
+            require_finite(value, name=name)
+        require_finite(mount.aft_recess_m, name="motor_attachment.mount_tube.aft_recess_m")
+        require_finite(attachment.motor_overhang_m, name="motor_attachment.motor_overhang_m")
+        for name, value, code in mount_dimensions:
+            if value <= 0.0:
+                raise GeometryValidationError(error_code=code, field_name=name, value=value)
+        if mount.aft_recess_m < 0.0:
+            raise GeometryValidationError(error_code="NEGATIVE_MOUNT_AFT_RECESS",
+                field_name="motor_attachment.mount_tube.aft_recess_m", value=mount.aft_recess_m)
+        body_inner_diameter = require_finite(diameter - 2.0 * body_thickness, name="body_inner_diameter_m")
+        if body_inner_diameter <= 0.0:
+            raise GeometryValidationError(error_code="INVALID_BODY_INNER_DIAMETER",
+                field_name="body_inner_diameter_m", value=body_inner_diameter)
+        mount_outer = require_finite(mount.inner_diameter_m + 2.0 * mount.wall_thickness_m,
+                                     name="motor_mount_outer_diameter_m")
+        if mount_outer >= body_inner_diameter:
+            raise GeometryValidationError(error_code="MOTOR_MOUNT_TOO_LARGE_FOR_BODY",
+                field_name="motor_mount_outer_diameter_m", value=mount_outer)
+        mount_end = require_finite(body_end - mount.aft_recess_m, name="motor_mount_end_x_geo_m")
+        mount_start = require_finite(mount_end - mount.length_m, name="motor_mount_start_x_geo_m")
+        if mount_start < nose_end or mount_end > body_end:
+            raise GeometryValidationError(error_code="MOTOR_MOUNT_OUTSIDE_BODY",
+                field_name="motor_mount_start_x_geo_m", value=mount_start)
+        if 2.0 * ring_thickness > mount.length_m:
+            raise GeometryValidationError(error_code="CENTERING_RINGS_OVERLAP",
+                field_name="motor_attachment.centering_rings.axial_thickness_m", value=ring_thickness)
+        if attachment.motor_overhang_m < -mount.length_m:
+            raise GeometryValidationError(error_code="MOTOR_AFT_REFERENCE_BEFORE_MOUNT",
+                field_name="motor_attachment.motor_overhang_m", value=attachment.motor_overhang_m)
+        aft_reference = require_finite(mount_end + attachment.motor_overhang_m,
+                                       name="motor_aft_reference_x_geo_m")
+        front_end = mount_start + ring_thickness
+        rear_start = mount_end - ring_thickness
+        mount_outer_radius, mount_inner_radius = mount_outer / 2.0, mount.inner_diameter_m / 2.0
+        mount_volume = pi * (mount_outer_radius * mount_outer_radius - mount_inner_radius * mount_inner_radius) * mount.length_m
+        ring_outer_radius = body_inner_diameter / 2.0
+        one_ring_volume = pi * (ring_outer_radius * ring_outer_radius - mount_outer_radius * mount_outer_radius) * ring_thickness
+        pair_volume = 2.0 * one_ring_volume
+        mount_centroid = (mount_start + mount_end) / 2.0
+        front_centroid = mount_start + ring_thickness / 2.0
+        rear_centroid = mount_end - ring_thickness / 2.0
+        pair_centroid = (front_centroid + rear_centroid) / 2.0
+        for name, value, code in (
+            ("motor_mount_material_volume_m3", mount_volume, "INVALID_MOUNT_VOLUME"),
+            ("one_centering_ring_material_volume_m3", one_ring_volume, "INVALID_RING_VOLUME"),
+            ("centering_ring_pair_material_volume_m3", pair_volume, "INVALID_RING_VOLUME"),
+        ):
+            require_finite(value, name=name)
+            if value <= 0.0:
+                raise GeometryValidationError(error_code=code, field_name=name, value=value)
+        for name, value, code in (
+            ("motor_mount_volume_centroid_x_geo_m", mount_centroid, "INVALID_MOUNT_CENTROID"),
+            ("centering_ring_pair_volume_centroid_x_geo_m", pair_centroid, "INVALID_RING_CENTROID"),
+        ):
+            require_finite(value, name=name)
+            if not mount_start <= value <= mount_end:
+                raise GeometryValidationError(error_code=code, field_name=name, value=value)
         return ResolvedRocketGeometry(
             source=geometry,
             nose_start_x_geo_m=0.0, nose_end_x_geo_m=nose_end,
@@ -193,4 +275,13 @@ class GeometryResolver:
             nose_material_volume_m3=nose_volume, nose_volume_centroid_x_geo_m=nose_centroid,
             body_material_volume_m3=body_volume, body_volume_centroid_x_geo_m=body_centroid,
             fin_set_material_volume_m3=fin_volume, fin_set_volume_centroid_x_geo_m=fin_centroid,
+            body_inner_diameter_m=body_inner_diameter,
+            motor_mount_inner_diameter_m=mount.inner_diameter_m,
+            motor_mount_outer_diameter_m=mount_outer,
+            motor_mount_start_x_geo_m=mount_start, motor_mount_end_x_geo_m=mount_end,
+            front_centering_ring_start_x_geo_m=mount_start, front_centering_ring_end_x_geo_m=front_end,
+            rear_centering_ring_start_x_geo_m=rear_start, rear_centering_ring_end_x_geo_m=mount_end,
+            motor_aft_reference_x_geo_m=aft_reference,
+            motor_mount_material_volume_m3=mount_volume, motor_mount_volume_centroid_x_geo_m=mount_centroid,
+            centering_ring_pair_material_volume_m3=pair_volume, centering_ring_pair_volume_centroid_x_geo_m=pair_centroid,
         )

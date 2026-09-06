@@ -22,6 +22,7 @@
 - [x] NAT-011A Minimal Single-Stage Rocket Geometry
 - [x] NAT-011A.1 Geometry Construction & Material Volume Extension
 - [x] NAT-011B Materials + Derived Structural Mass & CG
+- [x] NAT-011A.2 Motor Mount Assembly Geometry
 
 NAT-010A: FLOW-001, WORLD/ENU SI hız çıkarımı; sahiplik `flight_conditions`.
 Başlangıç `49410f7`: 410 test PASS. FLOW-T01..T18 ve overflow guard:
@@ -89,3 +90,23 @@ flight_conditions 98 PASS, environment/V&V 260 PASS, math/V&V 148 PASS,
 full 677 PASS (633 existing + 44 yeni). Geometry ve diğer önceki production
 kodları/dependency değişmedi. Propulsion, inertia, measured/override ve
 NAT-011C implement edilmedi. NAT-011B IMPLEMENTATION GATE: PASS.
+
+NAT-011A.2: başlangıç `bb1f2de` (ancestor `556a853`), temiz tree ve 677 PASS.
+Tek SingleStageRocketGeometry source'una mandatory motor_attachment eklendi:
+bir coaxial mount tube, tam iki identical centering ring ve signed overhang.
+Motorun kendisi değildir; hiçbir motor markası/ölçüsü production default değil.
+GeometryResolver body inner diameter, mount dış çapı, x_geo yerleşimleri,
+rocket-side motor aft reference ve mount/ring material volume/centroid üretir.
+Root/body ve önceki external geometry/reference/volume politikaları korunur.
+Mount tamamen body içinde; radyal clearance strict pozitif, ring touching
+geçerli, overlap geçersizdir. Negatif overhang >= -mount length geçerlidir.
+Aft reference structural overall_length'i değiştirmez; installed motor
+envelope/fit NAT-011C'ye aittir. Manufacturing tolerances/retention ertelidir.
+Geçici gate sınırı: mount/rings geometrik olarak mevcut fakat NAT-011B
+structural mass hâlâ yalnız nose/body/fins içerir. Mass production değişmedi;
+bu eksik katkı NAT-011B.1'de kapatılacaktır. Mount material ataması yapılmadı.
+MOUNT-T01..34: 59 PASS; geometry 184 PASS, materials 13 PASS, mass 31 PASS,
+flight_conditions 98 PASS, environment/V&V 260 PASS, math/V&V 148 PASS,
+full 736 PASS (677 existing + 59 yeni). Önceki testlerde yalnız required
+schema/fixture uyarlaması yapıldı; fiziksel assertions korunur. Dependency yok.
+NAT-011A.2 IMPLEMENTATION GATE: PASS.

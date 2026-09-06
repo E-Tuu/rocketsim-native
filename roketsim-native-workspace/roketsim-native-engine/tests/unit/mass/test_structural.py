@@ -8,6 +8,7 @@ import pytest
 
 from roketsim_native.geometry.models import (
     ConicalNoseGeometry, CylindricalBodyGeometry, NoseConstructionMode,
+    MotorAttachmentGeometry, MotorMountTubeGeometry, CenteringRingPairGeometry,
     SingleStageRocketGeometry, TrapezoidalFinSetGeometry,
 )
 from roketsim_native.geometry.resolver import GeometryResolver
@@ -26,7 +27,9 @@ def geometry():
     return GeometryResolver().resolve(rocket_geometry=SingleStageRocketGeometry(.1,
         ConicalNoseGeometry(.3, NoseConstructionMode.HOLLOW_SHELL, .002),
         CylindricalBodyGeometry(.7, .002),
-        TrapezoidalFinSetGeometry(4, .18, .08, .12, .05, .72, .003)))
+        TrapezoidalFinSetGeometry(4, .18, .08, .12, .05, .72, .003),
+        MotorAttachmentGeometry(MotorMountTubeGeometry(.120, .029, .001, 0.),
+                                CenteringRingPairGeometry(.003), .005)))
 
 
 @pytest.fixture

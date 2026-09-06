@@ -11,7 +11,8 @@ from dataclasses import dataclass
 from enum import Enum
 
 __all__ = ("ConicalNoseGeometry", "CylindricalBodyGeometry",
-           "TrapezoidalFinSetGeometry", "SingleStageRocketGeometry", "NoseConstructionMode")
+           "TrapezoidalFinSetGeometry", "SingleStageRocketGeometry", "NoseConstructionMode",
+           "MotorMountTubeGeometry", "CenteringRingPairGeometry", "MotorAttachmentGeometry")
 
 
 class NoseConstructionMode(str, Enum):
@@ -57,6 +58,37 @@ class TrapezoidalFinSetGeometry:
 
 
 @dataclass(frozen=True, slots=True)
+class MotorMountTubeGeometry:
+    """Coaxial iç mount tube; seçilmiş motorun kendisi veya ölçüleri değildir."""
+
+    length_m: float
+    inner_diameter_m: float
+    wall_thickness_m: float
+    aft_recess_m: float
+
+
+@dataclass(frozen=True, slots=True)
+class CenteringRingPairGeometry:
+    """Tam iki aynı ring; radyal ölçüler body/mount'tan türetilir."""
+
+    axial_thickness_m: float
+
+
+@dataclass(frozen=True, slots=True)
+class MotorAttachmentGeometry:
+    """Rocket-side referans: signed overhang = aft reference - mount end.
+
+    Pozitif aft, sıfır flush, negatif recessed. Fit/katalog NAT-011C'ye,
+    mount/ring mass NAT-011B.1'e aittir. Manufacturing tolerances ve retention
+    hardware ertelidir; fiziksel default ölçü yoktur.
+    """
+
+    mount_tube: MotorMountTubeGeometry
+    centering_rings: CenteringRingPairGeometry
+    motor_overhang_m: float
+
+
+@dataclass(frozen=True, slots=True)
 class SingleStageRocketGeometry:
     """Bir conical nose, bir cylindrical body ve bir trapezoidal fin set."""
 
@@ -64,3 +96,4 @@ class SingleStageRocketGeometry:
     nose: ConicalNoseGeometry
     body: CylindricalBodyGeometry
     fins: TrapezoidalFinSetGeometry
+    motor_attachment: MotorAttachmentGeometry
