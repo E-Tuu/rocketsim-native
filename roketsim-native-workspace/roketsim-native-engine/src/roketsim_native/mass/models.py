@@ -28,10 +28,15 @@ class ComponentMassProperties:
 
 @dataclass(frozen=True, slots=True)
 class StructuralMassProperties:
-    """Yalnız nose/body/fins yapısı; motor hariçtir, total rocket mass değildir."""
+    """Nose/body/fins/mount/ring yapısı; gerçek motor hariçtir.
+
+    Centering rings iki ring'in birleşik katkısıdır; total rocket mass değildir.
+    """
 
     nose: ComponentMassProperties
     body: ComponentMassProperties
     fins: ComponentMassProperties
+    motor_mount: ComponentMassProperties
+    centering_rings: ComponentMassProperties
     structure_mass_kg: float
     structure_cg_x_geo_m: float

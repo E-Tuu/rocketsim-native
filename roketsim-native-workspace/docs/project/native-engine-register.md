@@ -23,6 +23,7 @@
 - [x] NAT-011A.1 Geometry Construction & Material Volume Extension
 - [x] NAT-011B Materials + Derived Structural Mass & CG
 - [x] NAT-011A.2 Motor Mount Assembly Geometry
+- [x] NAT-011B.1 Motor Mount Structural Mass & CG Extension
 
 NAT-010A: FLOW-001, WORLD/ENU SI hız çıkarımı; sahiplik `flight_conditions`.
 Başlangıç `49410f7`: 410 test PASS. FLOW-T01..T18 ve overflow guard:
@@ -110,3 +111,20 @@ flight_conditions 98 PASS, environment/V&V 260 PASS, math/V&V 148 PASS,
 full 736 PASS (677 existing + 59 yeni). Önceki testlerde yalnız required
 schema/fixture uyarlaması yapıldı; fiziksel assertions korunur. Dependency yok.
 NAT-011A.2 IMPLEMENTATION GATE: PASS.
+
+NAT-011B.1 önkoşulu: accepted `4fcdf7b`, temiz tree, ancestor `bb1f2de`,
+başlangıç full 736 PASS. A.2'nin geçici mount/ring mass eksikliği kapatıldı.
+SingleStageRocketMaterials'a mandatory motor_mount ve centering_rings
+seçimleri eklendi; default/katalog genişlemesi yoktur. Aynı generic component
+result ve structural result şimdi beş yapı katkısını içerir. Ring pair tek
+birleşik katkıdır. Gerçek motor/propellant yapısal kütleye dahil değildir.
+Geometry tek material-volume/volume-centroid, Materials tek density otoritesi;
+Mass yalnız MASS-001 rho*V ve MASS-002 beş katkının weighted CG'sini uygular.
+Geometry production denklemleri değişmedi. Eski nose/body/fins sonuçları ve
+üç-component referans değerleri testlerde korunur; toplamlar artık beşlidir.
+SMEXT-T01..18/edge: 24 PASS; materials 13 PASS, mass 55 PASS, geometry
+184 PASS, flight_conditions 98 PASS, environment/V&V 260 PASS, math/V&V
+148 PASS; full 760 PASS (736 existing + 24 yeni). Mevcut structured material/
+mass error sözleşmeleri korunur; repair yoktur. NAT-011C motor/propulsion,
+time-varying rocket mass, inertia ve overrides ertelidir; dependency eklenmedi.
+NAT-011B.1 IMPLEMENTATION GATE: PASS.

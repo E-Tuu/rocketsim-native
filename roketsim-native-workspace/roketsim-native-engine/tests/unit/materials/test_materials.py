@@ -58,7 +58,7 @@ def test_empty_name(name):
 def test_explicit_assignment():
     """MAT-T07 / MASS-T27: Her atama mandatory; fiziksel default yoktur."""
     parameters = inspect.signature(SingleStageRocketMaterials).parameters
-    assert tuple(parameters) == ('nose', 'body', 'fins')
+    assert tuple(parameters) == ('nose', 'body', 'fins', 'motor_mount', 'centering_rings')
     assert all(p.default is inspect.Parameter.empty for p in parameters.values())
     with pytest.raises(TypeError):
         SingleStageRocketMaterials()
@@ -69,7 +69,7 @@ def test_explicit_assignment():
 def test_independent_assignments():
     """MAT-T08: Genel BulkMaterial kullanılabilir; component seçimi hard-coded değil."""
     third = BulkMaterial('Test material', 900.)
-    assignment = SingleStageRocketMaterials(CARDBOARD, third, POLYSTYRENE)
+    assignment = SingleStageRocketMaterials(CARDBOARD, third, POLYSTYRENE, CARDBOARD, third)
     assert assignment.nose is CARDBOARD
     assert assignment.body is third
     assert assignment.fins is POLYSTYRENE

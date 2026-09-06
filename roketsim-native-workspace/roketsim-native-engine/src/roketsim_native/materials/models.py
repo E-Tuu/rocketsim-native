@@ -36,8 +36,13 @@ class BulkMaterial:
 
 @dataclass(frozen=True, slots=True)
 class SingleStageRocketMaterials:
-    """Üç bağımsız ve zorunlu kullanıcı seçimi; component default'u yoktur."""
+    """Beş bağımsız ve zorunlu kullanıcı seçimi; component default'u yoktur.
+
+    Centering rings iki identical demo ring'in ortak malzemesidir.
+    """
 
     nose: BulkMaterial
     body: BulkMaterial
     fins: BulkMaterial
+    motor_mount: BulkMaterial
+    centering_rings: BulkMaterial
