@@ -14,3 +14,4 @@
   - [x] NAT-009B Altitude & Geopotential Foundation
   - [x] NAT-009C Dry-Air Atmosphere Core
   - [x] NAT-009D Air Properties
+  - [x] NAT-009E Atmosphere V&V (standard PASS; OpenRocket NOT_CAPTURED)
