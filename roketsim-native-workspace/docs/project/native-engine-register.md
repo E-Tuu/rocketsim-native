@@ -24,6 +24,7 @@
 - [x] NAT-011B Materials + Derived Structural Mass & CG
 - [x] NAT-011A.2 Motor Mount Assembly Geometry
 - [x] NAT-011B.1 Motor Mount Structural Mass & CG Extension
+- [x] NAT-011C.1 Motor Definition & Catalog
 
 NAT-010A: FLOW-001, WORLD/ENU SI hız çıkarımı; sahiplik `flight_conditions`.
 Başlangıç `49410f7`: 410 test PASS. FLOW-T01..T18 ve overflow guard:
@@ -128,3 +129,18 @@ SMEXT-T01..18/edge: 24 PASS; materials 13 PASS, mass 55 PASS, geometry
 mass error sözleşmeleri korunur; repair yoktur. NAT-011C motor/propulsion,
 time-varying rocket mass, inertia ve overrides ertelidir; dependency eklenmedi.
 NAT-011B.1 IMPLEMENTATION GATE: PASS.
+
+NAT-011C.1: başlangıç `88ab5bc`, temiz çalışma ağacı, full 760 PASS.
+`propulsion.models/catalog` yalnız immutable/slotted motor verisi ve stable-ID
+katalog erişimi sağlar. İlk katalog yalnız AeroTech F50-4T içerir; default motor
+seçimi yoktur. NAR statik test kütleleri 0.0849/0.0379 kg otoritedir.
+31 kaynak thrust noktası korunur; yalnız katalogda açık (0,0) eklenerek 32
+nokta elde edilir. Test-only integral 76.828387 N*s, ölçülmüş referans 76.83 N*s.
+Kaynaklar, RASP header kütle farkı ve yuvarlama kararı:
+[NAT-011C.1 kaynak/V&V kaydı](../verification/nat-011c1-motor-catalog.md).
+MOTOR-T01..40/edge: 97 PASS; mass 55, materials 13, geometry 184,
+flight_conditions 98, environment/V&V 260, math/V&V 148 PASS.
+Full 857 PASS (760 existing + 97 yeni). Önceki production modülleri değişmedi.
+Motor installation C.2; motor mass/CG C.3; runtime interpolation, events ve
+dynamics bu gate'te yoktur. Yeni dependency/runtime network yoktur.
+NAT-011C.1 IMPLEMENTATION GATE: PASS.
