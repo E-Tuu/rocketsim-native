@@ -217,9 +217,11 @@ def test_nested_contract_types(name, value):
 def test_scope_contract():
     """MOTOR-T40: C.1 public yüzeyi yalnız data definitions/catalog; physics evaluator yok."""
     assert set(models.__all__) == {'MotorType', 'MotorValidationError', 'ThrustSample',
-        'MotorCertificationReference', 'MotorDataProvenance', 'MotorDefinition'}
+        'MotorCertificationReference', 'MotorDataProvenance', 'MotorDefinition',
+        'MotorMassSample', 'MotorCgSample'}
     assert set(catalog.__all__) == {'MotorCatalog', 'AEROTECH_F50_4T', 'DEMO_MOTOR_CATALOG'}
     assert [f.name for f in fields(MotorDefinition)] == ['motor_id', 'manufacturer', 'designation',
         'family', 'motor_type', 'propellant_name', 'diameter_m', 'length_m', 'initial_mass_kg',
-        'propellant_mass_kg', 'ejection_delay_s', 'thrust_curve', 'certification', 'provenance']
+        'propellant_mass_kg', 'ejection_delay_s', 'thrust_curve', 'certification', 'provenance',
+        'mass_curve', 'cg_curve']
     assert not [n for n in dir(MOTOR) if not n.startswith('_') and callable(getattr(MOTOR, n))]

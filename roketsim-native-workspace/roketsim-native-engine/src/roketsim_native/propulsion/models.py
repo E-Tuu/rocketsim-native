@@ -10,7 +10,8 @@ from enum import Enum
 from roketsim_native.math.numerical import require_finite
 
 __all__ = ("MotorType", "MotorValidationError", "ThrustSample",
-           "MotorCertificationReference", "MotorDataProvenance", "MotorDefinition")
+           "MotorCertificationReference", "MotorDataProvenance", "MotorDefinition",
+           "MotorMassSample", "MotorCgSample")
 
 
 class MotorType(Enum):
@@ -46,6 +47,42 @@ class ThrustSample:
 
 
 @dataclass(frozen=True, slots=True)
+class MotorMassSample:
+    """Kaynak motor kütle örneği (s, kg); model tarafından üretilmiş fallback değildir."""
+
+    time_s: float
+    mass_kg: float
+
+    def __post_init__(self) -> None:
+        require_finite(self.time_s, name="time_s")
+        require_finite(self.mass_kg, name="mass_kg")
+        if self.time_s < 0.0:
+            raise MotorValidationError(error_code="NEGATIVE_MASS_SAMPLE_TIME",
+                field_name="time_s", value=self.time_s)
+        if self.mass_kg <= 0.0:
+            raise MotorValidationError(error_code="NON_POSITIVE_MASS_SAMPLE",
+                field_name="mass_kg", value=self.mass_kg)
+
+
+@dataclass(frozen=True, slots=True)
+class MotorCgSample:
+    """Kaynak CG: motor ön yüzünden arka yüze doğru m; üst sınırı motor tanımı doğrular."""
+
+    time_s: float
+    cg_from_front_m: float
+
+    def __post_init__(self) -> None:
+        require_finite(self.time_s, name="time_s")
+        require_finite(self.cg_from_front_m, name="cg_from_front_m")
+        if self.time_s < 0.0:
+            raise MotorValidationError(error_code="NEGATIVE_CG_SAMPLE_TIME",
+                field_name="time_s", value=self.time_s)
+        if self.cg_from_front_m < 0.0:
+            raise MotorValidationError(error_code="NEGATIVE_CG_POSITION",
+                field_name="cg_from_front_m", value=self.cg_from_front_m)
+
+
+@dataclass(frozen=True, slots=True)
 class MotorCertificationReference:
     """Ölçülmüş static-test V&V metadata; runtime thrust kaynağı değildir."""
 
@@ -74,11 +111,17 @@ class MotorDataProvenance:
     certification_source: str
     thrust_curve_source: str
     normalization_note: str
+    mass_curve_source: str | None
+    cg_curve_source: str | None
 
     def __post_init__(self) -> None:
         for name in ("manufacturer_source", "certification_source", "thrust_curve_source", "normalization_note"):
             value = getattr(self, name)
             if not isinstance(value, str) or not value.strip():
+                raise MotorValidationError(error_code="INVALID_PROVENANCE", field_name=name, value=value)
+        for name in ("mass_curve_source", "cg_curve_source"):
+            value = getattr(self, name)
+            if value is not None and (not isinstance(value, str) or not value.strip()):
                 raise MotorValidationError(error_code="INVALID_PROVENANCE", field_name=name, value=value)
 
 
@@ -100,6 +143,8 @@ class MotorDefinition:
     thrust_curve: tuple[ThrustSample, ...]
     certification: MotorCertificationReference
     provenance: MotorDataProvenance
+    mass_curve: tuple[MotorMassSample, ...] | None
+    cg_curve: tuple[MotorCgSample, ...] | None
 
     def __post_init__(self) -> None:
         positive_values = (
@@ -145,3 +190,43 @@ class MotorDefinition:
             raise MotorValidationError(error_code="NO_POSITIVE_THRUST", field_name="thrust_curve", value=curve)
         if curve[-1].time_s <= 0.0 or curve[-1].thrust_N != 0.0:
             raise MotorValidationError(error_code="INVALID_THRUST_CURVE_END", field_name="thrust_curve", value=curve[-1])
+
+        # Kaynak eğrileri bağımsız zaman grid'leridir; None model seçimi yapmaz.
+        for name, samples, sample_type, source in (
+            ("mass", self.mass_curve, MotorMassSample, self.provenance.mass_curve_source),
+            ("cg", self.cg_curve, MotorCgSample, self.provenance.cg_curve_source),
+        ):
+            code = name.upper()
+            field = f"{name}_curve"
+            if (samples is None) != (source is None):
+                raise MotorValidationError(error_code=f"{code}_CURVE_PROVENANCE_MISMATCH",
+                    field_name=field, value=samples)
+            if samples is None:
+                continue
+            if not isinstance(samples, tuple) or not all(isinstance(s, sample_type) for s in samples):
+                raise MotorValidationError(error_code=f"INVALID_{code}_CURVE_TYPE",
+                    field_name=field, value=samples)
+            if len(samples) < 2:
+                raise MotorValidationError(error_code=f"TOO_FEW_{code}_SAMPLES",
+                    field_name=field, value=len(samples))
+            if samples[0].time_s != 0.0:
+                raise MotorValidationError(error_code=f"INVALID_{code}_CURVE_START",
+                    field_name=field, value=samples[0].time_s)
+            if any(b.time_s <= a.time_s for a, b in zip(samples, samples[1:])):
+                raise MotorValidationError(error_code=f"NON_INCREASING_{code}_CURVE_TIME",
+                    field_name=field, value=samples)
+            if samples[-1].time_s < curve[-1].time_s:
+                raise MotorValidationError(error_code=f"{code}_CURVE_INSUFFICIENT_COVERAGE",
+                    field_name=field, value=samples[-1].time_s)
+        if self.mass_curve is not None:
+            if self.mass_curve[0].mass_kg != self.initial_mass_kg:
+                raise MotorValidationError(error_code="MASS_CURVE_INITIAL_MISMATCH",
+                    field_name="mass_curve", value=self.mass_curve[0].mass_kg)
+            if any(b.mass_kg > a.mass_kg for a, b in zip(self.mass_curve, self.mass_curve[1:])):
+                raise MotorValidationError(error_code="MASS_CURVE_INCREASES",
+                    field_name="mass_curve", value=self.mass_curve)
+        if self.cg_curve is not None:
+            for sample in self.cg_curve:
+                if not 0.0 <= sample.cg_from_front_m <= self.length_m:
+                    raise MotorValidationError(error_code="CG_OUTSIDE_MOTOR",
+                        field_name="cg_from_front_m", value=sample.cg_from_front_m)

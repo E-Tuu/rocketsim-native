@@ -40,6 +40,8 @@ AEROTECH_F50_4T: Final[MotorDefinition] = MotorDefinition(
     motor_type=MotorType.SINGLE_USE, propellant_name="Blue Thunder",
     diameter_m=0.029, length_m=0.098, initial_mass_kg=0.0849, propellant_mass_kg=0.0379,
     ejection_delay_s=4.0,
+    # Doğrulanmış mass/CG zaman serisi yoktur; model politikası katalogdan ayrıdır.
+    mass_curve=None, cg_curve=None,
     thrust_curve=(
         # Yalnız bu katalog kaydı için explicit Native ignition boundary.
         ThrustSample(0.000, 0.000),
@@ -66,6 +68,7 @@ AEROTECH_F50_4T: Final[MotorDefinition] = MotorDefinition(
         certification_source="NAR S&T AEROTECH F50, tested 1995-09-03, updated 1/98, page 1 (4 s variant): https://www.thrustcurve.org/motors/cert/60c63bfcb5bc370004713e82/F50.pdf",
         thrust_curve_source="NAR-published data RASP transcription, 2000-07-04, page 2: https://www.thrustcurve.org/motors/cert/60c63bfcb5bc370004713e82/F50.pdf",
         normalization_note="Native canonical curve prepends (0.0 s, 0.0 N); all published thrust samples are otherwise preserved.",
+        mass_curve_source=None, cg_curve_source=None,
     ),
 )
 

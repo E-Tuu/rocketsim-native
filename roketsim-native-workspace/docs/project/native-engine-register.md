@@ -27,6 +27,7 @@
 - [x] NAT-011C.1 Motor Definition & Catalog
 - [x] NAT-011C.2 Motor Installation
 - [x] NAT-011C.3A Thrust Curve Evaluation, Impulse & Curve Statistics
+- [x] NAT-011C.3B Motor Mass & CG Evolution
 
 NAT-010A: FLOW-001, WORLD/ENU SI hız çıkarımı; sahiplik `flight_conditions`.
 Başlangıç `49410f7`: 410 test PASS. FLOW-T01..T18 ve overflow guard:
@@ -179,3 +180,23 @@ Mass ve önceki fizik değişmedi. C.3B mass/CG ve kaynak eğrileri, C.3C roket
 toplamları ertelidir. Yeni dependency/network veya clamp/repair yoktur.
 [Denklemler, test eşlemesi ve V&V](../verification/nat-011c3a-thrust-impulse.md).
 NAT-011C.3A IMPLEMENTATION GATE: PASS.
+
+NAT-011C.3B: başlangıç `101ba43`, temiz ağaç, full 954 PASS; `145b245` atası
+doğrulandı. MotorDefinition/provenance yetkilendirilmiş optional-typed fakat
+explicit mass/cg curve/source alanlarıyla genişletildi. F50'nin dört yeni
+alanı None; doğrulanmış eski kütle/ölçü/thrust verileri değişmedi.
+Kaynak verisi katalogda, açık model profili `propulsion.properties` içinde,
+mass/CG sonucu runtime'dadır. Otomatik fallback/promotion veya kaynak yazımı
+yoktur. Impuls modeli C.3A J(t)/J_total'ı tüketir; %5 sonrası kuyruk korunur.
+Explicit kaynaklar kendi bağımsız grid'lerinde doğrusal değerlendirilir,
+kendi bitişlerinden sonra hold edilir; post-burn kaynak değişimi desteklenir.
+Demo profil impuls-orantılı mass + sabit midpoint CG seçer. F50 mass(1.400)
+=0.047016141471977205 kg, terminal mass=0.047 kg; local CG=.049 m,
+kurulu x_geo CG=.956 m. Toplam roket/structural aggregation uygulanmadı.
+MPROP-T01..68/edge: 79 PASS; eski provenance testinin iki yeni alanıyla +4
+durum. Propulsion 277, C.3A 63, C.2 34, geometry 184, materials 13, mass 55,
+flight_conditions 98, environment/V&V 260, math/V&V 148 PASS.
+Full 1037 PASS (954 + 79 + 4). C.3A/C.2 ve diğer fizik denklemleri korunur;
+C.3C roket toplamları, inertia, events ve vector/dynamics ertelidir.
+[Kaynak/politika ayrımı ve V&V](../verification/nat-011c3b-motor-mass-cg.md).
+NAT-011C.3B IMPLEMENTATION GATE: PASS.
