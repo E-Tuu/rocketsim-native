@@ -25,6 +25,7 @@
 - [x] NAT-011A.2 Motor Mount Assembly Geometry
 - [x] NAT-011B.1 Motor Mount Structural Mass & CG Extension
 - [x] NAT-011C.1 Motor Definition & Catalog
+- [x] NAT-011C.2 Motor Installation
 
 NAT-010A: FLOW-001, WORLD/ENU SI hız çıkarımı; sahiplik `flight_conditions`.
 Başlangıç `49410f7`: 410 test PASS. FLOW-T01..T18 ve overflow guard:
@@ -144,3 +145,19 @@ Full 857 PASS (760 existing + 97 yeni). Önceki production modülleri değişmed
 Motor installation C.2; motor mass/CG C.3; runtime interpolation, events ve
 dynamics bu gate'te yoktur. Yeni dependency/runtime network yoktur.
 NAT-011C.1 IMPLEMENTATION GATE: PASS.
+
+NAT-011C.2: başlangıç `85f36f5`, temiz ağaç, full 857 PASS; ancestor
+`88ab5bc` doğrulandı. `propulsion.installation` geçerli Geometry ve seçilmiş
+MotorDefinition arasındaki nominal tek/eş eksenli ilişkiyi çözer.
+Aft hazır Geometry referansıdır; front=aft-length. D_motor<=D_mount,
+radial clearance=(D_mount-D_motor)/2, front>=mount_start ve gerçek interval
+engagement>0 koşulları uygulanır. Eşit çap nominal uyumdur; tolerans modeli
+yoktur. Üç overhang işareti desteklenir; sıfır/negatif örtüşme reddedilir.
+Frozen/slotted sonuç exact motor nesnesini korur. Structured
+MotorInstallationError uyumsuzluk/non-finite türetimleri bildirir; repair yoktur.
+MINST-T01..40: 34 PASS; propulsion 131, geometry 184, mass 55, materials 13,
+flight_conditions 98, environment/V&V 260, math/V&V 148 PASS.
+Full 891 PASS (857 existing + 34 yeni). Geometry, katalog ve önceki production
+fiziği değişmedi. C.3 itki/motor mass/CG ve sonraki total mass/events ertelidir.
+[Kurulum sözleşmesi ve test eşlemesi](../verification/nat-011c2-motor-installation.md).
+NAT-011C.2 IMPLEMENTATION GATE: PASS.
