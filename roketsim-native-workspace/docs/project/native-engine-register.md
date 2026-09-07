@@ -28,6 +28,7 @@
 - [x] NAT-011C.2 Motor Installation
 - [x] NAT-011C.3A Thrust Curve Evaluation, Impulse & Curve Statistics
 - [x] NAT-011C.3B Motor Mass & CG Evolution
+- [x] NAT-011C.3C Total Rocket Mass & CG Aggregation
 
 NAT-010A: FLOW-001, WORLD/ENU SI hız çıkarımı; sahiplik `flight_conditions`.
 Başlangıç `49410f7`: 410 test PASS. FLOW-T01..T18 ve overflow guard:
@@ -200,3 +201,21 @@ Full 1037 PASS (954 + 79 + 4). C.3A/C.2 ve diğer fizik denklemleri korunur;
 C.3C roket toplamları, inertia, events ve vector/dynamics ertelidir.
 [Kaynak/politika ayrımı ve V&V](../verification/nat-011c3b-motor-mass-cg.md).
 NAT-011C.3B IMPLEMENTATION GATE: PASS.
+
+NAT-011C.3C: başlangıç `ef1b5d0`, temiz ağaç, full 1037 PASS; `101ba43`
+atası doğrulandı. `mass.total` yalnız bir hazır StructuralMassProperties ve
+bir runtime MotorMassProperties katkısını toplar. Zaman/model seçimi/geometri
+girdisi yoktur; alt yapı veya motor fiziği yeniden hesaplanmaz.
+M=m_S+m_M; x=(m_S*x_S+m_M*x_M)/M. Eşit contributor CG özdeşliği exact korunur.
+Pozitif/sonlu total mass, sonlu CG ve kapalı contributor span kontrol edilir;
+bu Geometry extent sınırı değildir. Mevcut MassValidationError kullanılır.
+F50 ignition total=.6357490028277474 kg, CG=.6706064563777736 m;
+curve-end total=.5978490028277474 kg, CG=.6525142370178312 m.
+1.400 s kuyruk durumu final'den ayrıdır; aft motor kütlesi azalınca CG öne gider.
+RMASS-T01..38: 35 PASS; mass 90, propulsion 277, geometry 184, materials 13,
+flight_conditions 98, environment/V&V 260, math/V&V 148 PASS.
+Full 1072 PASS (1037 existing + 35 yeni). Önceki fizik/katalog verileri
+değişmedi. Tek yapı+tek motor API'si kasıtlıdır; cluster/staging gelecekte
+yeniden ele alınacak. Inertia/PAT, events/dynamics ve NAT-012 uygulanmadı.
+[Toplam kütle/CG doğrulama kaydı](../verification/nat-011c3c-total-rocket-mass.md).
+NAT-011C.3C IMPLEMENTATION GATE: PASS.

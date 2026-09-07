@@ -1,1 +1,1 @@
-"""Demo structural mass/CG; motor dahil değildir. Inertia ve overrides ertelidir."""
+"""Yapısal kütle/CG ve hazır motor katkısıyla roket toplamı; inertia/overrides ertelidir."""
