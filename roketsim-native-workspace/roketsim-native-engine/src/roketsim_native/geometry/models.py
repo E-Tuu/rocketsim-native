@@ -12,7 +12,20 @@ from enum import Enum
 
 __all__ = ("ConicalNoseGeometry", "CylindricalBodyGeometry",
            "TrapezoidalFinSetGeometry", "SingleStageRocketGeometry", "NoseConstructionMode",
-           "MotorMountTubeGeometry", "CenteringRingPairGeometry", "MotorAttachmentGeometry")
+           "MotorMountTubeGeometry", "CenteringRingPairGeometry", "MotorAttachmentGeometry",
+           "ReferenceGeometryPolicy", "FinCrossSection")
+
+
+class ReferenceGeometryPolicy(str, Enum):
+    """Yalnız dış eksenel simetrik airframe çapı; fin ve iç donanım hariçtir."""
+
+    MAXIMUM_DIAMETER = "maximum_diameter"
+
+
+class FinCrossSection(str, Enum):
+    """Kalınlık yönündeki kenar kesiti; planformun kare olduğu anlamına gelmez."""
+
+    SQUARE = "square"
 
 
 class NoseConstructionMode(str, Enum):
@@ -55,6 +68,7 @@ class TrapezoidalFinSetGeometry:
     tip_leading_edge_offset_x_m: float
     root_leading_edge_x_geo_m: float
     thickness_m: float
+    cross_section: FinCrossSection
 
 
 @dataclass(frozen=True, slots=True)
@@ -97,3 +111,4 @@ class SingleStageRocketGeometry:
     body: CylindricalBodyGeometry
     fins: TrapezoidalFinSetGeometry
     motor_attachment: MotorAttachmentGeometry
+    reference_geometry_policy: ReferenceGeometryPolicy

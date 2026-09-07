@@ -8,6 +8,7 @@ import pytest
 
 from roketsim_native.geometry import models, resolver
 from roketsim_native.geometry.models import (
+    ReferenceGeometryPolicy, FinCrossSection,
     ConicalNoseGeometry, CylindricalBodyGeometry, NoseConstructionMode,
     MotorAttachmentGeometry, MotorMountTubeGeometry, CenteringRingPairGeometry,
     SingleStageRocketGeometry, TrapezoidalFinSetGeometry,
@@ -25,12 +26,13 @@ RESOLVER = GeometryResolver()
 def geometry():
     return SingleStageRocketGeometry(
         airframe_diameter_m=0.100,
+        reference_geometry_policy=ReferenceGeometryPolicy.MAXIMUM_DIAMETER,
         nose=ConicalNoseGeometry(length_m=0.300, construction_mode=NoseConstructionMode.SOLID,
                                  wall_thickness_m=None),
         body=CylindricalBodyGeometry(length_m=0.700, wall_thickness_m=0.002),
         fins=TrapezoidalFinSetGeometry(fin_count=4, root_chord_m=0.180,
             tip_chord_m=0.080, semi_span_m=0.120, tip_leading_edge_offset_x_m=0.050,
-            root_leading_edge_x_geo_m=0.720, thickness_m=0.003),
+            root_leading_edge_x_geo_m=0.720, thickness_m=0.003, cross_section=FinCrossSection.SQUARE),
         motor_attachment=MotorAttachmentGeometry(MotorMountTubeGeometry(.120, .029, .001, 0.),
                                                  CenteringRingPairGeometry(.003), .005),
     )
@@ -202,7 +204,8 @@ def test_public_contract():
     assert parameters['rocket_geometry'].default is inspect.Parameter.empty
     assert set(models.__all__) == {'ConicalNoseGeometry', 'CylindricalBodyGeometry',
                                   'TrapezoidalFinSetGeometry', 'SingleStageRocketGeometry', 'NoseConstructionMode',
-                                  'MotorAttachmentGeometry', 'MotorMountTubeGeometry', 'CenteringRingPairGeometry'}
+                                  'MotorAttachmentGeometry', 'MotorMountTubeGeometry', 'CenteringRingPairGeometry',
+                                  'ReferenceGeometryPolicy', 'FinCrossSection'}
     assert set(resolver.__all__) == {'GeometryResolver', 'ResolvedRocketGeometry', 'GeometryValidationError'}
     assert [f.name for f in fields(ResolvedRocketGeometry)] == [
         'source', 'nose_start_x_geo_m', 'nose_end_x_geo_m',
@@ -219,8 +222,12 @@ def test_public_contract():
         'rear_centering_ring_start_x_geo_m', 'rear_centering_ring_end_x_geo_m',
         'motor_aft_reference_x_geo_m', 'motor_mount_material_volume_m3', 'motor_mount_volume_centroid_x_geo_m',
         'centering_ring_pair_material_volume_m3', 'centering_ring_pair_volume_centroid_x_geo_m',
+        'reference_geometry_policy', 'aerodynamic_length_m', 'nose_wetted_area_m2',
+        'body_wetted_area_m2', 'nose_frontal_area_m2', 'airframe_aft_base_area_m2',
+        'nose_fineness_ratio', 'nose_half_angle_rad', 'fin_planform_area_per_fin_m2',
+        'fin_mean_aerodynamic_chord_m', 'fin_leading_edge_sweep_angle_rad', 'fin_cross_section',
     ]
-    assert [f.name for f in fields(SingleStageRocketGeometry)] == ['airframe_diameter_m', 'nose', 'body', 'fins', 'motor_attachment']
+    assert [f.name for f in fields(SingleStageRocketGeometry)] == ['airframe_diameter_m', 'nose', 'body', 'fins', 'motor_attachment', 'reference_geometry_policy']
     assert [f.name for f in fields(ConicalNoseGeometry)] == ['length_m', 'construction_mode', 'wall_thickness_m']
     assert [f.name for f in fields(CylindricalBodyGeometry)] == ['length_m', 'wall_thickness_m']
 

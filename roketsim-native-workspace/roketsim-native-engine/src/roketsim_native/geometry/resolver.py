@@ -7,9 +7,11 @@ Mass/aero, frame transform, component tree ve staging hesaplanmaz.
 """
 
 from dataclasses import dataclass
-from math import hypot, pi
+from math import atan2, hypot, isfinite, pi
 
-from roketsim_native.geometry.models import SingleStageRocketGeometry, NoseConstructionMode
+from roketsim_native.geometry.models import (
+    SingleStageRocketGeometry, NoseConstructionMode, ReferenceGeometryPolicy, FinCrossSection,
+)
 from roketsim_native.math.numerical import require_finite
 
 __all__ = ("GeometryResolver", "ResolvedRocketGeometry", "GeometryValidationError")
@@ -63,6 +65,18 @@ class ResolvedRocketGeometry:
     motor_mount_volume_centroid_x_geo_m: float
     centering_ring_pair_material_volume_m3: float
     centering_ring_pair_volume_centroid_x_geo_m: float
+    reference_geometry_policy: ReferenceGeometryPolicy
+    aerodynamic_length_m: float
+    nose_wetted_area_m2: float
+    body_wetted_area_m2: float
+    nose_frontal_area_m2: float
+    airframe_aft_base_area_m2: float
+    nose_fineness_ratio: float
+    nose_half_angle_rad: float
+    fin_planform_area_per_fin_m2: float
+    fin_mean_aerodynamic_chord_m: float
+    fin_leading_edge_sweep_angle_rad: float
+    fin_cross_section: FinCrossSection
 
 
 class GeometryResolver:
@@ -74,6 +88,12 @@ class GeometryResolver:
         """Tüm scalar/domain koşullarını ve root attachment ilişkisini doğrula."""
         geometry = rocket_geometry
         fins = geometry.fins
+        if not isinstance(geometry.reference_geometry_policy, ReferenceGeometryPolicy):
+            raise GeometryValidationError(error_code="INVALID_REFERENCE_GEOMETRY_POLICY",
+                field_name="reference_geometry_policy", value=geometry.reference_geometry_policy)
+        if not isinstance(fins.cross_section, FinCrossSection):
+            raise GeometryValidationError(error_code="INVALID_FIN_CROSS_SECTION",
+                field_name="fins.cross_section", value=fins.cross_section)
         positive_dimensions = (
             ("airframe_diameter_m", geometry.airframe_diameter_m),
             ("nose.length_m", geometry.nose.length_m),
@@ -263,13 +283,42 @@ class GeometryResolver:
             require_finite(value, name=name)
             if not mount_start <= value <= mount_end:
                 raise GeometryValidationError(error_code=code, field_name=name, value=value)
+        # A.0: yalnız geometri; tasarım ölçüleri sabit motor/demo sayıları değildir.
+        # MAXIMUM_DIAMETER tek çaplı dış airframe'dir; fins/internal hardware hariç.
+        overall_length = max(body_end, root_te, tip_te)
+        nose_wetted = pi * radius * hypot(nose_end, radius)
+        body_wetted = 2.0 * pi * radius * geometry.body.length_m
+        frontal = pi * radius * radius
+        fineness = nose_end / diameter
+        half_angle = atan2(radius, nose_end)
+        mac = (2.0 / 3.0) * (root_chord + tip_chord
+                            - root_chord * tip_chord / (root_chord + tip_chord))
+        sweep = atan2(fins.tip_leading_edge_offset_x_m, fins.semi_span_m)
+        for name, value, code in (
+            ("aerodynamic_length_m", overall_length, "INVALID_AERODYNAMIC_LENGTH"),
+            ("nose_wetted_area_m2", nose_wetted, "INVALID_NOSE_WETTED_AREA"),
+            ("body_wetted_area_m2", body_wetted, "INVALID_BODY_WETTED_AREA"),
+            ("nose_frontal_area_m2", frontal, "INVALID_NOSE_FRONTAL_AREA"),
+            ("airframe_aft_base_area_m2", frontal, "INVALID_AIRFRAME_AFT_BASE_AREA"),
+            ("nose_fineness_ratio", fineness, "INVALID_NOSE_FINENESS_RATIO"),
+            ("fin_planform_area_per_fin_m2", fin_area, "INVALID_FIN_PLANFORM_AREA"),
+            ("fin_mean_aerodynamic_chord_m", mac, "INVALID_FIN_MEAN_AERODYNAMIC_CHORD"),
+        ):
+            if not isfinite(value) or value <= 0.0:
+                raise GeometryValidationError(error_code=code, field_name=name, value=value)
+        if not isfinite(half_angle) or not 0.0 < half_angle < pi / 2.0:
+            raise GeometryValidationError(error_code="INVALID_NOSE_HALF_ANGLE",
+                field_name="nose_half_angle_rad", value=half_angle)
+        if not isfinite(sweep):
+            raise GeometryValidationError(error_code="INVALID_FIN_SWEEP_ANGLE",
+                field_name="fin_leading_edge_sweep_angle_rad", value=sweep)
         return ResolvedRocketGeometry(
             source=geometry,
             nose_start_x_geo_m=0.0, nose_end_x_geo_m=nose_end,
             body_start_x_geo_m=nose_end, body_end_x_geo_m=body_end,
             fin_root_leading_edge_x_geo_m=root_le, fin_root_trailing_edge_x_geo_m=root_te,
             fin_tip_leading_edge_x_geo_m=tip_le, fin_tip_trailing_edge_x_geo_m=tip_te,
-            overall_length_m=max(body_end, root_te, tip_te),
+            overall_length_m=overall_length,
             reference_diameter_m=diameter, reference_length_m=diameter,
             reference_area_m2=area,
             nose_material_volume_m3=nose_volume, nose_volume_centroid_x_geo_m=nose_centroid,
@@ -284,4 +333,11 @@ class GeometryResolver:
             motor_aft_reference_x_geo_m=aft_reference,
             motor_mount_material_volume_m3=mount_volume, motor_mount_volume_centroid_x_geo_m=mount_centroid,
             centering_ring_pair_material_volume_m3=pair_volume, centering_ring_pair_volume_centroid_x_geo_m=pair_centroid,
+            reference_geometry_policy=geometry.reference_geometry_policy,
+            aerodynamic_length_m=overall_length,
+            nose_wetted_area_m2=nose_wetted, body_wetted_area_m2=body_wetted,
+            nose_frontal_area_m2=frontal, airframe_aft_base_area_m2=frontal,
+            nose_fineness_ratio=fineness, nose_half_angle_rad=half_angle,
+            fin_planform_area_per_fin_m2=fin_area, fin_mean_aerodynamic_chord_m=mac,
+            fin_leading_edge_sweep_angle_rad=sweep, fin_cross_section=fins.cross_section,
         )

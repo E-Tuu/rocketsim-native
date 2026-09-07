@@ -1,5 +1,10 @@
 # Native Engine Register
 
+Kalıcı sayısal değer provenansı kuralı (NAT-012A.0 ve sonrası): her üretim
+sayısı standart/evrensel sabit, kullanıcı/roket tasarım girdisi, doğrulanmış
+katalog/kaynak verisi veya açık model parametresi/politikası olmalıdır.
+Demo/test fixture değerleri genel üretim sabitine dönüştürülemez.
+
 - [x] NAT-000 Architecture freeze
 - [x] NAT-001 Python environment
 - [x] NAT-002 Repository foundation
@@ -29,6 +34,7 @@
 - [x] NAT-011C.3A Thrust Curve Evaluation, Impulse & Curve Statistics
 - [x] NAT-011C.3B Motor Mass & CG Evolution
 - [x] NAT-011C.3C Total Rocket Mass & CG Aggregation
+- [x] NAT-012A.0 Aerodynamic Geometry & Surface Data Contract
 
 NAT-010A: FLOW-001, WORLD/ENU SI hız çıkarımı; sahiplik `flight_conditions`.
 Başlangıç `49410f7`: 410 test PASS. FLOW-T01..T18 ve overflow guard:
@@ -219,3 +225,22 @@ değişmedi. Tek yapı+tek motor API'si kasıtlıdır; cluster/staging gelecekte
 yeniden ele alınacak. Inertia/PAT, events/dynamics ve NAT-012 uygulanmadı.
 [Toplam kütle/CG doğrulama kaydı](../verification/nat-011c3c-total-rocket-mass.md).
 NAT-011C.3C IMPLEMENTATION GATE: PASS.
+
+NAT-012A.0: başlangıç `149f4f0`, temiz ağaç, full 1072 PASS. Ham Geometry
+mandatory ReferenceGeometryPolicy.MAXIMUM_DIAMETER ve FinCrossSection.SQUARE
+ile genişletildi; unsupported politikalar/kesitler eklenmedi.
+Referans dış axisymmetric airframe çapıdır; fin span/iç mount/motor hariç.
+Aerodynamic length mevcut external overall extent'ten tek kez türetilir;
+motor aft reference uzatmaz. Nose/body wetted/frontal/base alanları, nose
+fineness/half-angle, per-fin mevcut planform alanı/MAC/signed LE sweep ve
+kesit aynı resolved Geometry'dedir. Yeni drag veya aero katsayısı yoktur.
+SurfaceFinish ve SingleStageRocketAerodynamicSurfaces bağımsız, immutable
+tasarım verisidir; material yoğunluğundan roughness seçilmez. Preset katalog yoktur.
+100/150/200 mm tasarımlar reference length/area'nın sabit olmadığını doğrular.
+Eski fixture'lara yalnız mandatory enum'lar eklendi; fiziksel assertions korunur.
+AEROGEO-T01..28/edge 34 PASS, SURFACE-T01..14/scope 15 PASS; geometry 218,
+aerodynamics 15, materials 13, mass 90, propulsion 277, flight_conditions 98,
+environment/V&V 260, math/V&V 148 PASS. Full 1121 PASS (1072 + 49 yeni).
+NAT-012A.1 drag/Re/Cf/Cd, NAT-012B CP/CNa/static margin ve dynamics ertelidir.
+[Sahiplik, provenans kuralı ve analitik V&V](../verification/nat-012a0-aero-geometry-surfaces.md).
+NAT-012A.0 IMPLEMENTATION GATE: PASS.

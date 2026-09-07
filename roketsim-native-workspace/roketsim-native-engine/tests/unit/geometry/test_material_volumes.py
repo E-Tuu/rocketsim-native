@@ -6,6 +6,7 @@ from math import hypot, isfinite, nextafter, pi
 import pytest
 
 from roketsim_native.geometry.models import (
+    ReferenceGeometryPolicy, FinCrossSection,
     ConicalNoseGeometry, CylindricalBodyGeometry, NoseConstructionMode,
     MotorAttachmentGeometry, MotorMountTubeGeometry, CenteringRingPairGeometry,
     SingleStageRocketGeometry, TrapezoidalFinSetGeometry,
@@ -18,9 +19,9 @@ def geometry():
     return SingleStageRocketGeometry(.1,
         ConicalNoseGeometry(.3, NoseConstructionMode.HOLLOW_SHELL, .002),
         CylindricalBodyGeometry(.7, .002),
-        TrapezoidalFinSetGeometry(4, .18, .08, .12, .05, .72, .003),
+        TrapezoidalFinSetGeometry(4, .18, .08, .12, .05, .72, .003, FinCrossSection.SQUARE),
         MotorAttachmentGeometry(MotorMountTubeGeometry(.120, .029, .001, 0.),
-                                CenteringRingPairGeometry(.003), .005))
+                                CenteringRingPairGeometry(.003), .005), ReferenceGeometryPolicy.MAXIMUM_DIAMETER)
 
 
 def resolve(geometry):
@@ -200,7 +201,7 @@ def test_no_defaults_or_mass_scope(geometry):
     with pytest.raises(TypeError):
         CylindricalBodyGeometry(.7)
     assert set(NoseConstructionMode) == {NoseConstructionMode.SOLID, NoseConstructionMode.HOLLOW_SHELL}
-    assert [f.name for f in fields(geometry)] == ['airframe_diameter_m', 'nose', 'body', 'fins', 'motor_attachment']
+    assert [f.name for f in fields(geometry)] == ['airframe_diameter_m', 'nose', 'body', 'fins', 'motor_attachment', 'reference_geometry_policy']
     forbidden = {'mass', 'cg', 'inertia', 'density_kg_m3', 'cp', 'cna', 'cd', 'drag'}
     assert not forbidden.intersection(f.name.lower() for f in fields(resolve(geometry)))
 
