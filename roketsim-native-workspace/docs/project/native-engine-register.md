@@ -26,6 +26,7 @@
 - [x] NAT-011B.1 Motor Mount Structural Mass & CG Extension
 - [x] NAT-011C.1 Motor Definition & Catalog
 - [x] NAT-011C.2 Motor Installation
+- [x] NAT-011C.3A Thrust Curve Evaluation, Impulse & Curve Statistics
 
 NAT-010A: FLOW-001, WORLD/ENU SI hız çıkarımı; sahiplik `flight_conditions`.
 Başlangıç `49410f7`: 410 test PASS. FLOW-T01..T18 ve overflow guard:
@@ -161,3 +162,20 @@ Full 891 PASS (857 existing + 34 yeni). Geometry, katalog ve önceki production
 fiziği değişmedi. C.3 itki/motor mass/CG ve sonraki total mass/events ertelidir.
 [Kurulum sözleşmesi ve test eşlemesi](../verification/nat-011c2-motor-installation.md).
 NAT-011C.2 IMPLEMENTATION GATE: PASS.
+
+NAT-011C.3A: başlangıç `145b245`, temiz ağaç, full 891 PASS; katalog atası
+`85f36f5` doğrulandı. `propulsion.thrust` kanonik eğriden parçalı doğrusal T(t),
+tam/kısmi trapezlerle geçmişsiz J(t) ve tam eğri istatistikleri türetir.
+motor_time_s ateşlemeden beri geçen süredir. Exact örnekler korunur; sonrasında
+T=0, J=J_total. Certification dış V&V metadata'dır; runtime kaynak değildir.
+%5 peak eşiği yalnız karakterizasyon: ilk giriş/son çıkış, earliest peak.
+F50 J_total=76.828387 N*s; 1.400 s'de T=2.181395348837211 N ve
+J=76.79566606976745 N*s. %5 sonrası kuyruk korunur. İleride burnout otoritesi
+curve_end_time_s=1.430 s'dir; burada event implement edilmez.
+THRUST-T01..45/edge: 63 PASS; propulsion 194, geometry 184, materials 13,
+mass 55, flight_conditions 98, environment/V&V 260, math/V&V 148 PASS.
+Full 954 PASS (891 existing + 63 yeni). Katalog, Installation, Geometry,
+Mass ve önceki fizik değişmedi. C.3B mass/CG ve kaynak eğrileri, C.3C roket
+toplamları ertelidir. Yeni dependency/network veya clamp/repair yoktur.
+[Denklemler, test eşlemesi ve V&V](../verification/nat-011c3a-thrust-impulse.md).
+NAT-011C.3A IMPLEMENTATION GATE: PASS.
