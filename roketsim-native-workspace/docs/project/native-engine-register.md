@@ -39,6 +39,7 @@ Demo/test fixture değerleri genel üretim sabitine dönüştürülemez.
 - [x] NAT-012B Extended-Barrowman Static Stability V1
 - [x] NAT-013 Initial / Launch State V1
 - [x] NAT-014 3DOF Translational Dynamics V1
+- [x] NAT-015 PhysicsEvaluator 3DOF V1
 
 NAT-010A: FLOW-001, WORLD/ENU SI hız çıkarımı; sahiplik `flight_conditions`.
 Başlangıç `49410f7`: 410 test PASS. FLOW-T01..T18 ve overflow guard:
@@ -344,3 +345,23 @@ regression 69 PASS. Gate talimatına göre full historical suite çalıştırıl
 NAT-015 PhysicsEvaluator uygulanmadı.
 [3DOF dynamics doğrulama kaydı](../verification/nat-014-3dof-translational-dynamics.md).
 NAT-014 IMPLEMENTATION GATE: PASS.
+
+NAT-015: başlangıç `e995bf30c74d184e9e8e6ef48f6d50010c7aa5b3`, temiz
+ağaç, remote yok; NAT-013 ancestry doğrulandı. `simulation.physics` yalnız current
+time/state orchestration bridge'idir. Context accepted Geometry/surfaces/structure/
+installation/profiles ile exact NAT-009 atmosphere, air-properties, gravity ve
+wind nesnelerini defaultsuz bağlar. NAT-009C'nin public altitude semantiği olan
+geopotential height korunur: launch değerine signed local ENU current-z minus
+launch-z eklenir; conversion/origin assumption/clamp yoktur. Frozen sıra
+atmosphere/air, gravity, wind, NAT-010A flow, NAT-010B conditions, timeline,
+C.3A thrust, C.3B motor, C.3C total mass, A.1 drag ve NAT-014 dynamics'tir.
+Aynı motor time thrust/property için kullanılır; pre-ignition fallback yoktur.
+Temporary NAT-014 inputs result'ta saklanmaz. Static stability kritik yola girmez;
+upstream error families aynen propagate edilir. V&V: altitude 1323.25/1170 m;
+F50 .012 s thrust=51.377 N, motor mass=.08474793212175599 kg, total mass=
+.6355969349495034 kg; zero-wind Vrel=(3,4,5); controlled dv/dt=(0,0,5).
+Focused/new simulation 21 PASS; dynamics/NAT-013/014 regression 69 PASS. Full
+historical suite gate talimatıyla çalıştırılmadı. Integration/RK4/events/rail/
+recovery/6DOF ve NAT-016 uygulanmadı.
+[PhysicsEvaluator doğrulama kaydı](../verification/nat-015-physics-evaluator-3dof.md).
+NAT-015 IMPLEMENTATION GATE: PASS.
