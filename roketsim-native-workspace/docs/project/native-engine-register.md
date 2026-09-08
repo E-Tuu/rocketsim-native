@@ -40,6 +40,7 @@ Demo/test fixture değerleri genel üretim sabitine dönüştürülemez.
 - [x] NAT-013 Initial / Launch State V1
 - [x] NAT-014 3DOF Translational Dynamics V1
 - [x] NAT-015 PhysicsEvaluator 3DOF V1
+- [x] NAT-016 Fixed-Step Numerical Foundation V1
 
 NAT-010A: FLOW-001, WORLD/ENU SI hız çıkarımı; sahiplik `flight_conditions`.
 Başlangıç `49410f7`: 410 test PASS. FLOW-T01..T18 ve overflow guard:
@@ -365,3 +366,20 @@ historical suite gate talimatıyla çalıştırılmadı. Integration/RK4/events/
 recovery/6DOF ve NAT-016 uygulanmadı.
 [PhysicsEvaluator doğrulama kaydı](../verification/nat-015-physics-evaluator-3dof.md).
 NAT-015 IMPLEMENTATION GATE: PASS.
+
+NAT-016: başlangıç `0293023bf79567312067605485fae0597bd2e398`, temiz
+ağaç, remote yok. Existing numerical/integration namespace bulunmadığından tek
+`roketsim_native.numerics` paketi oluşturuldu. `FixedStepConfig` mandatory positive
+finite dt taşır; default/min/max/recommended/clamp/final-step policy yoktur.
+`IntegrationPoint3DOF` yalnız finite `(time_s, accepted state)` tutar; negative
+time geçerli ve time physical state dışında kalır. Parametresiz/stateless
+`TranslationalStateAlgebra3DOF` exact position/velocity `y+scale*k` cebirini
+positive/zero/negative finite scale için uygular ve yeni accepted NAT-013 read-only
+state döndürür. PhysicsEvaluator/derivative çağrısı veya time advancement yoktur;
+bu primitive Euler/integrator değildir. NAT-013/NAT-014 state/derivative ve NumPy
+semantics aynen kullanıldı; yeni vector/tolerance policy ve physics değişikliği
+yoktur. V&V +.5/0/-.5 scales ve -3.25 s point geçti. Focused/all numerics 23 PASS;
+dynamics regression 69 PASS. Full historical suite gate talimatıyla çalıştırılmadı.
+RK4/adaptive/events/history/SimulationEngine ve NAT-017 uygulanmadı.
+[Fixed-step numerical doğrulama kaydı](../verification/nat-016-fixed-step-numerical-foundation.md).
+NAT-016 IMPLEMENTATION GATE: PASS.
