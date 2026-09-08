@@ -37,6 +37,7 @@ Demo/test fixture değerleri genel üretim sabitine dönüştürülemez.
 - [x] NAT-012A.0 Aerodynamic Geometry & Surface Data Contract
 - [x] NAT-012A.1 Native Basic Drag V1
 - [x] NAT-012B Extended-Barrowman Static Stability V1
+- [x] NAT-013 Initial / Launch State V1
 
 NAT-010A: FLOW-001, WORLD/ENU SI hız çıkarımı; sahiplik `flight_conditions`.
 Başlangıç `49410f7`: 410 test PASS. FLOW-T01..T18 ve overflow guard:
@@ -308,3 +309,21 @@ true multi-set Ntot, tapered attachment, force/moment ve ROUNDED drag gelecektir
 NAT-013 uygulanmadı.
 NAT-012B IMPLEMENTATION GATE: PASS.
 NAT-012 MILESTONE AUDIT: PASS.
+
+NAT-013: başlangıç `26815b9e122dba9e0b48fd9a33d46c9a653268d9`, temiz
+ağaç, remote yok. Önceki deneme unit-vector tolerans politikası bulunmadığı için
+edit öncesi durmuştu; retry açık Native policy `1e-8` ile tamamlandı. Bu tolerans
+yalnız launch-direction unit-norm validation'a aittir; global math'a eklenmedi ve
+normalization uygulanmadı. Accepted `math.vectors` ndarray/float64,
+`as_vector(size=3)` ve `magnitude` API'si yeniden kullanıldı. Frozen/slotted
+`LaunchConditions3DOF` explicit WORLD ENU position, velocity, unit direction;
+`TranslationalState3DOF` yalnız position+velocity taşır. Her stored ndarray
+independent defensive copy ve read-only'dir. `InitialStateBuilder` parametresiz,
+stateless, keyword-only olup direction'ı state'e kopyalamaz. WORLD origin default'u,
+time/motor-time, mass/aero/environment/attitude alanı yoktur. NAT-009 altitude,
+atmosphere, gravity ve wind otoritesi değiştirilmedi; WORLD-altitude köprüsü
+NAT-015'e ertelendi. Focused NAT-013: 26 PASS. Math/environment production
+değişmediğinden dependency ve full historical suite gate talimatına göre
+çalıştırılmadı. NAT-014 dynamics uygulanmadı.
+[Başlangıç-state doğrulama kaydı](../verification/nat-013-initial-launch-state.md).
+NAT-013 IMPLEMENTATION GATE: PASS.
