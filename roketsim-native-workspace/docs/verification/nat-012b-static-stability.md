@@ -1,8 +1,8 @@
-# NAT-012B — Extended-Barrowman Static Stability V1, checkpoint 1/2
+# NAT-012B — Extended-Barrowman Static Stability V1
 
 Tarih: 2026-09-08. Başlangıç kabul edilmiş NAT-012A.1 `43368eec36e85791ffdd4af1ee8f795de1c8436b`;
-ağaç temiz, remote yoktu. Bu checkpoint yalnız geometry descriptors ile
-linearized static CNa/CP'yi uygular. Static margin checkpoint 2'ye aittir.
+ağaç temiz, remote yoktu. Checkpoint 1 geometry descriptors ile linearized
+static CNa/CP'yi; checkpoint 2 ayrı static-margin aggregation'ını uygular.
 
 ## Kaynak ve model kararı
 
@@ -89,12 +89,58 @@ exact M domain; nose/cylinder policies; single-fin, N/2, N=1/2 rejection; N/Ntot
 tam Eq.3.54 tablosu; body-on-fin; quarter-chord; altı quintic boundary condition;
 M=.75 polynomial; total weighting; determinism/no mutation ve scope protection.
 
-Sonuç: focused checkpoint `47 passed`; all aerodynamics `88 passed`; all
-geometry `222 passed`. Talimat gereği full repository pytest çalıştırılmadı.
+Checkpoint-1 sonucu: focused `47 passed`; all aerodynamics `88 passed`; all
+geometry `222 passed`. Bu aşamada full repository pytest çalıştırılmadı.
+
+## Static margin sahipliği ve V&V
+
+Nihai sahiplik kesin olarak şöyledir:
+
+- CP → `StaticAerodynamicProperties` / Static Aerodynamics;
+- CG → `RocketMassProperties` / Mass;
+- Dmax → `ResolvedRocketGeometry.max_external_airframe_diameter_m` / Geometry;
+- static margin → ayrı `StaticMarginCalculator`.
+
+`StaticMarginCalculator` parametresiz/stateless ve üç girdisi keyword-only'dir.
+Zaman, Mach, model profile veya motor girdisi yoktur. Immutable/slotted
+`StaticMarginResult` yalnız `static_margin_calibers` saklar; CP ve CG'yi ikinci
+otorite olarak kopyalamaz. x_geo nose-tip origin, aft-positive convention ile:
+
+`static_margin_calibers=(CP_x_geo-CG_x_geo)/Dmax`.
+
+Pozitif değer CP'nin CG'nin aft'ında, sıfır neutral ayrım, negatif değer CP'nin
+CG'nin forward'ında olduğunu belirtir. Güvenli/güvensiz veya bir/iki-caliber
+tasarım kabul politikası uygulanmaz.
+
+Denominator kesinlikle `reference_length_m` değildir. Davranışsal testte aynı
+geometry'nin reference length alanı NaN yapılınca margin değişmez; Dmax ikiye
+katlanınca margin yarıya iner. Bu, iki değer mevcut MAXIMUM_DIAMETER profilinde
+numerik eşit olsa bile fiziksel authority ayrımını kanıtlar.
+
+CG=.650 m ve Dmax=.100 m için gerçek Part-1 sonuçları:
+
+| Mach | CP x_geo (m) | Static margin (caliber) |
+| ---: | ---: | ---: |
+| 0 | .6971650449840304 | .471650449840304 |
+| .75 | .707290109576936 | .5729010957693603 |
+
+Ayrı fixtures pozitif, exact sıfır ve negatif işareti doğrular. Birden fazla
+geçerli `RocketMassProperties` snapshot'ında yalnız CG değiştirilir; aynı exact
+StaticAerodynamicProperties/CP nesnesi korunurken margin monoton değişir.
+Non-finite raw CP/CG/Dmax generic ValueError; sonlu Dmax<=0 ve beklenmeyen
+non-finite derived margin structured `AerodynamicEvaluationError` üretir.
+Abs/clamp/epsilon/fallback yoktur.
+
+## Nihai NAT-012 test sonucu
+
+Nihai focused B (Part 1 + margin) `65 passed`; all aerodynamics `106 passed`;
+all geometry `222 passed`. Bunların tamamı geçtikten sonra ertelenmiş full
+repository pytest tam bir kez çalıştırıldı: `1216 passed in 4.59s`.
+Bu milestone audit NAT-012A.0, NAT-012A.1 ve NAT-012B'yi tüm kabul edilmiş önceki
+NAT fiziğiyle birlikte doğruladı.
 
 ## Ertelenenler
 
-Checkpoint 2: ayrı StaticMarginCalculator (CP Aerodynamics, CG Mass, Dmax Geometry).
 Post-demo: M>=.8 continuation, current-source .9–1.5 interpolation, supersonic
 static stability, explicit azimuths ve N=1/N=2 directional stability, asymmetric
 layouts, multiple interfering sets/true Ntot, tapered attachment, Galejs
@@ -104,4 +150,5 @@ A.1 post-demo kararı da korunur: `FinCrossSection.ROUNDED` ve OR13 Eq.3.89
 rounded-leading-edge pressure-drag routing'i M<.9, .9<M<1, M>1 için gelecektir;
 burada uygulanmamıştır.
 
-NAT-012B CHECKPOINT 1: PASS.
+NAT-012B IMPLEMENTATION GATE: PASS.
+NAT-012 MILESTONE AUDIT: PASS.

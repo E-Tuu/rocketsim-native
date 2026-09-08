@@ -36,7 +36,7 @@ Demo/test fixture değerleri genel üretim sabitine dönüştürülemez.
 - [x] NAT-011C.3C Total Rocket Mass & CG Aggregation
 - [x] NAT-012A.0 Aerodynamic Geometry & Surface Data Contract
 - [x] NAT-012A.1 Native Basic Drag V1
-- [ ] NAT-012B Extended-Barrowman Static Stability V1 (checkpoint 1/2 PASS)
+- [x] NAT-012B Extended-Barrowman Static Stability V1
 
 NAT-010A: FLOW-001, WORLD/ENU SI hız çıkarımı; sahiplik `flight_conditions`.
 Başlangıç `49410f7`: 410 test PASS. FLOW-T01..T18 ve overflow guard:
@@ -289,3 +289,22 @@ true multi-set Ntot, explicit azimuth/asymmetry, Galejs/nonlinear, force/moment
 ve dynamics post-demo'ya ertelidir.
 [Checkpoint-1 sözleşmesi ve V&V](../verification/nat-012b-static-stability.md).
 NAT-012B CHECKPOINT 1: PASS.
+
+NAT-012B checkpoint 2/final: kabul edilmiş Part-1 `cd7fbf0` audit edildi;
+domain `0<=M<.8`, direct subsonic fin CNa, M<=.5 quarter-chord ve .5<M<.8
+quintic CP routing, ayrı N/Ntot kavramları ve force/moment/AoA yokluğu korundu.
+Yeni ayrı `aerodynamics.static_margin` yalnız hazır StaticAerodynamicProperties
+CP, RocketMassProperties CG ve ResolvedRocketGeometry Dmax tüketir:
+`margin=(CP-CG)/Dmax`. `reference_length_m` tüketilmez; testte NaN ile
+değiştirilirken sonuç sabit kalır, Dmax değişince denominator sonucu değiştirir.
+Result tek signed `static_margin_calibers` alanıdır; safe/unsafe sınıflaması,
+CG/zaman hesabı veya clamp yoktur. M=0/.75 ve CG=.650 m için sırasıyla
+.471650449840304 ve .5729010957693603 caliber doğrulandı; pozitif/nötr/negatif
+işaret ve çoklu immutable CG snapshot'ı geçti. Focused B 65, aerodynamics 106,
+geometry 222 PASS. Ertelenmiş tek full NAT-012 milestone audit bir kez koşuldu:
+1216 PASS. A.0/A.1/B ve tüm önceki NAT regresyonları birlikte geçti.
+Transonic/supersonic, finite-AoA Galejs/nonlinear, explicit/asymmetric fins,
+true multi-set Ntot, tapered attachment, force/moment ve ROUNDED drag gelecektir.
+NAT-013 uygulanmadı.
+NAT-012B IMPLEMENTATION GATE: PASS.
+NAT-012 MILESTONE AUDIT: PASS.
