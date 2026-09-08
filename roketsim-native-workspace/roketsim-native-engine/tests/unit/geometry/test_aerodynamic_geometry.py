@@ -62,10 +62,14 @@ def test_distinct_lengths_and_motor_reference(geometry):
     result = resolve(geometry)
     assert result.reference_length_m == .1
     assert result.aerodynamic_length_m == result.overall_length_m == 1.
+    assert result.axisymmetric_body_length_m == 1.
+    assert result.max_external_airframe_diameter_m == .1
     changed = replace(geometry,motor_attachment=replace(geometry.motor_attachment,motor_overhang_m=10.))
     after = resolve(changed)
     assert after.motor_aft_reference_x_geo_m > 10.
     assert after.aerodynamic_length_m == 1.
+    assert after.axisymmetric_body_length_m == 1.
+    assert after.max_external_airframe_diameter_m == .1
 
 
 def test_fin_aft_extent(geometry):
@@ -74,6 +78,8 @@ def test_fin_aft_extent(geometry):
         root_leading_edge_x_geo_m=.82,tip_leading_edge_offset_x_m=.1,tip_chord_m=.12)))
     assert result.aerodynamic_length_m == result.overall_length_m == result.fin_tip_trailing_edge_x_geo_m
     assert result.aerodynamic_length_m == pytest.approx(1.04,rel=3e-15)
+    assert result.axisymmetric_body_length_m == 1.
+    assert result.max_external_airframe_diameter_m == .1
 
 
 @pytest.mark.parametrize('name,value',[
@@ -121,7 +127,8 @@ def test_invariants_and_immutability(geometry):
     """AEROGEO-T27/T28: Başarılı sonuçlar sonlu/geçerli; raw/result değişmez."""
     before = repr(geometry)
     r = resolve(geometry)
-    for name in ('aerodynamic_length_m','nose_wetted_area_m2','body_wetted_area_m2',
+    for name in ('aerodynamic_length_m','max_external_airframe_diameter_m',
+        'axisymmetric_body_length_m','nose_wetted_area_m2','body_wetted_area_m2',
         'nose_frontal_area_m2','airframe_aft_base_area_m2','nose_fineness_ratio',
         'fin_planform_area_per_fin_m2','fin_mean_aerodynamic_chord_m'):
         assert isfinite(getattr(r,name)) and getattr(r,name)>0

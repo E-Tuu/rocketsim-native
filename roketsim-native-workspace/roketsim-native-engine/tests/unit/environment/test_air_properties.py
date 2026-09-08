@@ -31,7 +31,7 @@ def assert_equations(state):
         viscosity = Decimal("1.458e-6") * temperature ** Decimal("1.5") / (
             temperature + Decimal("110.4")
         )
-        expected = (sound, viscosity, viscosity / density)
+        expected = (sound, viscosity, viscosity / density, Decimal("1.4"))
     for field, reference in zip(fields(properties), expected):
         actual = getattr(properties, field.name)
         assert math.isfinite(actual) and actual > 0
@@ -151,11 +151,12 @@ def test_structured_domain_error(field_name):
 
 
 def test_result_contract():
-    """AIR-T14: Yalnız frozen üç-field immutable snapshot."""
+    """AIR-T14: Frozen snapshot gamma'yı aynı kuru-hava authority'sinden sunar."""
     result = CALCULATOR.evaluate(atmosphere_state=DryAirAtmosphereState(288.15, 1.0, 1.0))
     assert isinstance(result, DryAirProperties)
     assert [field.name for field in fields(result)] == [
-        "speed_of_sound_m_s", "dynamic_viscosity_Pa_s", "kinematic_viscosity_m2_s"
+        "speed_of_sound_m_s", "dynamic_viscosity_Pa_s", "kinematic_viscosity_m2_s",
+        "specific_heat_ratio",
     ]
     for field in fields(result):
         assert type(getattr(result, field.name)) is float

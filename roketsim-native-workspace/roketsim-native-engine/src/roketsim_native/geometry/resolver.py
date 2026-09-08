@@ -67,6 +67,8 @@ class ResolvedRocketGeometry:
     centering_ring_pair_volume_centroid_x_geo_m: float
     reference_geometry_policy: ReferenceGeometryPolicy
     aerodynamic_length_m: float
+    max_external_airframe_diameter_m: float
+    axisymmetric_body_length_m: float
     nose_wetted_area_m2: float
     body_wetted_area_m2: float
     nose_frontal_area_m2: float
@@ -286,6 +288,8 @@ class GeometryResolver:
         # A.0: yalnız geometri; tasarım ölçüleri sabit motor/demo sayıları değildir.
         # MAXIMUM_DIAMETER tek çaplı dış airframe'dir; fins/internal hardware hariç.
         overall_length = max(body_end, root_te, tip_te)
+        max_external_airframe_diameter = diameter
+        axisymmetric_body_length = body_end
         nose_wetted = pi * radius * hypot(nose_end, radius)
         body_wetted = 2.0 * pi * radius * geometry.body.length_m
         frontal = pi * radius * radius
@@ -296,6 +300,10 @@ class GeometryResolver:
         sweep = atan2(fins.tip_leading_edge_offset_x_m, fins.semi_span_m)
         for name, value, code in (
             ("aerodynamic_length_m", overall_length, "INVALID_AERODYNAMIC_LENGTH"),
+            ("max_external_airframe_diameter_m", max_external_airframe_diameter,
+             "INVALID_MAX_EXTERNAL_AIRFRAME_DIAMETER"),
+            ("axisymmetric_body_length_m", axisymmetric_body_length,
+             "INVALID_AXISYMMETRIC_BODY_LENGTH"),
             ("nose_wetted_area_m2", nose_wetted, "INVALID_NOSE_WETTED_AREA"),
             ("body_wetted_area_m2", body_wetted, "INVALID_BODY_WETTED_AREA"),
             ("nose_frontal_area_m2", frontal, "INVALID_NOSE_FRONTAL_AREA"),
@@ -335,6 +343,8 @@ class GeometryResolver:
             centering_ring_pair_material_volume_m3=pair_volume, centering_ring_pair_volume_centroid_x_geo_m=pair_centroid,
             reference_geometry_policy=geometry.reference_geometry_policy,
             aerodynamic_length_m=overall_length,
+            max_external_airframe_diameter_m=max_external_airframe_diameter,
+            axisymmetric_body_length_m=axisymmetric_body_length,
             nose_wetted_area_m2=nose_wetted, body_wetted_area_m2=body_wetted,
             nose_frontal_area_m2=frontal, airframe_aft_base_area_m2=frontal,
             nose_fineness_ratio=fineness, nose_half_angle_rad=half_angle,

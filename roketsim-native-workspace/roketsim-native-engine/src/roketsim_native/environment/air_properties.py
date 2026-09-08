@@ -33,11 +33,12 @@ SUTHERLAND_CONSTANT_K: Final[float] = 110.4
 
 @dataclass(frozen=True, slots=True)
 class DryAirProperties:
-    """Yalnız a/mu/nu içeren SI birimli immutable derived snapshot."""
+    """a/mu/nu ve aynı kuru-hava modelinin gamma değerini taşıyan snapshot."""
 
     speed_of_sound_m_s: float
     dynamic_viscosity_Pa_s: float
     kinematic_viscosity_m2_s: float
+    specific_heat_ratio: float
 
 
 class AirPropertiesDomainError(ValueError):
@@ -90,5 +91,8 @@ class DryAirPropertiesCalculator:
             if value <= 0.0:
                 raise ValueError(f"{name} must be positive; got {value!r}")
         return DryAirProperties(
-            speed_of_sound_m_s, dynamic_viscosity_Pa_s, kinematic_viscosity_m2_s
+            speed_of_sound_m_s,
+            dynamic_viscosity_Pa_s,
+            kinematic_viscosity_m2_s,
+            DRY_AIR_SPECIFIC_HEAT_RATIO,
         )

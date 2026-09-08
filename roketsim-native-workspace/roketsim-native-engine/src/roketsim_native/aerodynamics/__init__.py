@@ -1,1 +1,1 @@
-"""Dış aerodinamik yüzey verisi; drag/static aero hesapları henüz uygulanmaz."""
+"""Dış yüzey verisi ve sıfır-AoA Basic Drag V1; static aero NAT-012B'ye aittir."""

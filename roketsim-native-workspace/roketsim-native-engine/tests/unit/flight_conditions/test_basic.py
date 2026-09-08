@@ -23,7 +23,7 @@ def inputs():
     """Basit analitik fixture; tüketilmeyen alanlar equation otoritesi değildir."""
     return dict(relative_velocity_world_m_s=np.array([3., 4., 12.]),
                 atmosphere_state=DryAirAtmosphereState(288., 100000., 2.),
-                air_properties=DryAirProperties(260., 0.123, 0.00002),
+                air_properties=DryAirProperties(260., 0.123, 0.00002, 1.4),
                 reference_length_m=0.2)
 
 
@@ -162,7 +162,7 @@ def test_immutability_determinism(inputs):
         assert BasicFlightConditionsCalculator().evaluate(**inputs) == expected
     np.testing.assert_array_equal(vector, original)
     assert state == DryAirAtmosphereState(288., 100000., 2.)
-    assert properties == DryAirProperties(260., 0.123, 0.00002)
+    assert properties == DryAirProperties(260., 0.123, 0.00002, 1.4)
 
 
 def test_scope_contract():

@@ -35,6 +35,7 @@ Demo/test fixture değerleri genel üretim sabitine dönüştürülemez.
 - [x] NAT-011C.3B Motor Mass & CG Evolution
 - [x] NAT-011C.3C Total Rocket Mass & CG Aggregation
 - [x] NAT-012A.0 Aerodynamic Geometry & Surface Data Contract
+- [x] NAT-012A.1 Native Basic Drag V1
 
 NAT-010A: FLOW-001, WORLD/ENU SI hız çıkarımı; sahiplik `flight_conditions`.
 Başlangıç `49410f7`: 410 test PASS. FLOW-T01..T18 ve overflow guard:
@@ -244,3 +245,24 @@ environment/V&V 260, math/V&V 148 PASS. Full 1121 PASS (1072 + 49 yeni).
 NAT-012A.1 drag/Re/Cf/Cd, NAT-012B CP/CNa/static margin ve dynamics ertelidir.
 [Sahiplik, provenans kuralı ve analitik V&V](../verification/nat-012a0-aero-geometry-surfaces.md).
 NAT-012A.0 IMPLEMENTATION GATE: PASS.
+
+NAT-012A.1: başlangıç `ea123b0`, temiz ağaç; kabul edilmiş milestone
+baseline'ı full 1121 PASS. `aerodynamics.drag` zorunlu immutable V1 profiliyle
+sıfır-AoA C_D0 üretir. Geometry artık ayrıca dış axisymmetric airframe çapını
+ve nose+body axisymmetric uzunluğunu sunar; reference/aerodynamic/body
+uzunlukları ayrıdır. NAT-009D `DryAirProperties`, mevcut tek gamma=1.4
+otoritesini snapshot alanı olarak sunar; aerodynamics gamma kopyası yoktur.
+Re=V*L_aero/nu korunur, Cf için yalnız açık politika Re_eval=max(Re,1e4)
+kullanılır. Fully-turbulent smooth ve component-bazlı roughness Cf, diameter
+tabanlı body form correction, fin MAC thickness correction, conical nose
+pressure, SQUARE fin LE pressure, fin TE base ve airframe base toplam yedi
+fiziksel katkıdır. Plume IGNORED'dır. Mach [0,1] desteklenir; >1 extrapolate
+edilmez. Smooth sentetik V&V: Re=6666666.666666666, Cf_corrected=
+0.003069223087075511, C_D0=0.4740271634476429. Bağımsız roughness branch
+seçimi doğrulandı. Odaklı 26, aerodynamics 41, geometry 218, doğrudan ilgili
+air-properties 51 PASS. Kullanıcı politikası gereği full tarihsel suite
+çalıştırılmadı; NAT-012 milestone audit'e ertelendi. Sonic yakın transonik
+fidelity, roughness correlation geçerlilik aralığı, ROUNDED/AIRFOIL fin,
+supersonic/transonic genişletme, plume/nozzle ve NAT-012B ertelidir.
+[Denklemler, model politikası ve V&V](../verification/nat-012a1-basic-drag.md).
+NAT-012A.1 IMPLEMENTATION GATE: PASS.
