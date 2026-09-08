@@ -38,6 +38,7 @@ Demo/test fixture değerleri genel üretim sabitine dönüştürülemez.
 - [x] NAT-012A.1 Native Basic Drag V1
 - [x] NAT-012B Extended-Barrowman Static Stability V1
 - [x] NAT-013 Initial / Launch State V1
+- [x] NAT-014 3DOF Translational Dynamics V1
 
 NAT-010A: FLOW-001, WORLD/ENU SI hız çıkarımı; sahiplik `flight_conditions`.
 Başlangıç `49410f7`: 410 test PASS. FLOW-T01..T18 ve overflow guard:
@@ -327,3 +328,19 @@ değişmediğinden dependency ve full historical suite gate talimatına göre
 çalıştırılmadı. NAT-014 dynamics uygulanmadı.
 [Başlangıç-state doğrulama kaydı](../verification/nat-013-initial-launch-state.md).
 NAT-013 IMPLEMENTATION GATE: PASS.
+
+NAT-014: başlangıç `20a999d803d5ba4a4b21c3c84f79a86b71408ce8`, temiz
+ağaç, remote yok. Accepted NAT-013 state/launch-condition ve ndarray/float64
+defensive-copy/read-only sözleşmeleri değiştirilmeden tüketildi. Explicit
+`FIXED_LAUNCH_DIRECTION` + `BASELINE_CD0_DRAG_ONLY` profile mandatory'dir.
+Ephemeral `TranslationalDynamicsInputs` hazır mass, thrust, relative flow, q,
+reference area, Cd0 ve WORLD gravity acceleration taşır; upstream physics'i
+yeniden hesaplamaz. F_thrust=T*launch_direction, D=q*A*Cd0,
+F_drag=-D*V_rel/|V_rel|, F_gravity=m*g_WORLD; net derived sum ve dv/dt=net/m,
+dr/dt=velocity'dir. Exact zero-flow/q davranışı explicit; ek mdot*v terimi,
+CNa/CP/AoA, rail, attitude veya integrasyon yoktur. Dört frozen ignition/ascent/
+descent/true-3D fixture geçti. Focused NAT-014 43 PASS; all dynamics/NAT-013
+regression 69 PASS. Gate talimatına göre full historical suite çalıştırılmadı.
+NAT-015 PhysicsEvaluator uygulanmadı.
+[3DOF dynamics doğrulama kaydı](../verification/nat-014-3dof-translational-dynamics.md).
+NAT-014 IMPLEMENTATION GATE: PASS.
