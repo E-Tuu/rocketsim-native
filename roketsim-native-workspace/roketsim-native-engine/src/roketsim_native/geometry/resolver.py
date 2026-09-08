@@ -11,6 +11,7 @@ from math import atan2, hypot, isfinite, pi
 
 from roketsim_native.geometry.models import (
     SingleStageRocketGeometry, NoseConstructionMode, ReferenceGeometryPolicy, FinCrossSection,
+    FinAngularArrangement,
 )
 from roketsim_native.math.numerical import require_finite
 
@@ -79,6 +80,13 @@ class ResolvedRocketGeometry:
     fin_mean_aerodynamic_chord_m: float
     fin_leading_edge_sweep_angle_rad: float
     fin_cross_section: FinCrossSection
+    nose_axial_length_m: float
+    fin_midchord_sweep_angle_rad: float
+    fin_mean_aerodynamic_chord_spanwise_location_m: float
+    fin_mean_aerodynamic_chord_leading_edge_x_geo_m: float
+    fin_aspect_ratio: float
+    fin_body_radius_at_root_m: float
+    fin_angular_arrangement: FinAngularArrangement
 
 
 class GeometryResolver:
@@ -96,6 +104,9 @@ class GeometryResolver:
         if not isinstance(fins.cross_section, FinCrossSection):
             raise GeometryValidationError(error_code="INVALID_FIN_CROSS_SECTION",
                 field_name="fins.cross_section", value=fins.cross_section)
+        if not isinstance(fins.angular_arrangement, FinAngularArrangement):
+            raise GeometryValidationError(error_code="INVALID_FIN_ANGULAR_ARRANGEMENT",
+                field_name="fins.angular_arrangement", value=fins.angular_arrangement)
         positive_dimensions = (
             ("airframe_diameter_m", geometry.airframe_diameter_m),
             ("nose.length_m", geometry.nose.length_m),
@@ -298,6 +309,22 @@ class GeometryResolver:
         mac = (2.0 / 3.0) * (root_chord + tip_chord
                             - root_chord * tip_chord / (root_chord + tip_chord))
         sweep = atan2(fins.tip_leading_edge_offset_x_m, fins.semi_span_m)
+        midchord_offset = (
+            fins.tip_leading_edge_offset_x_m + (tip_chord - root_chord) / 2.0
+        )
+        midchord_sweep = atan2(midchord_offset, fins.semi_span_m)
+        mac_spanwise_location = (
+            fins.semi_span_m * (root_chord + 2.0 * tip_chord)
+            / (3.0 * (root_chord + tip_chord))
+        )
+        mac_leading_edge = (
+            root_le + fins.tip_leading_edge_offset_x_m
+            * mac_spanwise_location / fins.semi_span_m
+        )
+        fin_aspect_ratio = (
+            2.0 * fins.semi_span_m * fins.semi_span_m / fin_area
+        )
+        fin_body_radius = radius
         for name, value, code in (
             ("aerodynamic_length_m", overall_length, "INVALID_AERODYNAMIC_LENGTH"),
             ("max_external_airframe_diameter_m", max_external_airframe_diameter,
@@ -311,6 +338,13 @@ class GeometryResolver:
             ("nose_fineness_ratio", fineness, "INVALID_NOSE_FINENESS_RATIO"),
             ("fin_planform_area_per_fin_m2", fin_area, "INVALID_FIN_PLANFORM_AREA"),
             ("fin_mean_aerodynamic_chord_m", mac, "INVALID_FIN_MEAN_AERODYNAMIC_CHORD"),
+            ("nose_axial_length_m", nose_end, "INVALID_NOSE_AXIAL_LENGTH"),
+            ("fin_mean_aerodynamic_chord_spanwise_location_m", mac_spanwise_location,
+             "INVALID_FIN_MAC_SPANWISE_LOCATION"),
+            ("fin_mean_aerodynamic_chord_leading_edge_x_geo_m", mac_leading_edge,
+             "INVALID_FIN_MAC_LEADING_EDGE_POSITION"),
+            ("fin_aspect_ratio", fin_aspect_ratio, "INVALID_FIN_ASPECT_RATIO"),
+            ("fin_body_radius_at_root_m", fin_body_radius, "INVALID_FIN_BODY_RADIUS"),
         ):
             if not isfinite(value) or value <= 0.0:
                 raise GeometryValidationError(error_code=code, field_name=name, value=value)
@@ -320,6 +354,9 @@ class GeometryResolver:
         if not isfinite(sweep):
             raise GeometryValidationError(error_code="INVALID_FIN_SWEEP_ANGLE",
                 field_name="fin_leading_edge_sweep_angle_rad", value=sweep)
+        if not isfinite(midchord_sweep):
+            raise GeometryValidationError(error_code="INVALID_FIN_MIDCHORD_SWEEP_ANGLE",
+                field_name="fin_midchord_sweep_angle_rad", value=midchord_sweep)
         return ResolvedRocketGeometry(
             source=geometry,
             nose_start_x_geo_m=0.0, nose_end_x_geo_m=nose_end,
@@ -350,4 +387,11 @@ class GeometryResolver:
             nose_fineness_ratio=fineness, nose_half_angle_rad=half_angle,
             fin_planform_area_per_fin_m2=fin_area, fin_mean_aerodynamic_chord_m=mac,
             fin_leading_edge_sweep_angle_rad=sweep, fin_cross_section=fins.cross_section,
+            nose_axial_length_m=nose_end,
+            fin_midchord_sweep_angle_rad=midchord_sweep,
+            fin_mean_aerodynamic_chord_spanwise_location_m=mac_spanwise_location,
+            fin_mean_aerodynamic_chord_leading_edge_x_geo_m=mac_leading_edge,
+            fin_aspect_ratio=fin_aspect_ratio,
+            fin_body_radius_at_root_m=fin_body_radius,
+            fin_angular_arrangement=fins.angular_arrangement,
         )

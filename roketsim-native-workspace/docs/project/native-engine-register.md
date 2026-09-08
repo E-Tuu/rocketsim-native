@@ -36,6 +36,7 @@ Demo/test fixture değerleri genel üretim sabitine dönüştürülemez.
 - [x] NAT-011C.3C Total Rocket Mass & CG Aggregation
 - [x] NAT-012A.0 Aerodynamic Geometry & Surface Data Contract
 - [x] NAT-012A.1 Native Basic Drag V1
+- [ ] NAT-012B Extended-Barrowman Static Stability V1 (checkpoint 1/2 PASS)
 
 NAT-010A: FLOW-001, WORLD/ENU SI hız çıkarımı; sahiplik `flight_conditions`.
 Başlangıç `49410f7`: 410 test PASS. FLOW-T01..T18 ve overflow guard:
@@ -266,3 +267,25 @@ fidelity, roughness correlation geçerlilik aralığı, ROUNDED/AIRFOIL fin,
 supersonic/transonic genişletme, plume/nozzle ve NAT-012B ertelidir.
 [Denklemler, model politikası ve V&V](../verification/nat-012a1-basic-drag.md).
 NAT-012A.1 IMPLEMENTATION GATE: PASS.
+
+NAT-012B checkpoint 1: başlangıç `43368ee`, temiz ağaç, remote yok.
+Geometry'de zorunlu `FinAngularArrangement.EQUALLY_SPACED`; resolved nose axial
+length, mid-chord sweep, MAC span/x placement, Extended-Barrowman AR ve local
+external body radius aynı authority'den türetilir. `aerodynamics.static_stability`
+zorunlu immutable V1 profiliyle yalnız alpha->0 nose/fin-set CNa ve CP üretir.
+Runtime domain `0 <= M < 0.8`; 0.8 ve üstü structured hata, continuation yoktur.
+Conical nose CNa alan oranı ve CP=2L/3; continuous cylinder linear katkısı sıfırdır
+ve fake result/Galejs finite-AoA term yoktur. Fin CNa direct subsonic mid-chord
+sweep bağıntısı, equally-spaced N/2, tam OR13 Eq.3.54 Ntot tablosu ve body-on-fin
+düzeltmesini kullanır. V1 tek fin setinde Ntot=N scope eşitliğidir; kavramlar
+birleştirilmez. Fin CP M<=.5 quarter chord, .5<M<.8 exact six-boundary-condition
+quintic'tir; M=2 yalnız polynomial construction endpoint'tir.
+M=0: fin-set CNa=12.629237832516534, total CNa=14.629237832516534,
+CP=.6971650449840304 m. M=.75: fin-set CNa=13.729822473770069,
+total CNa=15.729822473770069, CP=.707290109576936 m.
+Odaklı 47, aerodynamics 88, geometry 222 PASS. Full suite checkpoint 1'de
+çalıştırılmadı. StaticMarginCalculator checkpoint 2'ye; transonic/supersonic,
+true multi-set Ntot, explicit azimuth/asymmetry, Galejs/nonlinear, force/moment
+ve dynamics post-demo'ya ertelidir.
+[Checkpoint-1 sözleşmesi ve V&V](../verification/nat-012b-static-stability.md).
+NAT-012B CHECKPOINT 1: PASS.

@@ -8,7 +8,7 @@ import pytest
 
 from roketsim_native.geometry import models, resolver
 from roketsim_native.geometry.models import (
-    ReferenceGeometryPolicy, FinCrossSection,
+    ReferenceGeometryPolicy, FinCrossSection, FinAngularArrangement,
     ConicalNoseGeometry, CylindricalBodyGeometry, NoseConstructionMode,
     MotorAttachmentGeometry, MotorMountTubeGeometry, CenteringRingPairGeometry,
     SingleStageRocketGeometry, TrapezoidalFinSetGeometry,
@@ -32,7 +32,9 @@ def geometry():
         body=CylindricalBodyGeometry(length_m=0.700, wall_thickness_m=0.002),
         fins=TrapezoidalFinSetGeometry(fin_count=4, root_chord_m=0.180,
             tip_chord_m=0.080, semi_span_m=0.120, tip_leading_edge_offset_x_m=0.050,
-            root_leading_edge_x_geo_m=0.720, thickness_m=0.003, cross_section=FinCrossSection.SQUARE),
+            root_leading_edge_x_geo_m=0.720, thickness_m=0.003,
+            cross_section=FinCrossSection.SQUARE,
+            angular_arrangement=FinAngularArrangement.EQUALLY_SPACED),
         motor_attachment=MotorAttachmentGeometry(MotorMountTubeGeometry(.120, .029, .001, 0.),
                                                  CenteringRingPairGeometry(.003), .005),
     )
@@ -205,7 +207,7 @@ def test_public_contract():
     assert set(models.__all__) == {'ConicalNoseGeometry', 'CylindricalBodyGeometry',
                                   'TrapezoidalFinSetGeometry', 'SingleStageRocketGeometry', 'NoseConstructionMode',
                                   'MotorAttachmentGeometry', 'MotorMountTubeGeometry', 'CenteringRingPairGeometry',
-                                  'ReferenceGeometryPolicy', 'FinCrossSection'}
+                                  'ReferenceGeometryPolicy', 'FinCrossSection', 'FinAngularArrangement'}
     assert set(resolver.__all__) == {'GeometryResolver', 'ResolvedRocketGeometry', 'GeometryValidationError'}
     assert [f.name for f in fields(ResolvedRocketGeometry)] == [
         'source', 'nose_start_x_geo_m', 'nose_end_x_geo_m',
@@ -227,10 +229,17 @@ def test_public_contract():
         'body_wetted_area_m2', 'nose_frontal_area_m2', 'airframe_aft_base_area_m2',
         'nose_fineness_ratio', 'nose_half_angle_rad', 'fin_planform_area_per_fin_m2',
         'fin_mean_aerodynamic_chord_m', 'fin_leading_edge_sweep_angle_rad', 'fin_cross_section',
+        'nose_axial_length_m', 'fin_midchord_sweep_angle_rad',
+        'fin_mean_aerodynamic_chord_spanwise_location_m',
+        'fin_mean_aerodynamic_chord_leading_edge_x_geo_m', 'fin_aspect_ratio',
+        'fin_body_radius_at_root_m', 'fin_angular_arrangement',
     ]
     assert [f.name for f in fields(SingleStageRocketGeometry)] == ['airframe_diameter_m', 'nose', 'body', 'fins', 'motor_attachment', 'reference_geometry_policy']
     assert [f.name for f in fields(ConicalNoseGeometry)] == ['length_m', 'construction_mode', 'wall_thickness_m']
     assert [f.name for f in fields(CylindricalBodyGeometry)] == ['length_m', 'wall_thickness_m']
+    assert [f.name for f in fields(TrapezoidalFinSetGeometry)][-2:] == [
+        'cross_section', 'angular_arrangement'
+    ]
 
 
 def test_frozen_geometry_convention():

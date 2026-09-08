@@ -1,1 +1,1 @@
-"""Dış yüzey verisi ve sıfır-AoA Basic Drag V1; static aero NAT-012B'ye aittir."""
+"""Yüzey/Basic Drag ve alpha->0 Extended-Barrowman static-aero temeli."""

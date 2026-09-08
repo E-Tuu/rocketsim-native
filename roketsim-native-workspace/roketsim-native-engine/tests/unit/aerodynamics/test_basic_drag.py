@@ -39,6 +39,7 @@ from roketsim_native.geometry.models import (
     ConicalNoseGeometry,
     CylindricalBodyGeometry,
     FinCrossSection,
+    FinAngularArrangement,
     MotorAttachmentGeometry,
     MotorMountTubeGeometry,
     NoseConstructionMode,
@@ -59,7 +60,7 @@ def make_geometry(*, fin_offset_m: float = 0.05, fin_tip_chord_m: float = 0.08):
         CylindricalBodyGeometry(0.7, 0.002),
         TrapezoidalFinSetGeometry(
             4, 0.18, fin_tip_chord_m, 0.12, fin_offset_m, 0.72, 0.003,
-            FinCrossSection.SQUARE,
+            FinCrossSection.SQUARE, FinAngularArrangement.EQUALLY_SPACED,
         ),
         MotorAttachmentGeometry(
             MotorMountTubeGeometry(0.12, 0.029, 0.001, 0.0),

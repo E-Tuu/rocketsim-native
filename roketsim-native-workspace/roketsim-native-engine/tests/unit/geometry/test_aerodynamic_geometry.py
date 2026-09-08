@@ -7,7 +7,8 @@ from math import atan2, isfinite, pi
 import pytest
 
 from roketsim_native.geometry.models import (
-    ReferenceGeometryPolicy, FinCrossSection, ConicalNoseGeometry, CylindricalBodyGeometry,
+    ReferenceGeometryPolicy, FinCrossSection, FinAngularArrangement,
+    ConicalNoseGeometry, CylindricalBodyGeometry,
     NoseConstructionMode, TrapezoidalFinSetGeometry, SingleStageRocketGeometry,
     MotorAttachmentGeometry, MotorMountTubeGeometry, CenteringRingPairGeometry,
 )
@@ -20,7 +21,8 @@ def geometry():
     return SingleStageRocketGeometry(.1,
         ConicalNoseGeometry(.3,NoseConstructionMode.HOLLOW_SHELL,.002),
         CylindricalBodyGeometry(.7,.002),
-        TrapezoidalFinSetGeometry(4,.18,.08,.12,.05,.72,.003,FinCrossSection.SQUARE),
+        TrapezoidalFinSetGeometry(4,.18,.08,.12,.05,.72,.003,FinCrossSection.SQUARE,
+                                 FinAngularArrangement.EQUALLY_SPACED),
         MotorAttachmentGeometry(MotorMountTubeGeometry(.12,.029,.001,0.),
                                 CenteringRingPairGeometry(.003),.005),
         ReferenceGeometryPolicy.MAXIMUM_DIAMETER)
@@ -34,8 +36,10 @@ def test_enums_and_mandatory_schema():
     """AEROGEO-T01/T02/T08/T09: Tek desteklenen enum; default politika/kesit yok."""
     assert {x.name:x.value for x in ReferenceGeometryPolicy} == {'MAXIMUM_DIAMETER':'maximum_diameter'}
     assert {x.name:x.value for x in FinCrossSection} == {'SQUARE':'square'}
+    assert {x.name:x.value for x in FinAngularArrangement} == {'EQUALLY_SPACED':'equally_spaced'}
     assert signature(SingleStageRocketGeometry).parameters['reference_geometry_policy'].default is Parameter.empty
     assert signature(TrapezoidalFinSetGeometry).parameters['cross_section'].default is Parameter.empty
+    assert signature(TrapezoidalFinSetGeometry).parameters['angular_arrangement'].default is Parameter.empty
 
 
 @pytest.mark.parametrize('diameter',[.1,.15,.2])
@@ -97,6 +101,23 @@ def test_analytic_fixture(geometry,name,value):
     assert getattr(resolve(geometry),name) == pytest.approx(value,rel=3e-15,abs=0)
 
 
+def test_static_stability_geometry_descriptors(geometry):
+    """NAT-012B: mid-chord/MAC/AR/root-radius aynı Geometry authority'sindedir."""
+    result = resolve(geometry)
+    assert result.nose_axial_length_m == .3
+    assert result.fin_midchord_sweep_angle_rad == pytest.approx(0., abs=1e-15)
+    assert result.fin_midchord_sweep_angle_rad != result.fin_leading_edge_sweep_angle_rad
+    assert result.fin_mean_aerodynamic_chord_spanwise_location_m == pytest.approx(
+        .0523076923076923, rel=3e-15
+    )
+    assert result.fin_mean_aerodynamic_chord_leading_edge_x_geo_m == pytest.approx(
+        .7417948717948718, rel=3e-15
+    )
+    assert result.fin_aspect_ratio == pytest.approx(1.8461538461538463, rel=3e-15)
+    assert result.fin_body_radius_at_root_m == .05
+    assert result.fin_angular_arrangement is FinAngularArrangement.EQUALLY_SPACED
+
+
 @pytest.mark.parametrize('offset',[-.05,0.,.05])
 @pytest.mark.parametrize('tip_chord',[0.,.08])
 def test_triangular_and_signed_sweep(geometry,offset,tip_chord):
@@ -153,6 +174,13 @@ def test_invalid_cross_section(geometry,value):
     with pytest.raises(GeometryValidationError) as caught:
         resolve(replace(geometry,fins=replace(geometry.fins,cross_section=value)))
     assert caught.value.error_code == 'INVALID_FIN_CROSS_SECTION'
+
+
+@pytest.mark.parametrize('value',[None,'equally_spaced','explicit_azimuths'])
+def test_invalid_angular_arrangement(geometry,value):
+    with pytest.raises(GeometryValidationError) as caught:
+        resolve(replace(geometry,fins=replace(geometry.fins,angular_arrangement=value)))
+    assert caught.value.error_code == 'INVALID_FIN_ANGULAR_ARRANGEMENT'
 
 
 @pytest.mark.parametrize('bad',[0.,float('nan'),float('inf')])

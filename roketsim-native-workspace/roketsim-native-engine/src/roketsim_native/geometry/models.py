@@ -13,7 +13,7 @@ from enum import Enum
 __all__ = ("ConicalNoseGeometry", "CylindricalBodyGeometry",
            "TrapezoidalFinSetGeometry", "SingleStageRocketGeometry", "NoseConstructionMode",
            "MotorMountTubeGeometry", "CenteringRingPairGeometry", "MotorAttachmentGeometry",
-           "ReferenceGeometryPolicy", "FinCrossSection")
+           "ReferenceGeometryPolicy", "FinCrossSection", "FinAngularArrangement")
 
 
 class ReferenceGeometryPolicy(str, Enum):
@@ -26,6 +26,12 @@ class FinCrossSection(str, Enum):
     """Kalınlık yönündeki kenar kesiti; planformun kare olduğu anlamına gelmez."""
 
     SQUARE = "square"
+
+
+class FinAngularArrangement(str, Enum):
+    """V1 tek düzeni: en az üç fin rocket axis çevresinde eşit aralıklıdır."""
+
+    EQUALLY_SPACED = "equally_spaced"
 
 
 class NoseConstructionMode(str, Enum):
@@ -69,6 +75,7 @@ class TrapezoidalFinSetGeometry:
     root_leading_edge_x_geo_m: float
     thickness_m: float
     cross_section: FinCrossSection
+    angular_arrangement: FinAngularArrangement
 
 
 @dataclass(frozen=True, slots=True)

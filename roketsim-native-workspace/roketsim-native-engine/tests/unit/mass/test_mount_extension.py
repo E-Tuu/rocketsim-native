@@ -6,7 +6,7 @@ import inspect
 import pytest
 
 from roketsim_native.geometry.models import (
-    ReferenceGeometryPolicy, FinCrossSection,
+    ReferenceGeometryPolicy, FinCrossSection, FinAngularArrangement,
     ConicalNoseGeometry, CylindricalBodyGeometry, NoseConstructionMode,
     MotorAttachmentGeometry, MotorMountTubeGeometry, CenteringRingPairGeometry,
     SingleStageRocketGeometry, TrapezoidalFinSetGeometry,
@@ -22,7 +22,7 @@ from roketsim_native.mass.structural import StructuralMassPropertiesCalculator
 def geometry():
     return GeometryResolver().resolve(rocket_geometry=SingleStageRocketGeometry(.1,
         ConicalNoseGeometry(.3, NoseConstructionMode.HOLLOW_SHELL, .002),
-        CylindricalBodyGeometry(.7, .002), TrapezoidalFinSetGeometry(4, .18, .08, .12, .05, .72, .003, FinCrossSection.SQUARE),
+        CylindricalBodyGeometry(.7, .002), TrapezoidalFinSetGeometry(4, .18, .08, .12, .05, .72, .003, FinCrossSection.SQUARE, FinAngularArrangement.EQUALLY_SPACED),
         MotorAttachmentGeometry(MotorMountTubeGeometry(.12, .029, .001, 0.),
                                 CenteringRingPairGeometry(.003), .005), ReferenceGeometryPolicy.MAXIMUM_DIAMETER))
 
