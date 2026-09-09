@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.1",
+  "operation": "simulate",
+  "model": "roketsim_native_3dof_v1",
+  "vehicle": {
+    "reference_geometry_policy": "maximum_diameter",
+    "components": [
+      {
+        "id": "nose-1",
+        "type": "nose_cone",
+        "shape": "conical",
+        "construction_mode": "HOLLOW_SHELL",
+        "axial_position_m": 0.0,
+        "length_m": 0.3,
+        "base_diameter_m": 0.1,
+        "wall_thickness_m": 0.002,
+        "material_id": "POLYSTYRENE"
+      },
+      {
+        "id": "body-1",
+        "type": "body_tube",
+        "axial_position_m": 0.3,
+        "length_m": 0.7,
+        "outer_diameter_m": 0.1,
+        "wall_thickness_m": 0.002,
+        "material_id": "CARDBOARD"
+      },
+      {
+        "id": "fins-1",
+        "type": "fin_set",
+        "axial_position_m": 0.72,
+        "count": 4,
+        "root_chord_m": 0.18,
+        "tip_chord_m": 0.08,
+        "semi_span_m": 0.12,
+        "sweep_length_m": 0.05,
+        "thickness_m": 0.003,
+        "cross_section": "square",
+        "angular_arrangement": "equally_spaced",
+        "material_id": "CARDBOARD"
+      }
+    ],
+    "motor_installation": {
+      "axial_position_m": 1.005,
+      "motor_overhang_m": 0.005,
+      "mount_tube": {
+        "length_m": 0.12,
+        "inner_diameter_m": 0.029,
+        "wall_thickness_m": 0.001,
+        "aft_recess_m": 0.0,
+        "material_id": "CARDBOARD"
+      },
+      "centering_rings": {
+        "axial_thickness_m": 0.003,
+        "material_id": "CARDBOARD"
+      }
+    },
+    "surface_finish": {
+      "equivalent_roughness_m": 0.0
+    }
+  },
+  "motor": {
+    "id": "AEROTECH_F50_4T",
+    "ignition_time_s": 0.0
+  },
+  "launch": {
+    "position_world_m": [0.0, 0.0, 0.0],
+    "velocity_world_m_s": [0.0, 0.0, 0.0],
+    "direction_world_unit": [0.0, 0.0, 1.0]
+  },
+  "environment": {
+    "geopotential_altitude_m": 1200.0,
+    "air_mass_velocity_world_m_s": [0.0, 0.0, 0.0]
+  },
+  "numerics": {
+    "fixed_step_s": 0.01,
+    "maximum_steps": 5000
+  }
+}

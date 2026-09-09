@@ -1,106 +1,80 @@
 # RoketSim Native
 
-RoketSim Native, model roket simülasyonu için çevrimdışı çalışan ve bağımsız olarak
-test edilebilen bir Python fizik motorudur. Fizik çekirdeği SI birimlerini kullanır;
-çevre, araç, itki, aerodinamik, dinamik, sayısal yöntemler, olaylar ve simülasyon
-yaşam döngüsü sorumluluklarını açık biçimde ayırır.
+RoketSim Native, model roketler için Python ile geliştirilmiş bir uçuş simülasyonu
+motorudur. Güncel sürüm sabit adımlı, doğrulanmış bir 3DOF balistik yetenek sunar;
+OpenRocket ileride parite ve referans hedefidir, uygulama otoritesi değildir.
 
-## Güncel Durum
+## Yetenekler
 
-İlk Native sabit adımlı 3DOF balistik yörünge temeli
-`0b5aa09b76af2a25c96689c63474dd1e6ac396e5` commit'inde doğrulanmıştır. Kabul
-edilmiş NAT-022 kilometre taşı, üretim zincirinin tamamını mock kullanmadan
-çalıştırmış ve eksiksiz depo regresyon paketini başarıyla geçmiştir.
-
-## Özellikler
-
-- Yerel WORLD ENU koordinatları ile kabul edilmiş atmosfer, hava özelliği, yerçekimi,
-  sabit rüzgâr, bağıl akış ve uçuş koşulu modelleri.
-- Çözümlenmiş tek kademeli geometri, yapısal kütle, motor kurulumu ve kesin
-  AeroTech F50-4T katalog tanımı.
-- Kanonik itki eğrisi değerlendirmesi, impuls, motor kütle değişimi ve toplam roket
-  kütlesi/CG birleşimi.
-- Basic Drag V1 ile doğrusallaştırılmış statik kararlılık CNa, CP ve statik marjı.
-- Sabit fırlatma yönlü itki kullanan noktasal kütle 3DOF öteleme dinamiği.
-- Açık sabit-adım yapılandırması ve klasik dört aşamalı RK4 integrasyonu.
-- BURNOUT, APOGEE ve terminal GROUND olaylarının konumlandırılması.
-- Değiştirilemez yörünge/olay snapshot'ları, simülasyon yürütümü ve sonuç sorguları.
+- Standart atmosfer, yerçekimi, sabit rüzgâr ve bağıl hava akışı
+- Araç geometrisi, AeroTech F50-4T itki modeli ve değişken motor/roket kütlesi
+- Basic Drag V1 ve 3DOF öteleme dinamiği
+- Klasik sabit adımlı RK4 integrasyonu
+- BURNOUT, APOGEE ve GROUND olayları
+- Yörünge kaydı ve değiştirilemez simülasyon sonucu
 
 ## Mimari
 
 ```text
 Çevre
-    ↓
+  ↓
 Araç / İtki
-    ↓
+  ↓
 Aerodinamik
-    ↓
+  ↓
 Dinamik
-    ↓
+  ↓
 RK4
-    ↓
+  ↓
 Olaylar / Kaydedici
-    ↓
+  ↓
 Simülasyon Motoru
-    ↓
+  ↓
 Simülasyon Sonucu
 ```
 
-## Doğrulanmış Demo
+## Çalıştırma
 
-Kabul edilmiş dikey ve sıfır rüzgârlı demo, katalogdaki AeroTech F50-4T motorunu
-kullanır. Burnout `1.430 s` anında, apogee yaklaşık `279.53 m` yükseklikte ve
-`7.012 s` anında, terminal zemin geçişi ise yaklaşık `15.832 s` anında gerçekleşir.
-Kilometre taşı denetimi **1431 başarılı, 0 başarısız, 0 atlanan** testle tamamlanmıştır.
-
-## Hızlı Başlangıç
-
-Depo kökünden, mevcut yapılandırılmış proje ortamını kullanın:
+Proje Python 3.12 veya üzerini ve `numpy` paketini gerektirir. Depo kökünden:
 
 ```powershell
 cd roketsim-native-engine
-.\.venv\Scripts\python.exe -m pytest -q
+python -m pip install --group dev -e .
+python -m pytest
 ```
 
-Depo şu anda komut satırı simülasyon uygulaması yerine bir fizik kütüphanesi ve
-test paketi sunmaktadır.
+JSON CLI, kurulu ortamdan tek bir isteği stdin üzerinden alır:
 
-## Testler
+```powershell
+Get-Content ..\examples\integration\request-v1.json -Raw |
+  python -m roketsim_native.integration.cli
+```
 
-Birim regresyonları `roketsim-native-engine/tests/unit/` altında, tam zincir
-doğrulaması ise `roketsim-native-engine/tests/integration/` altında bulunur.
-Kilometre taşı denetimleri, Hızlı Başlangıç bölümünde gösterilen yapılandırılmış
-pytest paketinin tamamını çalıştırır.
+## Java 17 Entegrasyonu
+
+Java frontend, yerel JSON CLI sürecini `ProcessBuilder` ile başlatır; istek stdin'e,
+tek JSON yanıt stdout'a yazılır. Şema 1.1, `capabilities` sorgusunu ve SI birimli açık
+araç yapılandırmasıyla `simulate` işlemini destekler; şema 1.0 preset istekleriyle
+uyumluluk korunur. Sözleşmeler `schemas/integration/`, standart kütüphane örneği
+ise `examples/integration/Java17CliBridgeExample.java` altındadır. Bu sınır bir ağ
+veya sunucu API'si değildir.
 
 ## Dokümantasyon
 
-- [Çevre ve uçuş koşulları](docs/environment.md)
-- [Araç, kütle ve itki](docs/vehicle-propulsion.md)
-- [Aerodinamik](docs/aerodynamics.md)
-- [Dinamik ve sayısal yöntemler](docs/dynamics-numerics.md)
-- [Simülasyon motoru](docs/simulation-engine.md)
-- [Doğrulanmış Native demo](docs/demo-validation.md)
+- [environment.md](docs/environment.md)
+- [vehicle-propulsion.md](docs/vehicle-propulsion.md)
+- [aerodynamics.md](docs/aerodynamics.md)
+- [dynamics-numerics.md](docs/dynamics-numerics.md)
+- [simulation-engine.md](docs/simulation-engine.md)
+- [demo-validation.md](docs/demo-validation.md)
 
-Ayrıntılı tarihsel doğrulama ve provenans kayıtları
-[`docs/archive/nat/`](docs/archive/nat/) altında korunur. Mimari karar kayıtları
-[`docs/decisions/`](docs/decisions/) altında tutulmaya devam eder.
+Ayrıntılı tarihsel doğrulama kayıtları `docs/archive/nat/` altında korunur.
 
-## Güncel V1 Sınırlamaları
+## Güncel Sınırlamalar
 
-- Simülasyon ignition anında başlar; pad reaksiyonu, Liftoff, fırlatma kılavuzu
-  hareketi ve rail clear modellenmez.
-- Recovery ve deployment modellenmediği için doğrulanmış demo balistik olarak alçalır.
-- Dinamik yalnız öteleme 3DOF kapsamındadır; attitude ve aerodinamik momentler yoktur.
-- Sayısal ilerletme, doğrusal bracket olay konumlandırmasıyla sabit adımlı RK4'tür.
-- Basic Drag V1 kabul edilmiş sıfır-AoA subsonik kapsamındadır ve rüzgâr yalnız sabittir.
-- Doğrulanmış temel, henüz OpenRocket yörünge paritesi iddiasında bulunmaz.
-
-## Yol Haritası
-
-- Fırlatma ve kılavuz fiziği
-- Aerodinamik V2
-- 6DOF dinamik
-- Recovery ve deployment
-- Gelişmiş çevre ve sayısal yöntemler
-- OpenRocket parite kampanyası
-- Frontend ve public entegrasyon yüzeyi
+- Simülasyon ignition anında başlar; Liftoff ve launch rail fiziği yoktur.
+- Recovery modellenmez.
+- Model 3DOF'tur; attitude ve momentler yoktur.
+- İntegrasyon sabit adımlıdır.
+- Aerodinamik kapsam Basic Drag V1 ile sınırlıdır.
+- Henüz OpenRocket paritesi iddiası yoktur.

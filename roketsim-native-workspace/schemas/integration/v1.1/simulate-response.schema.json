@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RoketSim Native V1.1 Simulation Response",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "ok", "model", "termination", "steps_performed", "events", "samples"],
+  "properties": {
+    "schema_version": { "const": "1.1" },
+    "ok": { "const": true },
+    "model": { "const": "roketsim_native_3dof_v1" },
+    "termination": { "$ref": "#/$defs/termination" },
+    "steps_performed": { "type": "integer", "minimum": 0 },
+    "events": { "type": "array", "items": { "$ref": "#/$defs/event" } },
+    "samples": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/sample" } }
+  },
+  "$defs": {
+    "vector3": {
+      "type": "array", "minItems": 3, "maxItems": 3,
+      "items": { "type": "number" }
+    },
+    "state": {
+      "type": "object", "additionalProperties": false,
+      "required": ["position_world_m", "velocity_world_m_s"],
+      "properties": {
+        "position_world_m": { "$ref": "#/$defs/vector3" },
+        "velocity_world_m_s": { "$ref": "#/$defs/vector3" }
+      }
+    },
+    "physics": {
+      "type": "object", "additionalProperties": false,
+      "required": ["total_mass_kg", "motor_mass_kg", "thrust_n", "mach", "reynolds_number", "dynamic_pressure_pa", "drag_coefficient_cd0", "acceleration_world_m_s2", "air_mass_velocity_world_m_s", "relative_air_velocity_world_m_s"],
+      "properties": {
+        "total_mass_kg": { "type": "number" },
+        "motor_mass_kg": { "type": "number" },
+        "thrust_n": { "type": "number" },
+        "mach": { "type": "number" },
+        "reynolds_number": { "type": "number" },
+        "dynamic_pressure_pa": { "type": "number" },
+        "drag_coefficient_cd0": { "type": "number" },
+        "acceleration_world_m_s2": { "$ref": "#/$defs/vector3" },
+        "air_mass_velocity_world_m_s": { "$ref": "#/$defs/vector3" },
+        "relative_air_velocity_world_m_s": { "$ref": "#/$defs/vector3" }
+      }
+    },
+    "sample": {
+      "type": "object", "additionalProperties": false,
+      "required": ["time_s", "state", "physics"],
+      "properties": {
+        "time_s": { "type": "number" },
+        "state": { "$ref": "#/$defs/state" },
+        "physics": { "$ref": "#/$defs/physics" }
+      }
+    },
+    "event": {
+      "type": "object", "additionalProperties": false,
+      "required": ["type", "time_s", "interpolation_fraction", "is_terminal", "estimated_state"],
+      "properties": {
+        "type": { "enum": ["burnout", "apogee", "ground"] },
+        "time_s": { "type": "number" },
+        "interpolation_fraction": { "type": "number", "minimum": 0, "maximum": 1 },
+        "is_terminal": { "type": "boolean" },
+        "estimated_state": { "$ref": "#/$defs/state" }
+      }
+    },
+    "termination": {
+      "type": "object", "additionalProperties": false,
+      "required": ["reason", "time_s", "simulation_duration_s"],
+      "properties": {
+        "reason": { "enum": ["terminal_event", "maximum_steps_reached"] },
+        "time_s": { "type": "number" },
+        "simulation_duration_s": { "type": "number" }
+      }
+    }
+  }
+}

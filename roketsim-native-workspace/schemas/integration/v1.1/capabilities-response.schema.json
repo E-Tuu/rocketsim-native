@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RoketSim Native V1.1 Capabilities Response",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "ok", "operation", "models", "vehicle", "motors"],
+  "properties": {
+    "schema_version": { "const": "1.1" },
+    "ok": { "const": true },
+    "operation": { "const": "capabilities" },
+    "models": {
+      "type": "array", "items": { "const": "roketsim_native_3dof_v1" },
+      "minItems": 1, "uniqueItems": true
+    },
+    "vehicle": {
+      "type": "object", "additionalProperties": false,
+      "required": ["component_types", "nose_shapes", "nose_construction_modes", "fin_cross_sections", "fin_angular_arrangements", "reference_geometry_policies", "materials"],
+      "properties": {
+        "component_types": { "type": "array", "items": { "enum": ["nose_cone", "body_tube", "fin_set"] }, "uniqueItems": true },
+        "nose_shapes": { "type": "array", "items": { "const": "conical" }, "uniqueItems": true },
+        "nose_construction_modes": { "type": "array", "items": { "const": "HOLLOW_SHELL" }, "uniqueItems": true },
+        "fin_cross_sections": { "type": "array", "items": { "const": "square" }, "uniqueItems": true },
+        "fin_angular_arrangements": { "type": "array", "items": { "const": "equally_spaced" }, "uniqueItems": true },
+        "reference_geometry_policies": { "type": "array", "items": { "const": "maximum_diameter" }, "uniqueItems": true },
+        "materials": {
+          "type": "array", "minItems": 2,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["id", "display_name"],
+            "properties": {
+              "id": { "enum": ["POLYSTYRENE", "CARDBOARD"] },
+              "display_name": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    },
+    "motors": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "display_name"],
+        "properties": {
+          "id": { "const": "AEROTECH_F50_4T" },
+          "display_name": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

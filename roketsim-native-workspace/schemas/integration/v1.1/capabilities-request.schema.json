@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RoketSim Native V1.1 Capabilities Request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "operation"],
+  "properties": {
+    "schema_version": { "const": "1.1" },
+    "operation": { "const": "capabilities" }
+  }
+}
