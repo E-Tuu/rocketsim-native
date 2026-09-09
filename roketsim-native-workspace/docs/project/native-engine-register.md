@@ -43,6 +43,7 @@ Demo/test fixture değerleri genel üretim sabitine dönüştürülemez.
 - [x] NAT-016 Fixed-Step Numerical Foundation V1
 - [x] NAT-017 Classical Fixed-Step RK4 Integrator 3DOF V1
 - [x] NAT-018 Burnout / Apogee / Ground Events 3DOF V1
+- [x] NAT-019 3DOF Flight Recorder V1
 
 NAT-010A: FLOW-001, WORLD/ENU SI hız çıkarımı; sahiplik `flight_conditions`.
 Başlangıç `49410f7`: 410 test PASS. FLOW-T01..T18 ve overflow guard:
@@ -420,3 +421,21 @@ curve-end regression 63 PASS. Accepted physics/numerics exports değişmedi ve g
 talimatıyla full pytest çalıştırılmadı.
 [3DOF flight-events doğrulama kaydı](../verification/nat-018-flight-events-3dof.md).
 NAT-018 IMPLEMENTATION GATE: PASS.
+
+NAT-019: başlangıç `9ce96cdff86620abdfe18c9e4136e76085cf1ec6`, temiz
+ağaç, remote yok; NAT-017 ancestry doğrulandı. Existing `simulation` namespace'inde
+pasif `FlightRecorder3DOF`, yalnız accepted point+endpoint physics tutan sample ve
+immutable tuple snapshot eklendi. Point/physics exact correspondence caller/NAT-020
+orchestration önkoşuludur; result provenance taşımadığı için recorder bunu yeniden
+kanıtlamaz. RK4 k4 trial physics accepted endpoint physics değildir ve kayıttan önce
+endpoint açıkça değerlendirilmelidir. Samples strict-increasing, events
+non-decreasing time ile ayrı append-only stream'lerdir; equal-time supplied order
+korunur, dedupe/sort yoktur ve invalid event batch atomik reddedilir. Estimated
+event state sample'a yükseltilmez. Her snapshot yeni tuple'lardır, eski snapshot
+sonraki append'den etkilenmez ve snapshot recorder'ı seal etmez; empty snapshot
+geçerlidir. Physics/RK4/EventDetector çağrısı, lifecycle/cross-stream validation,
+export/persistence/resampling yoktur. V&V A–M geçti: focused 12 PASS, all directly
+affected simulation 58 PASS (NAT-018 events ve NAT-015 physics dahil). Gate
+talimatıyla full pytest çalıştırılmadı.
+[3DOF flight-recorder doğrulama kaydı](../verification/nat-019-flight-recorder-3dof.md).
+NAT-019 IMPLEMENTATION GATE: PASS.
