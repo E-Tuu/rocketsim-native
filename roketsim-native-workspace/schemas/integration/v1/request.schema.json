@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RoketSim Native 3DOF V1 Request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "model", "vehicle", "motor", "launch", "environment", "numerics"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "model": { "const": "roketsim_native_3dof_v1" },
+    "vehicle": {
+      "type": "object", "additionalProperties": false, "required": ["preset"],
+      "properties": { "preset": { "const": "verified_demo_vehicle_v1" } }
+    },
+    "motor": {
+      "type": "object", "additionalProperties": false, "required": ["id", "ignition_time_s"],
+      "properties": {
+        "id": { "const": "AEROTECH_F50_4T" },
+        "ignition_time_s": { "type": "number" }
+      }
+    },
+    "launch": {
+      "type": "object", "additionalProperties": false,
+      "required": ["position_world_m", "velocity_world_m_s", "direction_world_unit"],
+      "properties": {
+        "position_world_m": { "$ref": "#/$defs/vector3" },
+        "velocity_world_m_s": { "$ref": "#/$defs/vector3" },
+        "direction_world_unit": { "$ref": "#/$defs/vector3" }
+      }
+    },
+    "environment": {
+      "type": "object", "additionalProperties": false,
+      "required": ["geopotential_altitude_m", "air_mass_velocity_world_m_s"],
+      "properties": {
+        "geopotential_altitude_m": { "type": "number" },
+        "air_mass_velocity_world_m_s": { "$ref": "#/$defs/vector3" }
+      }
+    },
+    "numerics": {
+      "type": "object", "additionalProperties": false,
+      "required": ["fixed_step_s", "maximum_steps"],
+      "properties": {
+        "fixed_step_s": { "type": "number", "exclusiveMinimum": 0 },
+        "maximum_steps": { "type": "integer", "minimum": 1 }
+      }
+    }
+  },
+  "$defs": {
+    "vector3": {
+      "type": "array", "minItems": 3, "maxItems": 3,
+      "items": { "type": "number" }
+    }
+  }
+}

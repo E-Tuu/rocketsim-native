@@ -23,6 +23,10 @@
 - `termination_time_s`, terminal-event zamanını veya son kabul edilmiş noktayı izler;
   `simulation_duration_s` ilk ignition sample'ından ölçülür.
 - V1 simülasyon zamanı propulsion ignition anında başlar.
+- Sürüm `1.0` yerel JSON/CLI sınırı, tek stdin isteğini accepted simülasyon
+  zincirine bağlar ve tek stdout yanıtı üretir.
+- Java 17 istemcileri bu sınırı `ProcessBuilder` ile kullanabilir; Python motoru
+  tek fizik otoritesi olarak kalır ve ağ/sunucu katmanı çalıştırılmaz.
 
 ## Kapsam Dışı / Planlanan
 
@@ -30,5 +34,10 @@
 - ON_GUIDE dinamiği, launch-rail kısıtları ve rail clear ertelenmiştir.
 - Recovery ve deployment ertelenmiştir.
 - `flight_time_s`, Liftoff kabul edilmiş bir authority kazanana kadar ertelenmiştir.
-- Frontend/public-facade entegrasyonu ertelenmiştir.
-- Serialization, export, plotting ve reporting API'leri ertelenmiştir.
+- Yerel V1 JSON/CLI sınırı dışındaki geniş frontend/public-facade entegrasyonu
+  ertelenmiştir.
+- Genel amaçlı dosya serialization, export, plotting ve reporting API'leri
+  ertelenmiştir.
+- V1 dış sözleşmesi yalnız sürümlü doğrulanmış demo araç preset'ini destekler;
+  keyfî araç JSON yapılandırması henüz public değildir.
+- Ağ tabanlı API veya servis güncel mimarinin parçası değildir.
