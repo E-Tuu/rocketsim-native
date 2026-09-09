@@ -41,6 +41,7 @@ Demo/test fixture değerleri genel üretim sabitine dönüştürülemez.
 - [x] NAT-014 3DOF Translational Dynamics V1
 - [x] NAT-015 PhysicsEvaluator 3DOF V1
 - [x] NAT-016 Fixed-Step Numerical Foundation V1
+- [x] NAT-017 Classical Fixed-Step RK4 Integrator 3DOF V1
 
 NAT-010A: FLOW-001, WORLD/ENU SI hız çıkarımı; sahiplik `flight_conditions`.
 Başlangıç `49410f7`: 410 test PASS. FLOW-T01..T18 ve overflow guard:
@@ -383,3 +384,20 @@ dynamics regression 69 PASS. Full historical suite gate talimatıyla çalıştı
 RK4/adaptive/events/history/SimulationEngine ve NAT-017 uygulanmadı.
 [Fixed-step numerical doğrulama kaydı](../verification/nat-016-fixed-step-numerical-foundation.md).
 NAT-016 IMPLEMENTATION GATE: PASS.
+
+NAT-017: başlangıç `6abbb6ffb350a32adc6a764eb5631360781ad2b6`, temiz
+ağaç, remote yok. Mevcut `roketsim_native.numerics` içinde minimal keyword-only
+`DerivativeFunction3DOF` ve parametresiz/stateless `ClassicalRK4Integrator3DOF`
+eklendi. Standard classical explicit RK4 tam dört stage'i `t`, `t+h/2`, `t+h/2`,
+`t+h` zamanlarında ve özgün `y` tabanlı `y+h/2*k1`, `y+h/2*k2`, `y+h*k3` trial
+state'leriyle uygular. Bütün trial/final state'ler accepted NAT-016 StateAlgebra
+üzerinden kurulur; final derivative exact 1:2:2:1/6 ağırlığıdır. K4 trial state
+endpoint authority sayılmaz ve beşinci evaluation yoktur. Non-finite stage time
+`NONFINITE_RK4_STAGE_TIME`; upstream callable errors aynen yayılır. Direct
+PhysicsEvaluator coupling, adaptive/clipping, events, history/recorder ve
+SimulationEngine yoktur. Constant derivative/acceleration, oscillator ve stage
+spy frozen V&V kapsamı doğrulandı. Focused NAT-017 17 PASS; all numerics 40 PASS;
+doğrudan NAT-016 regression 23 PASS. Public dynamics exports değişmediğinden
+dynamics suite rerun gerekmedi; gate talimatıyla full pytest çalıştırılmadı.
+[Classical RK4 doğrulama kaydı](../verification/nat-017-classical-rk4-3dof.md).
+NAT-017 IMPLEMENTATION GATE: PASS.
