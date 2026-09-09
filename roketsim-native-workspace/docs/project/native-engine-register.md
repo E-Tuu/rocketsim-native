@@ -44,6 +44,7 @@ Demo/test fixture değerleri genel üretim sabitine dönüştürülemez.
 - [x] NAT-017 Classical Fixed-Step RK4 Integrator 3DOF V1
 - [x] NAT-018 Burnout / Apogee / Ground Events 3DOF V1
 - [x] NAT-019 3DOF Flight Recorder V1
+- [x] NAT-020 SimulationEngine 3DOF V1
 
 NAT-010A: FLOW-001, WORLD/ENU SI hız çıkarımı; sahiplik `flight_conditions`.
 Başlangıç `49410f7`: 410 test PASS. FLOW-T01..T18 ve overflow guard:
@@ -439,3 +440,25 @@ affected simulation 58 PASS (NAT-018 events ve NAT-015 physics dahil). Gate
 talimatıyla full pytest çalıştırılmadı.
 [3DOF flight-recorder doğrulama kaydı](../verification/nat-019-flight-recorder-3dof.md).
 NAT-019 IMPLEMENTATION GATE: PASS.
+
+NAT-020: başlangıç `71a4ac188fec2fbbffd605d20ddb7118b7bc532f`, temiz
+ağaç, remote yok; NAT-017 ancestry doğrulandı. Existing `simulation` namespace'inde
+parameterless/run-arası stateless engine, mandatory run config/positive integer
+step guard, exact terminal policy/reasons ve minimal execution sonucu eklendi.
+Initial state yalnız NAT-013 builder'dan; initial time aynı NAT-015 propulsion
+timeline ignition authority'sinden gelir ve bağımsız initial_time yoktur. Initial
+point endpoint physics'i kaydedilir. Local derivative adapter her NAT-017 stage'de
+NAT-015'i yeniden çalıştırıp yalnız accepted dynamics derivative döndürür; cache
+yoktur. Event screening candidate acceptance'tan önce yapılır. K4 y4 physics
+endpoint değildir; accepted candidate için ayrı endpoint physics evaluation vardır.
+Interior terminal candidate sayılır fakat reddedilir ve endpoint sample/physics
+yoktur; alpha==1 terminal candidate accepted/kaydedilir. Terminal sonrası events
+atılır, eş-zaman events supplied NAT-018 order'ında kalır ve terminal final stepte
+limitten önce gelir. N accepted stepte N+1 samples/1+5N calls; step-N interior
+terminalde N samples/5N calls doğrulandı. Her run fresh recorder ve exact unchanged
+FixedStepConfig kullanır. Upstream errors wrapping olmadan yayılır; event
+re-integration/clipping/root solve/failed-liftoff patch yoktur. V&V A–R geçti:
+focused 25 PASS, all simulation 83 PASS, direct NAT-017 RK4 17 PASS. Gate
+talimatıyla full pytest çalıştırılmadı.
+[3DOF SimulationEngine doğrulama kaydı](../verification/nat-020-simulation-engine-3dof.md).
+NAT-020 IMPLEMENTATION GATE: PASS.
