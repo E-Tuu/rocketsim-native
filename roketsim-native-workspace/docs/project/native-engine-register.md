@@ -462,3 +462,25 @@ focused 25 PASS, all simulation 83 PASS, direct NAT-017 RK4 17 PASS. Gate
 talimatıyla full pytest çalıştırılmadı.
 [3DOF SimulationEngine doğrulama kaydı](../verification/nat-020-simulation-engine-3dof.md).
 NAT-020 IMPLEMENTATION GATE: PASS.
+
+NAT-021: başlangıç `4ad04f2d5af4f9b510ea11672a57d8598b265b14`, temiz
+ağaç, remote yok. Existing `simulation` namespace'inde frozen/slotted
+`SimulationResult3DOF`, tamamlanmış accepted execution üzerinde immutable semantic
+query facade olarak eklendi. Tek stored authority `execution`'dır; recorded data,
+sample/event tuples, termination reason ve step count exact accepted nesnelerden
+forward edilir. Completed result en az bir initial sample ister. Initial sample
+`samples[0]`, semantic olarak açık last accepted RK4 sample `samples[-1]`'dir;
+ambiguous final state/sample aliases yoktur. Generic event query tüm matches'i
+recorded sırada döndürür; named burnout/apogee/ground lookup yok/tek/ambiguous
+cardinality'yi None/exact occurrence/structured error ile korur. Terminal authority
+accepted `event.is_terminal`'dır. Terminal reason exact bir terminal occurrence,
+maximum-step reason sıfır terminal occurrence gerektirir. Termination time terminal
+eventten veya last accepted sample'dan reason'a göre gelir; interior terminal last
+sample'dan sonra olabilir ve synthetic sample üretilmez. Duration termination minus
+initial sample time'dır; negatif sonuç repair edilmeden reddedilir. Liftoff authority
+olmadığından flight_time, altitude/impact/max analytics ve final aliases yoktur.
+Execution/physics/RK4/detection/recorder mutation/export işlemi yapılmaz. Frozen
+V&V A–S geçti: focused NAT-021 14 PASS, all simulation 97 PASS. Gate talimatıyla
+full pytest çalıştırılmadı. NAT-022 uygulanmadı.
+[3DOF SimulationResult doğrulama kaydı](../verification/nat-021-simulation-result-3dof.md).
+NAT-021 IMPLEMENTATION GATE: PASS.
