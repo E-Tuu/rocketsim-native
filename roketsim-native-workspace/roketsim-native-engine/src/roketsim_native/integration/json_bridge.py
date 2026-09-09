@@ -1,8 +1,7 @@
 """INT-001/002: sürümlü JSON isteklerini accepted Native zincirine bağlar.
 
 Bu modül yalnız dış sözleşmeyi doğrular, accepted domain/configuration
-nesnelerini kurar ve accepted sonuçları JSON değerlerine dönüştürür. Fizik veya
-sayısal yöntem denklemi sahiplenmez.
+nesnelerini kurar ve accepted sonuçları JSON değerlerine dönüştürür.
 """
 
 from dataclasses import dataclass

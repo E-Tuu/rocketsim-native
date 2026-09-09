@@ -3,6 +3,12 @@
 RoketSim Native, model roketler için Python ile geliştirilmiş bir uçuş simülasyonu
 motorudur. Güncel sürüm sabit adımlı, doğrulanmış bir 3DOF balistik yetenek sunar;
 OpenRocket ileride parite ve referans hedefidir, uygulama otoritesi değildir.
+# Yazar Notu 
+
+Bu demo içerisinde 1 adet motor örneği ( AeroTech F50-4T ), 2 adet (CARDBOARD, POLYSTYRENE) malzeme çeşiti ve basic roket componentleri (nose (conical), body (Cylindrical), fin (Trapezoidal, (square kenar kesiti). Bu componentler liste oluşturulup arttırılacaktı. bu demo sadece bunları karşılar. 
+Python - Java köprüsü olarak json kullanıldı. (Burası eksik ve yetersiz. şimdilik deneme yapılabilinmesi için konulmuştur. Entegrasyon yapılamazsa tekrar düzenleme yapılacaktır.)
+demo içerisinde birçok model es geçilmiştir. eklenecek modeller aşağıda (dokümantasyon) ve diğer modül md.lerinde açıklanmaktadır. 
+integration kısmında özellikle [schemas/integration/v1.1/], [examples/integration/request-v1.1-explicit-demo.json] ve [Java17CliBridgeExample.java] bakmanız daha iyi olacaktır.
 
 ## Yetenekler
 
@@ -16,21 +22,21 @@ OpenRocket ileride parite ve referans hedefidir, uygulama otoritesi değildir.
 ## Mimari
 
 ```text
-Çevre
+Environment
   ↓
-Araç / İtki
+Propulsion
   ↓
-Aerodinamik
+Aerodynamic
   ↓
-Dinamik
+Dynamic
   ↓
 RK4
   ↓
-Olaylar / Kaydedici
+events/recorder
   ↓
-Simülasyon Motoru
+Simulation Engine 
   ↓
-Simülasyon Sonucu
+Simulation Results
 ```
 
 ## Çalıştırma
