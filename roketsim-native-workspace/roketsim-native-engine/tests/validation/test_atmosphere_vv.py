@@ -15,7 +15,10 @@ PROVIDER = USStandardAtmosphere1976Lower()
 CALCULATOR = DryAirPropertiesCalculator()
 KNOTS = (0, 11000, 20000, 32000, 47000, 51000, 71000, 84852)
 SWEEP = tuple(sorted(set(range(-5000, 84853, 50)) | set(KNOTS) | {-5000, 84852}))
-REPORT = Path(__file__).resolve().parents[3] / "docs/verification/nat-009e-atmosphere-vv.md"
+REPORT = (
+    Path(__file__).resolve().parents[3]
+    / "docs/archive/nat/nat-009e-atmosphere-vv.md"
+)
 # SOURCE_TABLE: PDAS BigTables Tables 1/2, geometric km. 2026-09-06 doğrulandı.
 # Frozen offline veri: T,p,rho,a,mu,nu; testler network kullanmaz.
 PDAS = (
