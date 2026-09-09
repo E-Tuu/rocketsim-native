@@ -42,6 +42,7 @@ Demo/test fixture değerleri genel üretim sabitine dönüştürülemez.
 - [x] NAT-015 PhysicsEvaluator 3DOF V1
 - [x] NAT-016 Fixed-Step Numerical Foundation V1
 - [x] NAT-017 Classical Fixed-Step RK4 Integrator 3DOF V1
+- [x] NAT-018 Burnout / Apogee / Ground Events 3DOF V1
 
 NAT-010A: FLOW-001, WORLD/ENU SI hız çıkarımı; sahiplik `flight_conditions`.
 Başlangıç `49410f7`: 410 test PASS. FLOW-T01..T18 ve overflow guard:
@@ -401,3 +402,21 @@ doğrudan NAT-016 regression 23 PASS. Public dynamics exports değişmediğinden
 dynamics suite rerun gerekmedi; gate talimatıyla full pytest çalıştırılmadı.
 [Classical RK4 doğrulama kaydı](../verification/nat-017-classical-rk4-3dof.md).
 NAT-017 IMPLEMENTATION GATE: PASS.
+
+NAT-018: başlangıç `6e22e49bdae23970d924a5c152362ff36671482f`, temiz
+ağaç, remote yok. Existing `simulation` namespace'inde mandatory explicit event
+profile/context, frozen/slotted occurrence ve parameterless/stateless detector
+eklendi. V1 yalnız BURNOUT/APOGEE/GROUND raporlar. Burnout authority accepted
+`ignition_time_s + MotorCurveStatistics.curve_end_time_s`; F50 curve end 1.430 s,
+certification burn metadata/son nonzero/%5/ejection delay kullanılmaz. Burnout
+`(t0,t1]`; apogee WORLD `vz` positive→zero/negative; ground launch WORLD-z'ye
+göre H positive→zero/negative crossing'idir. Ground terminaldir fakat detector
+simulation'ı durdurmaz. State yalnız explicit linear bracket `estimated_state`;
+root solve/dense output/substep/clamp/epsilon yoktur. Çoklu events time ile,
+exact tie BURNOUT→APOGEE→GROUND sırasıyla döner. Event history/response, physics
+mutation, recorder, SimulationEngine, recovery ve rail events yoktur. V&V A–K
+geçti: focused 25 PASS, all simulation 46 PASS, directly relevant propulsion
+curve-end regression 63 PASS. Accepted physics/numerics exports değişmedi ve gate
+talimatıyla full pytest çalıştırılmadı.
+[3DOF flight-events doğrulama kaydı](../verification/nat-018-flight-events-3dof.md).
+NAT-018 IMPLEMENTATION GATE: PASS.
