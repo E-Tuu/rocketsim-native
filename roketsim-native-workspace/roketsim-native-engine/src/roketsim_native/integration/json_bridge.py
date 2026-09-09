@@ -1,4 +1,4 @@
-"""INT-001: sürümlü JSON isteğini accepted Native demo zincirine bağlar.
+"""INT-001/002: sürümlü JSON isteklerini accepted Native zincirine bağlar.
 
 Bu modül yalnız dış sözleşmeyi doğrular, accepted domain/configuration
 nesnelerini kurar ve accepted sonuçları JSON değerlerine dönüştürür. Fizik veya
@@ -253,11 +253,10 @@ def _require_identifier(
     return identifier
 
 
-def parse_request_json(source: str) -> BridgeRequestV1:
-    """Tek V1 JSON nesnesini eksik ve bilinmeyen alanlara kapalı doğrula."""
-
+def _decode_request_json(source: str) -> object:
+    """Standart dışı sayıları da reddederek tek JSON değerini çöz."""
     try:
-        decoded = json.loads(source, parse_constant=_reject_nonstandard_number)
+        return json.loads(source, parse_constant=_reject_nonstandard_number)
     except IntegrationRequestError:
         raise
     except (json.JSONDecodeError, TypeError) as exc:
@@ -267,6 +266,16 @@ def parse_request_json(source: str) -> BridgeRequestV1:
             value=None,
             message=f"Geçersiz JSON: {exc.msg if isinstance(exc, json.JSONDecodeError) else exc}",
         ) from None
+
+
+def parse_request_json(source: str) -> BridgeRequestV1:
+    """Tek V1.0 JSON nesnesini eksik ve bilinmeyen alanlara kapalı doğrula."""
+
+    return _parse_v10_request(_decode_request_json(source))
+
+
+def _parse_v10_request(decoded: object) -> BridgeRequestV1:
+    """Çözümlenmiş JSON değerini geriye uyumlu V1.0 isteği olarak doğrula."""
 
     root = _object(decoded, field="request")
     _exact_fields(
@@ -481,7 +490,11 @@ def _vector_json(value: Any) -> list[float]:
     return [float(component) for component in value]
 
 
-def serialize_result(result: SimulationResult3DOF) -> dict[str, Any]:
+def serialize_result(
+    result: SimulationResult3DOF,
+    *,
+    schema_version: str = SCHEMA_VERSION,
+) -> dict[str, Any]:
     """Accepted history ve endpoint physics alanlarını mevcut sırada dışa aç."""
 
     events = [
@@ -537,7 +550,7 @@ def serialize_result(result: SimulationResult3DOF) -> dict[str, Any]:
             }
         )
     return {
-        "schema_version": SCHEMA_VERSION,
+        "schema_version": schema_version,
         "ok": True,
         "model": MODEL_ID,
         "termination": {
@@ -552,10 +565,15 @@ def serialize_result(result: SimulationResult3DOF) -> dict[str, Any]:
 
 
 def _error_response(
-    *, category: str, code: str, field: str | None, message: str
+    *,
+    category: str,
+    code: str,
+    field: str | None,
+    message: str,
+    schema_version: str = SCHEMA_VERSION,
 ) -> dict[str, Any]:
     return {
-        "schema_version": SCHEMA_VERSION,
+        "schema_version": schema_version,
         "ok": False,
         "error": {
             "category": category,
@@ -566,25 +584,38 @@ def _error_response(
     }
 
 
-def process_request_json(source: str) -> tuple[dict[str, Any], int]:
-    """Bir istekten tek response üret; CLI exit politikasını birlikte döndür."""
+def _request_failure(
+    exc: IntegrationRequestError,
+    *,
+    schema_version: str,
+) -> tuple[dict[str, Any], int]:
+    """Sürüme uygun structured request response'u üret."""
+
+    return (
+        _error_response(
+            category="request",
+            code=exc.error_code,
+            field=exc.field_name,
+            message=exc.message,
+            schema_version=schema_version,
+        ),
+        REQUEST_EXIT_CODE,
+    )
+
+
+def _run_with_response(
+    request: object,
+    *,
+    schema_version: str,
+    runner: Any,
+) -> tuple[dict[str, Any], int]:
+    """Accepted simülasyon hatalarını kimliklerini koruyarak protokole çevir."""
 
     try:
-        request = parse_request_json(source)
+        result = runner(request)
+        return serialize_result(result, schema_version=schema_version), 0
     except IntegrationRequestError as exc:
-        return (
-            _error_response(
-                category="request",
-                code=exc.error_code,
-                field=exc.field_name,
-                message=exc.message,
-            ),
-            REQUEST_EXIT_CODE,
-        )
-
-    try:
-        result = run_request(request)
-        return serialize_result(result), 0
+        return _request_failure(exc, schema_version=schema_version)
     except ValueError as exc:
         code = getattr(exc, "error_code", type(exc).__name__)
         field = getattr(exc, "field_name", None)
@@ -594,6 +625,7 @@ def process_request_json(source: str) -> tuple[dict[str, Any], int]:
                 code=str(code),
                 field=str(field) if field is not None else None,
                 message=str(exc),
+                schema_version=schema_version,
             ),
             SIMULATION_EXIT_CODE,
         )
@@ -604,6 +636,58 @@ def process_request_json(source: str) -> tuple[dict[str, Any], int]:
                 code="INTERNAL_ERROR",
                 field=None,
                 message="Beklenmeyen iç köprü hatası",
+                schema_version=schema_version,
             ),
             INTERNAL_EXIT_CODE,
         )
+
+
+def process_request_json(source: str) -> tuple[dict[str, Any], int]:
+    """V1.0/V1.1 tek isteğini dispatch et ve CLI exit politikasını döndür."""
+
+    try:
+        decoded = _decode_request_json(source)
+    except IntegrationRequestError as exc:
+        return _request_failure(exc, schema_version=SCHEMA_VERSION)
+
+    if type(decoded) is dict and "schema_version" in decoded:
+        raw_version = decoded["schema_version"]
+        if type(raw_version) is str and raw_version not in {SCHEMA_VERSION, "1.1"}:
+            exc = _request_error(
+                code="UNSUPPORTED_SCHEMA_VERSION",
+                field="schema_version",
+                value=raw_version,
+                message=f"schema_version desteklenmiyor: {raw_version!r}",
+            )
+            return _request_failure(exc, schema_version=SCHEMA_VERSION)
+
+    if type(decoded) is dict and decoded.get("schema_version") == "1.1":
+        from roketsim_native.integration.v11 import (
+            CapabilitiesRequestV11,
+            SCHEMA_VERSION_V11,
+            capabilities_response,
+            parse_v11_request,
+            run_explicit_request,
+        )
+
+        try:
+            request_v11 = parse_v11_request(decoded)
+        except IntegrationRequestError as exc:
+            return _request_failure(exc, schema_version=SCHEMA_VERSION_V11)
+        if isinstance(request_v11, CapabilitiesRequestV11):
+            return capabilities_response(), 0
+        return _run_with_response(
+            request_v11,
+            schema_version=SCHEMA_VERSION_V11,
+            runner=run_explicit_request,
+        )
+
+    try:
+        request_v10 = _parse_v10_request(decoded)
+    except IntegrationRequestError as exc:
+        return _request_failure(exc, schema_version=SCHEMA_VERSION)
+    return _run_with_response(
+        request_v10,
+        schema_version=SCHEMA_VERSION,
+        runner=run_request,
+    )

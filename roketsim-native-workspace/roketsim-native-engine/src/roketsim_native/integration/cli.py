@@ -10,9 +10,9 @@ from roketsim_native.integration.json_bridge import (
 )
 
 
-def _internal_response() -> dict[str, object]:
+def _internal_response(*, schema_version: str) -> dict[str, object]:
     return {
-        "schema_version": SCHEMA_VERSION,
+        "schema_version": schema_version,
         "ok": False,
         "error": {
             "category": "internal",
@@ -35,7 +35,10 @@ def main() -> int:
             separators=(",", ":"),
         )
     except (TypeError, ValueError):
-        response = _internal_response()
+        response_version = response.get("schema_version", SCHEMA_VERSION)
+        if not isinstance(response_version, str):
+            response_version = SCHEMA_VERSION
+        response = _internal_response(schema_version=response_version)
         exit_code = INTERNAL_EXIT_CODE
         rendered = json.dumps(
             response,

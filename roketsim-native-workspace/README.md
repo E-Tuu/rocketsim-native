@@ -53,9 +53,11 @@ Get-Content ..\examples\integration\request-v1.json -Raw |
 ## Java 17 Entegrasyonu
 
 Java frontend, yerel JSON CLI sürecini `ProcessBuilder` ile başlatır; istek stdin'e,
-tek JSON yanıt stdout'a yazılır. Sözleşmeler `schemas/integration/v1/`, standart
-kütüphane örneği ise `examples/integration/Java17CliBridgeExample.java` altındadır.
-Bu sınır bir ağ veya sunucu API'si değildir.
+tek JSON yanıt stdout'a yazılır. Şema 1.1, `capabilities` sorgusunu ve SI birimli açık
+araç yapılandırmasıyla `simulate` işlemini destekler; şema 1.0 preset istekleriyle
+uyumluluk korunur. Sözleşmeler `schemas/integration/`, standart kütüphane örneği
+ise `examples/integration/Java17CliBridgeExample.java` altındadır. Bu sınır bir ağ
+veya sunucu API'si değildir.
 
 ## Dokümantasyon
 

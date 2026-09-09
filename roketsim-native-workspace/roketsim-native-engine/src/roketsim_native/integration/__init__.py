@@ -9,6 +9,14 @@ from roketsim_native.integration.json_bridge import (
     run_request,
     serialize_result,
 )
+from roketsim_native.integration.v11 import (
+    CapabilitiesRequestV11,
+    ExplicitVehicleRequestV11,
+    build_explicit_simulation_configuration,
+    capabilities_response,
+    parse_v11_request,
+    run_explicit_request,
+)
 
 __all__ = (
     "BridgeRequestV1",
@@ -18,4 +26,10 @@ __all__ = (
     "process_request_json",
     "run_request",
     "serialize_result",
+    "CapabilitiesRequestV11",
+    "ExplicitVehicleRequestV11",
+    "build_explicit_simulation_configuration",
+    "capabilities_response",
+    "parse_v11_request",
+    "run_explicit_request",
 )

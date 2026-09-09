@@ -23,8 +23,10 @@
 - `termination_time_s`, terminal-event zamanını veya son kabul edilmiş noktayı izler;
   `simulation_duration_s` ilk ignition sample'ından ölçülür.
 - V1 simülasyon zamanı propulsion ignition anında başlar.
-- Sürüm `1.0` yerel JSON/CLI sınırı, tek stdin isteğini accepted simülasyon
-  zincirine bağlar ve tek stdout yanıtı üretir.
+- Yerel JSON/CLI sınırı, tek stdin isteğini accepted simülasyon zincirine bağlar ve
+  tek stdout yanıtı üretir; şema V1.0 preset uyumluluğu korunur.
+- Şema V1.1, `capabilities` ile desteklenen alanı bildirir ve SI birimli açık
+  `nose_cone`, `body_tube`, `fin_set` girdileriyle `simulate` çalıştırır.
 - Java 17 istemcileri bu sınırı `ProcessBuilder` ile kullanabilir; Python motoru
   tek fizik otoritesi olarak kalır ve ağ/sunucu katmanı çalıştırılmaz.
 
@@ -38,6 +40,6 @@
   ertelenmiştir.
 - Genel amaçlı dosya serialization, export, plotting ve reporting API'leri
   ertelenmiştir.
-- V1 dış sözleşmesi yalnız sürümlü doğrulanmış demo araç preset'ini destekler;
-  keyfî araç JSON yapılandırması henüz public değildir.
+- Desteklenmeyen component aileleri ile recovery ve 6DOF yapılandırmaları public
+  JSON sözleşmesinin parçası değildir.
 - Ağ tabanlı API veya servis güncel mimarinin parçası değildir.

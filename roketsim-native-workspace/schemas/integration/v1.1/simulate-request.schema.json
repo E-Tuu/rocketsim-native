@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RoketSim Native V1.1 Explicit Vehicle Simulation Request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "operation", "model", "vehicle", "motor", "launch", "environment", "numerics"],
+  "properties": {
+    "schema_version": { "const": "1.1" },
+    "operation": { "const": "simulate" },
+    "model": { "const": "roketsim_native_3dof_v1" },
+    "vehicle": { "$ref": "#/$defs/vehicle" },
+    "motor": { "$ref": "#/$defs/motor" },
+    "launch": { "$ref": "#/$defs/launch" },
+    "environment": { "$ref": "#/$defs/environment" },
+    "numerics": { "$ref": "#/$defs/numerics" }
+  },
+  "$defs": {
+    "vector3": {
+      "type": "array", "minItems": 3, "maxItems": 3,
+      "items": { "type": "number" }
+    },
+    "nose": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "type", "shape", "construction_mode", "axial_position_m", "length_m", "base_diameter_m", "wall_thickness_m", "material_id"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "type": { "const": "nose_cone" },
+        "shape": { "const": "conical" },
+        "construction_mode": { "const": "HOLLOW_SHELL" },
+        "axial_position_m": { "type": "number", "description": "Nose start coordinate on accepted x_geo; V1.1 requires the nose-tip origin." },
+        "length_m": { "type": "number", "exclusiveMinimum": 0 },
+        "base_diameter_m": { "type": "number", "exclusiveMinimum": 0, "description": "Must equal the body outer diameter; both map to the single accepted airframe diameter." },
+        "wall_thickness_m": { "type": "number", "exclusiveMinimum": 0 },
+        "material_id": { "enum": ["POLYSTYRENE", "CARDBOARD"] }
+      }
+    },
+    "body": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "type", "axial_position_m", "length_m", "outer_diameter_m", "wall_thickness_m", "material_id"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "type": { "const": "body_tube" },
+        "axial_position_m": { "type": "number", "description": "Body start coordinate on accepted x_geo; must equal the resolved nose end." },
+        "length_m": { "type": "number", "exclusiveMinimum": 0 },
+        "outer_diameter_m": { "type": "number", "exclusiveMinimum": 0, "description": "Must equal the nose base diameter; both map to the single accepted airframe diameter." },
+        "wall_thickness_m": { "type": "number", "exclusiveMinimum": 0 },
+        "material_id": { "enum": ["POLYSTYRENE", "CARDBOARD"] }
+      }
+    },
+    "fins": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "type", "axial_position_m", "count", "root_chord_m", "tip_chord_m", "semi_span_m", "sweep_length_m", "thickness_m", "cross_section", "angular_arrangement", "material_id"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "type": { "const": "fin_set" },
+        "axial_position_m": { "type": "number", "description": "Accepted fin root leading-edge x_geo coordinate." },
+        "count": { "type": "integer", "minimum": 3 },
+        "root_chord_m": { "type": "number", "exclusiveMinimum": 0 },
+        "tip_chord_m": { "type": "number", "minimum": 0 },
+        "semi_span_m": { "type": "number", "exclusiveMinimum": 0 },
+        "sweep_length_m": { "type": "number", "description": "Accepted signed tip-leading-edge axial offset from the root leading edge." },
+        "thickness_m": { "type": "number", "exclusiveMinimum": 0 },
+        "cross_section": { "const": "square" },
+        "angular_arrangement": { "const": "equally_spaced" },
+        "material_id": { "enum": ["POLYSTYRENE", "CARDBOARD"] }
+      }
+    },
+    "mountTube": {
+      "type": "object", "additionalProperties": false,
+      "required": ["length_m", "inner_diameter_m", "wall_thickness_m", "aft_recess_m", "material_id"],
+      "properties": {
+        "length_m": { "type": "number", "exclusiveMinimum": 0 },
+        "inner_diameter_m": { "type": "number", "exclusiveMinimum": 0 },
+        "wall_thickness_m": { "type": "number", "exclusiveMinimum": 0 },
+        "aft_recess_m": { "type": "number", "minimum": 0 },
+        "material_id": { "enum": ["POLYSTYRENE", "CARDBOARD"] }
+      }
+    },
+    "centeringRings": {
+      "type": "object", "additionalProperties": false,
+      "required": ["axial_thickness_m", "material_id"],
+      "properties": {
+        "axial_thickness_m": { "type": "number", "exclusiveMinimum": 0 },
+        "material_id": { "enum": ["POLYSTYRENE", "CARDBOARD"] }
+      }
+    },
+    "motorInstallation": {
+      "type": "object", "additionalProperties": false,
+      "description": "axial_position_m is the accepted motor aft-reference x_geo coordinate.",
+      "required": ["axial_position_m", "motor_overhang_m", "mount_tube", "centering_rings"],
+      "properties": {
+        "axial_position_m": { "type": "number" },
+        "motor_overhang_m": { "type": "number" },
+        "mount_tube": { "$ref": "#/$defs/mountTube" },
+        "centering_rings": { "$ref": "#/$defs/centeringRings" }
+      }
+    },
+    "vehicle": {
+      "type": "object", "additionalProperties": false,
+      "required": ["reference_geometry_policy", "components", "motor_installation", "surface_finish"],
+      "properties": {
+        "reference_geometry_policy": { "const": "maximum_diameter" },
+        "components": {
+          "type": "array", "minItems": 3, "maxItems": 3,
+          "items": { "oneOf": [{ "$ref": "#/$defs/nose" }, { "$ref": "#/$defs/body" }, { "$ref": "#/$defs/fins" }] }
+        },
+        "motor_installation": { "$ref": "#/$defs/motorInstallation" },
+        "surface_finish": {
+          "type": "object", "additionalProperties": false,
+          "required": ["equivalent_roughness_m"],
+          "properties": { "equivalent_roughness_m": { "type": "number", "minimum": 0 } }
+        }
+      }
+    },
+    "motor": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "ignition_time_s"],
+      "properties": {
+        "id": { "const": "AEROTECH_F50_4T" },
+        "ignition_time_s": { "type": "number" }
+      }
+    },
+    "launch": {
+      "type": "object", "additionalProperties": false,
+      "required": ["position_world_m", "velocity_world_m_s", "direction_world_unit"],
+      "properties": {
+        "position_world_m": { "$ref": "#/$defs/vector3" },
+        "velocity_world_m_s": { "$ref": "#/$defs/vector3" },
+        "direction_world_unit": { "$ref": "#/$defs/vector3" }
+      }
+    },
+    "environment": {
+      "type": "object", "additionalProperties": false,
+      "required": ["geopotential_altitude_m", "air_mass_velocity_world_m_s"],
+      "properties": {
+        "geopotential_altitude_m": { "type": "number" },
+        "air_mass_velocity_world_m_s": { "$ref": "#/$defs/vector3" }
+      }
+    },
+    "numerics": {
+      "type": "object", "additionalProperties": false,
+      "required": ["fixed_step_s", "maximum_steps"],
+      "properties": {
+        "fixed_step_s": { "type": "number", "exclusiveMinimum": 0 },
+        "maximum_steps": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}
