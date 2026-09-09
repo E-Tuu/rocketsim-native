@@ -484,3 +484,32 @@ V&V A–S geçti: focused NAT-021 14 PASS, all simulation 97 PASS. Gate talimat�
 full pytest çalıştırılmadı. NAT-022 uygulanmadı.
 [3DOF SimulationResult doğrulama kaydı](../verification/nat-021-simulation-result-3dof.md).
 NAT-021 IMPLEMENTATION GATE: PASS.
+
+NAT-022: başlangıç `e7b0f8308d1e23d14fc4229c3a14301f14d8d486`, temiz
+ağaç, remote yok. İlk complete Native 3DOF trajectory gerçek accepted production
+chain ile mock/stub olmadan doğrulandı; `src/roketsim_native/` değişmedi. NAT-015
+lineage'indeki hollow-shell 0.1 m demo geometry, accepted POLYSTYRENE/CARDBOARD
+structure, exact installed catalog F50-4T, smooth V&V surfaces, 1200 m accepted
+environment mapping, no-wind, WORLD +z launch ve ignition 0 s fixture olarak
+bağlandı. Primary explicit V&V h=.010/5000 guard run 1584 candidate, 1584 accepted
+sample ve terminal ground üretti. Initial total mass .6357490028277474 kg; motor
+mass .0849→.047 kg. Burnout exact curve-end authority'sinden 1.43 s, WORLD z
+88.15789842420412 m, vz 87.92821395634027 m/s; apogee 7.012303670973791 s,
+WORLD z/launch height 279.5335684908227 m, vz=0; ground 15.832349589466348 s,
+vz=-49.190189996430696 m/s, alpha=.23495894666415096. Last accepted point
+15.829999999999707 s ve z=.1155854393789068 m'dir; interior event state sample'a
+yükseltilmedi ve below-ground sample yoktur. İlk propagated step upward'dır;
+powered ascent, non-increasing mass, coast, ballistic descent, strict event/sample
+chronology, vertical symmetry, finite domains ve identical repeat geçti. Fine
+h=.005 run 3167 steps/samples ile terminal oldu; burnout unchanged, apogee/ground
+time differences .00005477680852639111/.00020468896056513586 s, apogee-height
+relative difference .0026709382920917456% olup V&V policy içindedir. Max recorded
+Mach .27673174265848777, q 4663.19556661582 Pa, speed 92.8134640033708 m/s yalnız
+diagnostic evidence'dır. Focused 9, simulation 97, propulsion 277, aerodynamics
+106, dynamics+numerics 109 PASS; full milestone audit 1431 passed, 0 skipped,
+0 failed. Ignition-start/no pad-Liftoff-guide/recovery, ballistic descent, Basic
+Drag V1, 3DOF/no attitude, steady wind, fixed RK4, linear event localization ve
+no OpenRocket parity frozen limitations olarak kaydedildi.
+[End-to-end Native trajectory doğrulama kaydı](../verification/nat-022-end-to-end-native-trajectory.md).
+FIRST NATIVE 3DOF DEMO BASELINE: VERIFIED.
+NAT-022 IMPLEMENTATION GATE: PASS.
