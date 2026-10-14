@@ -6,6 +6,13 @@ import org.roketsim.core.math.FrameConventions;
 import org.roketsim.core.units.UnitPolicy;
 import org.roketsim.core.math.Quaternion;
 import org.roketsim.core.math.Quaternions;
+import org.roketsim.core.environment.Altitude;
+import org.roketsim.core.environment.USStandardAtmosphere1976Lower;
+import org.roketsim.core.environment.DryAirPropertiesCalculator;
+import org.roketsim.core.environment.ConstantGravityModel;
+import org.roketsim.core.environment.ConstantWindModel;
+import org.roketsim.core.flightconditions.RelativeFlowCalculator;
+import org.roketsim.core.flightconditions.BasicFlightConditionsCalculator;
 
 public final class CoreConsumer {
     public static void main(String[] args) {
@@ -22,5 +29,16 @@ public final class CoreConsumer {
             throw new AssertionError("Quaternion consumer failed");
         }
         System.out.println("QUATERNION_CONSUMER: PASS");
+        var atmosphere = new USStandardAtmosphere1976Lower().evaluate(1200);
+        var air = new DryAirPropertiesCalculator().evaluate(atmosphere);
+        var wind = new ConstantWindModel(new double[]{0,20,0}).evaluate();
+        var relative = new RelativeFlowCalculator().evaluate(new double[]{0,120,0},wind);
+        var conditions = new BasicFlightConditionsCalculator().evaluate(relative,atmosphere,air,.1);
+        if (conditions.airspeedMS()!=100 || conditions.mach()!=100/air.speedOfSoundMS()
+            || new ConstantGravityModel().evaluate().get(2)!=-9.80665
+            || Altitude.aglFromOrthometric(1200,850)!=350) {
+            throw new AssertionError("Environment consumer failed");
+        }
+        System.out.println("ENVIRONMENT_CONSUMER: PASS");
     }
 }
