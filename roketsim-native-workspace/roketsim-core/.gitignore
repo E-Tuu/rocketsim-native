@@ -1,0 +1,4 @@
+.gradle/
+build/
+verification/consumer/.gradle/
+verification/consumer/build/

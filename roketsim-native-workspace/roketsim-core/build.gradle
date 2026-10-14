@@ -1,0 +1,48 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+
+group = 'org.roketsim'
+version = '0.1.0'
+
+java {
+    toolchain { languageVersion = JavaLanguageVersion.of(17) }
+    withSourcesJar()
+    withJavadocJar()
+}
+tasks.withType(JavaCompile).configureEach {
+    options.release = 17
+    options.encoding = 'UTF-8'
+}
+tasks.withType(Javadoc).configureEach { options.encoding = 'UTF-8' }
+tasks.withType(AbstractArchiveTask).configureEach {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
+repositories { mavenCentral() }
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.10.0'
+}
+test { useJUnitPlatform() }
+dependencyLocking { lockAllConfigurations() }
+publishing {
+    publications {
+        core(MavenPublication) {
+            from components.java
+            pom {
+                name = 'RoketSim Core'
+                description = 'Independent SI mathematical foundation for RoketSim'
+            }
+        }
+    }
+}
+tasks.register('verifyProductionDependencies') {
+    doLast {
+        if (!configurations.runtimeClasspath.resolve().empty) {
+            throw new GradleException('Core production dependencies must be empty')
+        }
+    }
+}
+check.dependsOn verifyProductionDependencies
