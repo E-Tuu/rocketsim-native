@@ -1,0 +1,170 @@
+[
+  {
+    "test": "[1] inf",
+    "classname": "org.roketsim.core.VectorStringInputTest",
+    "outcome": "FAILED",
+    "failure_type": "org.opentest4j.AssertionFailedError",
+    "message": "org.opentest4j.AssertionFailedError: expected: <true> but was: <false>"
+  },
+  {
+    "test": "[2] +INF",
+    "classname": "org.roketsim.core.VectorStringInputTest",
+    "outcome": "FAILED",
+    "failure_type": "org.opentest4j.AssertionFailedError",
+    "message": "org.opentest4j.AssertionFailedError: expected: <true> but was: <false>"
+  },
+  {
+    "test": "[3] nan",
+    "classname": "org.roketsim.core.VectorStringInputTest",
+    "outcome": "FAILED",
+    "failure_type": "org.opentest4j.AssertionFailedError",
+    "message": "org.opentest4j.AssertionFailedError: expected: <true> but was: <false>"
+  },
+  {
+    "test": "[4] -NaN",
+    "classname": "org.roketsim.core.VectorStringInputTest",
+    "outcome": "PASSED",
+    "failure_type": null,
+    "message": null
+  },
+  {
+    "test": "[5] Infinity",
+    "classname": "org.roketsim.core.VectorStringInputTest",
+    "outcome": "PASSED",
+    "failure_type": null,
+    "message": null
+  },
+  {
+    "test": "[6] 1e309",
+    "classname": "org.roketsim.core.VectorStringInputTest",
+    "outcome": "PASSED",
+    "failure_type": null,
+    "message": null
+  },
+  {
+    "test": "[1] 1f",
+    "classname": "org.roketsim.core.VectorStringInputTest",
+    "outcome": "FAILED",
+    "failure_type": "org.opentest4j.AssertionFailedError",
+    "message": "org.opentest4j.AssertionFailedError: Expected java.lang.IllegalArgumentException to be thrown, but nothing was thrown."
+  },
+  {
+    "test": "[2] 0x1.0p0",
+    "classname": "org.roketsim.core.VectorStringInputTest",
+    "outcome": "FAILED",
+    "failure_type": "org.opentest4j.AssertionFailedError",
+    "message": "org.opentest4j.AssertionFailedError: Expected java.lang.IllegalArgumentException to be thrown, but nothing was thrown."
+  },
+  {
+    "test": "pythonUnicodeAndNumericForms()",
+    "classname": "org.roketsim.core.VectorStringInputTest",
+    "outcome": "FAILED",
+    "failure_type": "java.lang.IllegalArgumentException",
+    "message": "java.lang.IllegalArgumentException: vector must contain numerical values"
+  },
+  {
+    "test": "[1] 1d",
+    "classname": "org.roketsim.core.VectorStringInputTest",
+    "outcome": "FAILED",
+    "failure_type": "org.opentest4j.AssertionFailedError",
+    "message": "org.opentest4j.AssertionFailedError: Expected java.lang.IllegalArgumentException to be thrown, but nothing was thrown."
+  },
+  {
+    "test": "[2] 1D",
+    "classname": "org.roketsim.core.VectorStringInputTest",
+    "outcome": "FAILED",
+    "failure_type": "org.opentest4j.AssertionFailedError",
+    "message": "org.opentest4j.AssertionFailedError: Expected java.lang.IllegalArgumentException to be thrown, but nothing was thrown."
+  },
+  {
+    "test": "[3] 1F",
+    "classname": "org.roketsim.core.VectorStringInputTest",
+    "outcome": "FAILED",
+    "failure_type": "org.opentest4j.AssertionFailedError",
+    "message": "org.opentest4j.AssertionFailedError: Expected java.lang.IllegalArgumentException to be thrown, but nothing was thrown."
+  },
+  {
+    "test": "[4] ?1.5?",
+    "classname": "org.roketsim.core.VectorStringInputTest",
+    "outcome": "FAILED",
+    "failure_type": "org.opentest4j.AssertionFailedError",
+    "message": "org.opentest4j.AssertionFailedError: Expected java.lang.IllegalArgumentException to be thrown, but nothing was thrown."
+  },
+  {
+    "test": "[5] ?1.5?",
+    "classname": "org.roketsim.core.VectorStringInputTest",
+    "outcome": "FAILED",
+    "failure_type": "org.opentest4j.AssertionFailedError",
+    "message": "org.opentest4j.AssertionFailedError: Expected java.lang.IllegalArgumentException to be thrown, but nothing was thrown."
+  },
+  {
+    "test": "[6] _1",
+    "classname": "org.roketsim.core.VectorStringInputTest",
+    "outcome": "PASSED",
+    "failure_type": null,
+    "message": null
+  },
+  {
+    "test": "[7] 1_",
+    "classname": "org.roketsim.core.VectorStringInputTest",
+    "outcome": "PASSED",
+    "failure_type": null,
+    "message": null
+  },
+  {
+    "test": "[8] 1__0",
+    "classname": "org.roketsim.core.VectorStringInputTest",
+    "outcome": "PASSED",
+    "failure_type": null,
+    "message": null
+  },
+  {
+    "test": "[9] 1e_2",
+    "classname": "org.roketsim.core.VectorStringInputTest",
+    "outcome": "PASSED",
+    "failure_type": null,
+    "message": null
+  },
+  {
+    "test": "[10] 1 2",
+    "classname": "org.roketsim.core.VectorStringInputTest",
+    "outcome": "PASSED",
+    "failure_type": null,
+    "message": null
+  },
+  {
+    "test": "[11] ",
+    "classname": "org.roketsim.core.VectorStringInputTest",
+    "outcome": "PASSED",
+    "failure_type": null,
+    "message": null
+  },
+  {
+    "test": "[12]  ",
+    "classname": "org.roketsim.core.VectorStringInputTest",
+    "outcome": "PASSED",
+    "failure_type": null,
+    "message": null
+  },
+  {
+    "test": "[13] nan(1)",
+    "classname": "org.roketsim.core.VectorStringInputTest",
+    "outcome": "PASSED",
+    "failure_type": null,
+    "message": null
+  },
+  {
+    "test": "pythonDigitSeparator()",
+    "classname": "org.roketsim.core.VectorStringInputTest",
+    "outcome": "FAILED",
+    "failure_type": "java.lang.IllegalArgumentException",
+    "message": "java.lang.IllegalArgumentException: vector must contain numerical values"
+  },
+  {
+    "test": "sharedConsumers()",
+    "classname": "org.roketsim.core.VectorStringInputTest",
+    "outcome": "FAILED",
+    "failure_type": "java.lang.IllegalArgumentException",
+    "message": "java.lang.IllegalArgumentException: quaternion must contain numerical values"
+  }
+]

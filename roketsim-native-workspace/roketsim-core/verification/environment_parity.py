@@ -8,6 +8,7 @@ import random
 import subprocess
 import sys
 from pathlib import Path
+from parity_contract import count_cases
 
 import numpy as np
 
@@ -18,6 +19,7 @@ from roketsim_native.flight_conditions import basic, relative_flow
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--java", required=True)
+parser.add_argument("--build-dir", type=Path)
 args = parser.parse_args()
 cases = []
 
@@ -157,8 +159,9 @@ def encoded(value):
     return repr(float(value))
 
 
+count_cases("ENVIRONMENT", [(op, tuple(map(encoded, values))) for op, values in cases])
 lines = ["\t".join((op, *map(encoded, values))) for op, values in cases]
-classpath = os.pathsep.join(str(CORE / directory) for directory in ("build/classes/java/main", "build/classes/java/test"))
+classpath = os.pathsep.join(str((args.build_dir or CORE / "build") / directory) for directory in ("classes/java/main", "classes/java/test"))
 process = subprocess.run([args.java, "-cp", classpath, "org.roketsim.core.EnvironmentParityProbe"],
     input="\n".join(lines)+"\n", text=True, capture_output=True, check=True)
 outputs = process.stdout.splitlines()
@@ -176,11 +179,14 @@ for (op, values), output in zip(cases, outputs):
         category = type(error).__name__ if type(error) is not ValueError else "IllegalArgumentException"
         assert fields[:2] == ["ERROR", category], (op, values, fields, error)
         if isinstance(error, atmosphere.AtmosphereDomainError):
+            assert len(fields) == 6, fields
             assert fields[2] == "geopotential_height_m"
             assert list(map(float, fields[3:])) == [error.requested_geopotential_height_m, error.minimum_geopotential_height_m, error.maximum_geopotential_height_m]
         elif hasattr(error, "field_name"):
+            assert len(fields) == 4, fields
             assert fields[2] == error.field_name and float(fields[3]) == error.value
         else:
+            assert len(fields) == 3, fields
             # Generic aile korunur; değişken float message biçimi sözleşme değildir.
             token = str(error).split()[0]
             assert token in fields[2], (op, values, token, fields)
@@ -209,6 +215,7 @@ for (op, values), output in zip(cases, outputs):
     if not np.array_equal(actual, expected):
         print("NONEXACT", op, values, "Python", expected.tolist(), "Java", actual.tolist())
     successes += 1
+assert successes + errors == len(cases)
 print(f"ENVIRONMENT_PARITY: {successes} success, {errors} error cases passed; {exact_cases} numerically exact cases")
 print(f"HYPOT3: {norm_exact}/{norm_total} successful condition norms numerically exact")
 for prefix in ("chain", "air", "conditions", "math", "hypot"):

@@ -6,6 +6,7 @@ import platform
 import subprocess
 import sys
 from pathlib import Path
+from parity_contract import count_cases
 
 import numpy as np
 import pytest
@@ -16,16 +17,20 @@ from roketsim_native.math.vectors import magnitude, dot, normalize, cross3
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--java", required=True)
+parser.add_argument("--build-dir", type=Path)
 args = parser.parse_args()
 core = Path(__file__).resolve().parents[1]
-classpath = os.pathsep.join((str(core / "build/classes/java/main"), str(core / "build/classes/java/test")))
+build = args.build_dir or core / "build"
+classpath = os.pathsep.join(str(build / directory) for directory in ("classes/java/main", "classes/java/test"))
 cases = [([3.,4.,0.],[1.,0.,0.]),([1.,2.,3.],[4.,-5.,6.]),
          ([1.,2.],[4.,-5.]),([1.,2.,3.,4.],[4.,3.,2.,1.]),
          ([-2.,0.,5.],[3.,7.,-1.]),([1e-9,0.,0.],[2.,0.,0.])]
+count_cases("VECTOR", cases)
 for left, right in cases:
     output = subprocess.check_output([args.java,"-cp",classpath,"org.roketsim.core.ParityProbe",
         ",".join(map(str,left)),",".join(map(str,right))],text=True)
     actual = np.array([float(value) for value in output.splitlines()])
+    assert actual.shape == (2 + len(left) + (3 if len(left) == 3 else 0),), output
     # Mevcut test_vectors.py: scalar pytest.approx; array assert_allclose varsayılanları.
     assert actual[0] == pytest.approx(magnitude(left))
     assert actual[1] == pytest.approx(dot(left,right))

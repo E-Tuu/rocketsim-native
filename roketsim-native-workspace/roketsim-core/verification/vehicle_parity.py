@@ -2,7 +2,7 @@
 
 import argparse
 import base64
-from dataclasses import fields, replace
+from dataclasses import asdict, fields, replace
 from enum import Enum
 import math
 import os
@@ -10,6 +10,7 @@ from pathlib import Path
 import platform
 import subprocess
 import sys
+from parity_contract import count_cases, keyed_output, nonempty
 
 import numpy as np
 
@@ -199,7 +200,28 @@ def reference(operation, changes):
     return output
 
 
+def effective_case(operation, changes):
+    if operation in {'material', 'catalog'}:
+        return operation, changes
+    source = asdict(geometry())
+    materials = asdict(SingleStageRocketMaterials(POLYSTYRENE,CARDBOARD,CARDBOARD,CARDBOARD,CARDBOARD))
+    resolved_changes = {}
+    for path, value in changes.items():
+        if path.startswith('resolved.'):
+            resolved_changes[path] = value
+        else:
+            target = materials if path.startswith('materials.') else source
+            path = path[10:] if path.startswith('materials.') else path[9:] if path.startswith('geometry.') else path
+            names = path.split('.')
+            for name in names[:-1]:
+                target = target[name]
+            target[names[-1]] = value
+    return operation, source, materials, resolved_changes
+
+
 def run(selected):
+    nonempty(selected)
+    count_cases('VEHICLE', [effective_case(op, changes) for op, changes in selected])
     payload = '\n'.join('\t'.join([op, *(path+'='+encode(value) for path, value in changes.items())]) for op, changes in selected)+'\n'
     cp = os.pathsep.join(str(args.build_dir / name) for name in ('classes/java/main', 'classes/java/test'))
     process = subprocess.run([args.java, '-cp', cp, 'org.roketsim.core.VehicleParityProbe'],
@@ -214,17 +236,19 @@ def run(selected):
         except (ValueError, OverflowError) as error:
             assert parts[:2] == ['ERROR', type(error).__name__], (changes, error, parts)
             if hasattr(error, 'error_code'):
+                assert len(parts) == 5, parts
                 assert parts[2] == error.error_code and parts[3] == (error.field_name or 'null'), (changes, error, parts)
                 want, got = error.value, decoded(parts[4])
                 if isinstance(want, (float, int)) and not isinstance(want, bool):
                     assert (want == got or isinstance(want, float) and math.isnan(want) and math.isnan(got)), (changes, want, got)
                 else: assert want == got, (changes, want, got)
             else:
+                assert len(parts) == 3, parts
                 assert str(error).split()[0] in decoded(parts[2]), (changes, error, parts)
             errors += 1
             continue
         assert parts[0] == 'OK', (changes, parts)
-        actual = dict(part.split('=', 1) for part in parts[1:])
+        actual = keyed_output(parts[1:], {camel(name) for name in expected})
         assert set(actual) == {camel(name) for name in expected}, (op, actual.keys(), expected.keys())
         for name, want in expected.items():
             got = decoded(actual[camel(name)])
@@ -244,6 +268,7 @@ def run(selected):
                 exact += int(got == want)
                 max_relative = max(max_relative, abs(got-want)/abs(want) if want else 0.)
         successes += 1
+    assert successes + errors == len(selected)
     print(f'{args.group.upper()}_PARITY: {successes} success, {errors} error cases; {quantities} numerical quantities, {exact} exact; max_relative={max_relative}')
 
 

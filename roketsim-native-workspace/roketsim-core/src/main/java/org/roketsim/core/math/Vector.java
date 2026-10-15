@@ -38,7 +38,7 @@ public final class Vector {
             try {
                 if (component instanceof Number number) { result[i] = number.doubleValue(); }
                 else if (component instanceof Boolean flag) { result[i] = flag ? 1.0 : 0.0; }
-                else if (component instanceof String text) { result[i] = Double.parseDouble(text); }
+                else if (component instanceof String text) { result[i] = PythonNumericText.parse(text); }
                 else { throw new IllegalArgumentException(name + " must contain numerical values"); }
             } catch (NumberFormatException exception) {
                 throw new IllegalArgumentException(name + " must contain numerical values", exception);

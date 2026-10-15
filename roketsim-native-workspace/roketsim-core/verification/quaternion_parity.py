@@ -7,6 +7,7 @@ import platform
 import subprocess
 import sys
 from pathlib import Path
+from parity_contract import count_cases
 
 import numpy as np
 import pytest
@@ -19,9 +20,10 @@ from roketsim_native.math import quaternion as reference
 TEST_ATOL = 1e-12
 parser = argparse.ArgumentParser()
 parser.add_argument("--java", required=True)
+parser.add_argument("--build-dir", type=Path)
 args = parser.parse_args()
-classpath = os.pathsep.join(str(CORE / directory) for directory in
-    ("build/classes/java/main", "build/classes/java/test"))
+classpath = os.pathsep.join(str((args.build_dir or CORE / "build") / directory) for directory in
+    ("classes/java/main", "classes/java/test"))
 
 
 def encoded(value):
@@ -37,7 +39,11 @@ def encoded(value):
 def java_call(operation, *values):
     output = subprocess.check_output([args.java, "-cp", classpath,
         "org.roketsim.core.QuaternionParityProbe", operation, *map(encoded, values)], text=True)
+    assert len(output.splitlines()) == 1, output
     status, *parts = output.strip().split("\t")
+    assert status in {"OK", "ERROR"}, output
+    if status == "ERROR":
+        assert len(parts) == 1 and parts[0], output
     return status, parts
 
 
@@ -58,10 +64,12 @@ def python_call(operation, *values):
 
 
 successes = failures = 0
+executed_cases = []
 
 
 def compare(operation, *values, error_token=None):
     global successes, failures
+    executed_cases.append((operation, values))
     try:
         expected = python_call(operation, *values)
     except ValueError:
@@ -75,6 +83,7 @@ def compare(operation, *values, error_token=None):
     assert status == "OK", (operation, values, parts)
     actual = np.array([float(value) for value in parts])
     expected = np.asarray(expected).reshape(-1)
+    assert actual.shape == expected.shape, (operation, values, actual, expected)
     if operation == "norm":
         assert actual[0] == pytest.approx(expected[0])
     elif operation in {"as", "conjugate", "multiply"}:
@@ -138,13 +147,17 @@ compare("inverse",[float.fromhex('0x0.0000000000001p-1022'),0.,0.,0.],0.,error_t
 
 trig_max_error = 0.
 for angle in (0.,math.pi/4,-math.pi/4,math.pi/2,.63/2,1.234/2,1.1/2):
+    executed_cases.append(("trig", (angle,)))
     status, parts = java_call("trig",angle)
     assert status == "OK"
     result = np.array([float(value) for value in parts])
+    assert result.shape == (4,), parts
     expected = np.array([math.sin(angle),math.cos(angle)]*2)
     np.testing.assert_allclose(result,expected,atol=TEST_ATOL,rtol=0.)
     trig_max_error = max(trig_max_error,float(np.max(np.abs(result-expected))))
 
+count_cases("QUATERNION", executed_cases)
+assert successes + failures == len(executed_cases) - 7
 print(f"QUATERNION_PARITY: {successes} success cases, {failures} error cases passed")
 print(f"MATH_STRICTMATH: 7 cases passed; max Python difference={trig_max_error}")
 print(sys.version)
