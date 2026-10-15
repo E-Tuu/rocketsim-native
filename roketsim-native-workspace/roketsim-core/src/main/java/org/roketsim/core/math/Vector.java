@@ -4,7 +4,7 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
-/** Boyutu sabitlenmemiş immutable değer; array giriş ve çıkışları kopyalanır. */
+/** Boyutu sabitlenmemiş immutable numeric değer; String bileşenler adapter katmanında ayrıştırılır. */
 public final class Vector {
     private final double[] values;
 
@@ -38,7 +38,9 @@ public final class Vector {
             try {
                 if (component instanceof Number number) { result[i] = number.doubleValue(); }
                 else if (component instanceof Boolean flag) { result[i] = flag ? 1.0 : 0.0; }
-                else if (component instanceof String text) { result[i] = PythonNumericText.parse(text); }
+                else if (component instanceof String) {
+                    throw new IllegalArgumentException(name + " must contain numerical values; String components are not supported");
+                }
                 else { throw new IllegalArgumentException(name + " must contain numerical values"); }
             } catch (NumberFormatException exception) {
                 throw new IllegalArgumentException(name + " must contain numerical values", exception);
