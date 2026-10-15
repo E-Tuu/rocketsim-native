@@ -13,6 +13,9 @@ import org.roketsim.core.environment.ConstantGravityModel;
 import org.roketsim.core.environment.ConstantWindModel;
 import org.roketsim.core.flightconditions.RelativeFlowCalculator;
 import org.roketsim.core.flightconditions.BasicFlightConditionsCalculator;
+import org.roketsim.core.geometry.*;
+import org.roketsim.core.materials.*;
+import org.roketsim.core.mass.StructuralMassPropertiesCalculator;
 
 public final class CoreConsumer {
     public static void main(String[] args) {
@@ -40,5 +43,22 @@ public final class CoreConsumer {
             throw new AssertionError("Environment consumer failed");
         }
         System.out.println("ENVIRONMENT_CONSUMER: PASS");
+        // Açık NAT-011 consumer fixture'ı; generic production default değildir.
+        var vehicle=new SingleStageRocketGeometry(.1,new ConicalNoseGeometry(.3,NoseConstructionMode.HOLLOW_SHELL,.002),
+            new CylindricalBodyGeometry(.7,.002),new TrapezoidalFinSetGeometry(4,.18,.08,.12,.05,.72,.003,
+                FinCrossSection.SQUARE,FinAngularArrangement.EQUALLY_SPACED),
+            new MotorAttachmentGeometry(new MotorMountTubeGeometry(.12,.029,.001,0),new CenteringRingPairGeometry(.003),.005),
+            ReferenceGeometryPolicy.MAXIMUM_DIAMETER);
+        var resolved=new GeometryResolver().resolve(vehicle);
+        var materials=new SingleStageRocketMaterials(MaterialCatalog.POLYSTYRENE,MaterialCatalog.CARDBOARD,
+            MaterialCatalog.CARDBOARD,MaterialCatalog.CARDBOARD,MaterialCatalog.CARDBOARD);
+        var structure=new StructuralMassPropertiesCalculator().evaluate(resolved,materials);
+        // Existing SMEXT-T16 relative tolerance; production numerical policy değildir.
+        if(resolved.source()!=vehicle || Math.abs(structure.structureMassKg()-.5508490028277474)>.5508490028277474*3e-14
+            || Math.abs(structure.structureCgXGeoM()-.6266199705547180)>.6266199705547180*3e-14
+            || structure.nose().material()!=MaterialCatalog.POLYSTYRENE) {
+            throw new AssertionError("Vehicle structural consumer failed");
+        }
+        System.out.println("VEHICLE_STRUCTURAL_CONSUMER: PASS");
     }
 }

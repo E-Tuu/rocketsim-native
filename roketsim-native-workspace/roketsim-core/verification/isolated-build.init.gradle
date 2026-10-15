@@ -1,0 +1,9 @@
+// Test-only output yönlendirmesi: OneDrive read-only/reparse build dizinlerine dokunmaz.
+// Normal library build politikasını değiştirmez; hedef caller tarafından açık verilir.
+gradle.beforeProject { project ->
+    def target = project.findProperty('verificationBuildDir')
+    if (target == null) {
+        throw new GradleException('verificationBuildDir must be explicitly supplied')
+    }
+    project.layout.buildDirectory.set(project.file(target))
+}
