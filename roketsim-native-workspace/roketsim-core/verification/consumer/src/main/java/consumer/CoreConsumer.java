@@ -18,6 +18,7 @@ import org.roketsim.core.materials.*;
 import org.roketsim.core.mass.StructuralMassPropertiesCalculator;
 import org.roketsim.core.mass.RocketMassPropertiesCalculator;
 import org.roketsim.core.propulsion.*;
+import org.roketsim.core.aerodynamics.*;
 
 public final class CoreConsumer {
     public static void main(String[] args) {
@@ -76,5 +77,25 @@ public final class CoreConsumer {
             throw new AssertionError("Propulsion/runtime mass consumer failed");
         }
         System.out.println("PROPULSION_RUNTIME_MASS_CONSUMER: PASS");
+        // Accepted NAT-012 synthetic fixtures, not generic engine defaults.
+        var smooth=new SurfaceFinish("Consumer synthetic",0);
+        var surfaces=new SingleStageRocketAerodynamicSurfaces(smooth,smooth,smooth);
+        var aeroFlight=new org.roketsim.core.flightconditions.BasicFlightConditions(100,.3,123,456);
+        var aeroAir=new org.roketsim.core.environment.DryAirProperties(340,1.8e-5,1.5e-5,1.4);
+        var explicitProfile=new BasicDragModelProfile("fully_turbulent","aerodynamic_length",
+            "minimum_evaluation_reynolds",1e4,"td13_conical_subsonic_to_sonic",
+            "td13_square","td13_subsonic_to_sonic","ignored");
+        var drag=new BasicDragEvaluator().evaluate(resolved,surfaces,aeroFlight,aeroAir,explicitProfile);
+        var staticAero=new StaticAerodynamicEvaluator().evaluate(resolved,
+            new org.roketsim.core.flightconditions.BasicFlightConditions(100,.75,0,0),
+            StaticStabilityModelProfile.NATIVE_STATIC_STABILITY_V1_PROFILE);
+        var margin=new StaticMarginCalculator().evaluate(staticAero,total,resolved);
+        if(Math.abs(drag.totalCd0()-.4740271634476429)>.4740271634476429*5e-15
+            || drag.modelProfile()!=explicitProfile
+            || Math.abs(staticAero.cpXGeoM()-.707290109576936)>.707290109576936*4e-15
+            || Math.abs(margin.staticMarginCalibers()-.5476767889371825)>.5476767889371825*5e-15) {
+            throw new AssertionError("Aerodynamics consumer failed");
+        }
+        System.out.println("AERODYNAMICS_CONSUMER: PASS");
     }
 }

@@ -1,0 +1,16 @@
+{
+  "input": "('drag', {'dp.boundary_layer_model': 'fully_turbulent'})",
+  "python": "{'result.reynoldsNumber': 6666666.666666666, 'result.frictionEvaluationReynoldsNumber': 6666666.666666666, 'result.noseSkinFriction.smoothCorrectedCf': 0.003069223087075511, 'result.noseSkinFriction.roughnessCorrectedCf': 0.0, 'result.noseSkinFriction.selectedCf': 0.003069223087075511, 'result.noseSkinFriction.selectedBranch': 'SMOOTH', 'result.bodySkinFriction.smoothCorrectedCf': 0.003069223087075511, 'result.bodySkinFriction.roughnessCorrectedCf': 0.0, 'result.bodySkinFriction.selectedCf': 0.003069223087075511, 'result.bodySkinFriction.selectedBranch': 'SMOOTH', 'result.finSkinFriction.smoothCorrectedCf': 0.003069223087075511, 'result.finSkinFriction.roughnessCorrectedCf': 0.0, 'result.finSkinFriction.selectedCf': 0.003069223087075511, 'result.finSkinFriction.selectedBranch': 'SMOOTH', 'result.noseFrictionCd': 0.019602822950748604, 'result.bodyFrictionCd': 0.09023515876002, 'result.finFrictionCd': 0.05091519406760164, 'result.nosePressureCd': 0.021621978661408206, 'result.finLeadingEdgePressureCd': 0.13580527568987105, 'result.finTrailingEdgeBaseCd': 0.024146733317993406, 'result.airframeBaseCd': 0.13169999999999998, 'result.totalCd0': 0.4740271634476429, 'result.modelProfile.boundaryLayerModel': 'fully_turbulent', 'result.modelProfile.reynoldsLengthPolicy': 'AERODYNAMIC_LENGTH', 'result.modelProfile.lowReynoldsContinuation': 'MINIMUM_EVALUATION_REYNOLDS', 'result.modelProfile.minimumFrictionEvaluationReynolds': 10000.0, 'result.modelProfile.nosePressureModel': 'TD13_CONICAL_SUBSONIC_TO_SONIC', 'result.modelProfile.finEdgeModel': 'TD13_SQUARE', 'result.modelProfile.baseDragModel': 'TD13_SUBSONIC_TO_SONIC', 'result.modelProfile.plumeTreatment': 'IGNORED', 'result.frictionCd': 0.16075317577837026, 'result.pressureCd': 0.15742725435127924, 'result.baseCd': 0.1558467333179934}",
+  "java": "ERROR\terror.category=s:QWVyb2R5bmFtaWNFdmFsdWF0aW9uRXJyb3I=\terror.code=s:VU5TVVBQT1JURURfQkFTSUNfRFJBR19QUk9GSUxF\terror.field=s:bW9kZWxfcHJvZmlsZQ==\terror.value.boundaryLayerModel=s:ZnVsbHlfdHVyYnVsZW50\terror.value.reynoldsLengthPolicy=AERODYNAMIC_LENGTH\terror.value.lowReynoldsContinuation=MINIMUM_EVALUATION_REYNOLDS\terror.value.minimumFrictionEvaluationReynolds=10000.0\terror.value.nosePressureModel=TD13_CONICAL_SUBSONIC_TO_SONIC\terror.value.finEdgeModel=TD13_SQUARE\terror.value.baseDragModel=TD13_SUBSONIC_TO_SONIC\terror.value.plumeTreatment=IGNORED\terror.context=null",
+  "discrepancy": "AssertionError(('Wrong result/error category', 'OK', 'ERROR'))",
+  "command": "..\\roketsim-native-engine\\.venv\\Scripts\\python.exe -B -c \"import runpy,sys; sys.path.insert(0,'verification'); m=runpy.run_path('verification/aerodynamics_parity.py',run_name='focused_profile_probe'); m['main'].__globals__['CASES']=[('drag',{'dp.boundary_layer_model':'fully_turbulent'})]; sys.argv=['aerodynamics_parity.py','--java','C:/Program Files/Eclipse Adoptium/jdk-17.0.20.101-hotspot/bin/java.exe','--build-dir','C:/Users/ebrut/AppData/Local/Temp/roketsim-j006']; m['main']()\"",
+  "exit_code": 1,
+  "environment": {
+    "python": "3.12.4",
+    "numpy": "2.5.2",
+    "java": "Temurin 17.0.20.1+1",
+    "gradle": "8.12.1",
+    "platform": "Windows 11 build 26200"
+  },
+  "status": "OPEN — STOP before correction; no commit or push"
+}
