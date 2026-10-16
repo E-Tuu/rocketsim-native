@@ -6,4 +6,5 @@ module org.roketsim.core {
     exports org.roketsim.core.geometry;
     exports org.roketsim.core.materials;
     exports org.roketsim.core.mass;
+    exports org.roketsim.core.propulsion;
 }

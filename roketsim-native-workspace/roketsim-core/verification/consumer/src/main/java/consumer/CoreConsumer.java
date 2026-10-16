@@ -16,6 +16,8 @@ import org.roketsim.core.flightconditions.BasicFlightConditionsCalculator;
 import org.roketsim.core.geometry.*;
 import org.roketsim.core.materials.*;
 import org.roketsim.core.mass.StructuralMassPropertiesCalculator;
+import org.roketsim.core.mass.RocketMassPropertiesCalculator;
+import org.roketsim.core.propulsion.*;
 
 public final class CoreConsumer {
     public static void main(String[] args) {
@@ -60,5 +62,19 @@ public final class CoreConsumer {
             throw new AssertionError("Vehicle structural consumer failed");
         }
         System.out.println("VEHICLE_STRUCTURAL_CONSUMER: PASS");
+        var motor=MotorCatalogs.DEMO_MOTOR_CATALOG.get("aerotech_f50_4t");
+        var installation=new MotorInstallationResolver().resolve(resolved,motor);
+        var runtime=new MotorPropertyEvaluator().evaluate(installation,
+            MotorPropertyModelProfile.DEMO_MOTOR_PROPERTY_MODEL_PROFILE,1.4);
+        var total=new RocketMassPropertiesCalculator().evaluate(structure,runtime);
+        var thrust=new MotorThrustCurveEvaluator().evaluate(motor,1.4);
+        // Accepted THRUST/MPROP/RMASS fixture tolerances, not production defaults.
+        if(Math.abs(runtime.massKg()-.047016141471977205)>.047016141471977205*3e-15
+            ||Math.abs(total.totalMassKg()-.5978651442997246)>.5978651442997246*3e-15
+            ||Math.abs(total.totalCgXGeoM()-.6525224306832178)>.6525224306832178*3e-15
+            ||Math.abs(thrust.thrustN()-2.181395348837211)>2.181395348837211*4e-15) {
+            throw new AssertionError("Propulsion/runtime mass consumer failed");
+        }
+        System.out.println("PROPULSION_RUNTIME_MASS_CONSUMER: PASS");
     }
 }
