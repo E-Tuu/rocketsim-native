@@ -8,4 +8,5 @@ module org.roketsim.core {
     exports org.roketsim.core.mass;
     exports org.roketsim.core.propulsion;
     exports org.roketsim.core.aerodynamics;
+    exports org.roketsim.core.dynamics;
 }

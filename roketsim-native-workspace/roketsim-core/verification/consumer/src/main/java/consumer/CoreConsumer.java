@@ -19,6 +19,7 @@ import org.roketsim.core.mass.StructuralMassPropertiesCalculator;
 import org.roketsim.core.mass.RocketMassPropertiesCalculator;
 import org.roketsim.core.propulsion.*;
 import org.roketsim.core.aerodynamics.*;
+import org.roketsim.core.dynamics.*;
 
 public final class CoreConsumer {
     public static void main(String[] args) {
@@ -97,5 +98,21 @@ public final class CoreConsumer {
             throw new AssertionError("Aerodynamics consumer failed");
         }
         System.out.println("AERODYNAMICS_CONSUMER: PASS");
+        // Accepted NAT-013/014 explicit 3D fixture; no upstream physics orchestration.
+        var launch=new LaunchConditions3DOF(new double[]{10,20,30},new double[]{3,0,4},new double[]{.6,0,.8});
+        var state=new InitialStateBuilder().build(launch);
+        var snapshot=new TranslationalDynamicsInputs(1.5,10,new double[]{3,0,4},50,.2,.4,new double[]{0,0,-9.8});
+        var dynamics=new TranslationalDynamicsEvaluator().evaluate(state,launch,snapshot,
+            TranslationalDynamicsModelProfile.NATIVE_TRANSLATIONAL_DYNAMICS_V1_PROFILE);
+        double[] expectedAcceleration={2.4,0,-6.6};
+        for(int i=0;i<3;i++) {
+            if(Math.abs(dynamics.accelerationWorldMS2().get(i)-expectedAcceleration[i])>2e-15)
+                throw new AssertionError("Dynamics acceleration fixture failed");
+        }
+        if(state.positionWorldM().get(0)!=10 || state.velocityWorldMS().get(2)!=4
+            || state.positionWorldM()==launch.initialPositionWorldM()
+            || dynamics.accelerationWorldMS2()!=dynamics.derivative().velocityDerivativeWorldMS2())
+            throw new AssertionError("Dynamics state/ownership consumer failed");
+        System.out.println("DYNAMICS_CONSUMER: PASS");
     }
 }
