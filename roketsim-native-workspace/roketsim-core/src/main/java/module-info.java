@@ -9,4 +9,5 @@ module org.roketsim.core {
     exports org.roketsim.core.propulsion;
     exports org.roketsim.core.aerodynamics;
     exports org.roketsim.core.dynamics;
+    exports org.roketsim.core.numerics;
 }

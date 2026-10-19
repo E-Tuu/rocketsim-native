@@ -20,6 +20,7 @@ import org.roketsim.core.mass.RocketMassPropertiesCalculator;
 import org.roketsim.core.propulsion.*;
 import org.roketsim.core.aerodynamics.*;
 import org.roketsim.core.dynamics.*;
+import org.roketsim.core.numerics.*;
 
 public final class CoreConsumer {
     public static void main(String[] args) {
@@ -114,5 +115,18 @@ public final class CoreConsumer {
             || dynamics.accelerationWorldMS2()!=dynamics.derivative().velocityDerivativeWorldMS2())
             throw new AssertionError("Dynamics state/ownership consumer failed");
         System.out.println("DYNAMICS_CONSUMER: PASS");
+        // Accepted NAT-017 constant-acceleration fixture; packaged JAR API only.
+        var numericalState=new TranslationalState3DOF(new double[]{0,0,100},new double[]{0,0,20});
+        int[] calls={0};
+        var endpoint=new ClassicalRK4Integrator3DOF().step(new IntegrationPoint3DOF(0,numericalState),
+            new FixedStepConfig(.5),(t,s)->{
+                calls[0]++;
+                return new TranslationalStateDerivative3DOF(s.velocityWorldMS(),new double[]{0,0,-10});
+            });
+        if(calls[0]!=4 || endpoint.timeS()!=.5 || Math.abs(endpoint.state().positionWorldM().get(2)-108.75)>108.75e-7
+            || Math.abs(endpoint.state().velocityWorldMS().get(2)-15)>15e-7 || endpoint.state()==numericalState
+            || numericalState.positionWorldM().get(2)!=100)
+            throw new AssertionError("RK4 independent consumer failed");
+        System.out.println("NUMERICS_RK4_CONSUMER: PASS");
     }
 }
