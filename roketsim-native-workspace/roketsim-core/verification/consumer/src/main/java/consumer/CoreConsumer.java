@@ -21,6 +21,7 @@ import org.roketsim.core.propulsion.*;
 import org.roketsim.core.aerodynamics.*;
 import org.roketsim.core.dynamics.*;
 import org.roketsim.core.numerics.*;
+import org.roketsim.core.simulation.*;
 
 public final class CoreConsumer {
     public static void main(String[] args) {
@@ -128,5 +129,30 @@ public final class CoreConsumer {
             || numericalState.positionWorldM().get(2)!=100)
             throw new AssertionError("RK4 independent consumer failed");
         System.out.println("NUMERICS_RK4_CONSUMER: PASS");
+        // NAT-015 real F50 fixture: no numerical integration or duplicate physics.
+        var physicsContext=new PhysicsEvaluationContext3DOF(resolved,surfaces,structure,installation,
+            MotorPropertyModelProfile.DEMO_MOTOR_PROPERTY_MODEL_PROFILE,
+            BasicDragModelProfile.NATIVE_BASIC_DRAG_V1_PROFILE,
+            TranslationalDynamicsModelProfile.NATIVE_TRANSLATIONAL_DYNAMICS_V1_PROFILE,
+            EnvironmentPositionMappingModel.LOCAL_ENU_VERTICAL_OFFSET,1200,new PropulsionTimeline(0),
+            new USStandardAtmosphere1976Lower(),new DryAirPropertiesCalculator(),
+            new ConstantGravityModel(),new org.roketsim.core.environment.NoWindModel());
+        var physicsLaunch=new LaunchConditions3DOF(new double[]{10,20,50},new double[]{0,0,0},new double[]{0,0,1});
+        var physicsState=new InitialStateBuilder().build(physicsLaunch);
+        var physics=new PhysicsEvaluator3DOF().evaluate(.012,physicsState,physicsLaunch,physicsContext);
+        if(physics.environmentAltitudeM()!=1200 || physics.motorTimeS()!=.012
+            || physics.motorThrustState().thrustN()!=51.377
+            || Math.abs(physics.motorMassProperties().massKg()-.0847479321)>5e-11
+            || Math.abs(physics.rocketMassProperties().totalMassKg()-.6355969349)>5e-11
+            || physics.dynamics().modelProfile()!=physicsContext.translationalDynamicsModelProfile()
+            || physics.flightConditions().airspeedMS()!=0)
+            throw new AssertionError("Physics evaluator consumer snapshot failed");
+        var supplied=new TranslationalDynamicsInputs(physics.rocketMassProperties().totalMassKg(),
+            physics.motorThrustState().thrustN(),physics.relativeFlow(),physics.flightConditions().dynamicPressurePa(),
+            resolved.referenceAreaM2(),physics.basicDrag().totalCd0(),physics.gravityAccelerationWorldMS2());
+        if(!physics.dynamics().derivative().equals(new TranslationalDynamicsEvaluator().evaluate(physicsState,
+                physicsLaunch,supplied,physicsContext.translationalDynamicsModelProfile()).derivative()))
+            throw new AssertionError("Physics evaluator consumer derivative failed");
+        System.out.println("PHYSICS_EVALUATOR_CONSUMER: PASS");
     }
 }
