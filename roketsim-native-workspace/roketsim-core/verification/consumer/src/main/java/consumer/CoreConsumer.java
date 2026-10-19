@@ -154,5 +154,38 @@ public final class CoreConsumer {
                 physicsLaunch,supplied,physicsContext.translationalDynamicsModelProfile()).derivative()))
             throw new AssertionError("Physics evaluator consumer derivative failed");
         System.out.println("PHYSICS_EVALUATOR_CONSUMER: PASS");
+        // J-010 short lifecycle consumption through the packaged, independent JAR.
+        var eventProfile=new FlightEventDetectionProfile3DOF(
+            BurnoutDetectionModel.PROPULSION_CURVE_END_TIME,
+            ApogeeDetectionModel.WORLD_VERTICAL_VELOCITY_DOWNWARD_CROSSING,
+            GroundReferenceModel.LAUNCH_WORLD_Z_PLANE,
+            EventLocalizationModel.LINEAR_BRACKET_INTERPOLATION);
+        var statistics=new MotorCurveAnalyzer().analyze(motor);
+        var eventContext=new FlightEventDetectionContext3DOF(physicsLaunch,new PropulsionTimeline(0),statistics,eventProfile);
+        var detected=new FlightEventDetector3DOF().detect(
+            new IntegrationPoint3DOF(0,new TranslationalState3DOF(new double[]{0,0,60},new double[]{0,0,1})),
+            new IntegrationPoint3DOF(2,new TranslationalState3DOF(new double[]{0,0,40},new double[]{0,0,-1})),eventContext);
+        if(detected.size()!=3 || detected.get(0).eventType()!=FlightEventType.APOGEE
+            || detected.get(1).eventType()!=FlightEventType.GROUND || !detected.get(1).isTerminal()
+            || detected.get(2).eventType()!=FlightEventType.BURNOUT)
+            throw new AssertionError("Flight event consumer ordering failed");
+        var recorder=new FlightRecorder3DOF();
+        recorder.recordSample(new IntegrationPoint3DOF(.012,physicsState),physics);
+        var snapshotBefore=recorder.snapshot();recorder.recordEvents(detected);
+        if(!snapshotBefore.events().isEmpty() || recorder.snapshot().events().size()!=3
+            || recorder.snapshot().samples().get(0).physics()!=physics)
+            throw new AssertionError("Recorder consumer snapshot ownership failed");
+        var runConfig=new SimulationRunConfiguration3DOF(physicsLaunch,physicsContext,statistics,eventProfile,
+            new FixedStepConfig(.01),new SimulationRunLimits3DOF(3),
+            TerminalEventHandlingModel.REJECT_INTERIOR_CANDIDATE_ACCEPT_ENDPOINT);
+        var execution=new SimulationEngine3DOF().run(runConfig);
+        var result=new SimulationResult3DOF(execution);
+        if(result.terminationReason()!=SimulationTerminationReason.MAXIMUM_STEPS_REACHED
+            || result.stepsPerformed()!=3 || result.samples().size()!=4 || result.terminalEvent()!=null
+            || result.initialSample().point().timeS()!=0 || result.terminationTimeS()!=.03
+            || result.simulationDurationS()!=.03 || result.recordedData()!=execution.recordedData()
+            || !result.eventsOfType(FlightEventType.GROUND).isEmpty())
+            throw new AssertionError("Simulation lifecycle/result consumer failed");
+        System.out.println("LIFECYCLE_CONSUMER: PASS");
     }
 }
