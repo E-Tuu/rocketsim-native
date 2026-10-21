@@ -1,0 +1,12 @@
+{
+  "source_baseline": "4399400c1c8f04b05d4f36b04a5f7d11e958d813",
+  "note": "Raw complete traces are reproducible test artifacts, not committed. They were compared field-by-field; these hashes are supplementary integrity evidence, not the parity oracle.",
+  "files": [
+    {"file":"primary-java.tsv","bytes":10137682,"records":1590,"sha256":"2ffae2ddc7109ac6d448f750e657b6356a7afd4924b3314764c985de9586b79a"},
+    {"file":"primary-python.jsonl","bytes":10902360,"records":1590,"sha256":"bfe4e01b85b35a5c5ff7b8e9943b878576769003e5626463d6b778069a041e2d"},
+    {"file":"repeat-java.tsv","bytes":10137682,"records":1590,"sha256":"2ffae2ddc7109ac6d448f750e657b6356a7afd4924b3314764c985de9586b79a"},
+    {"file":"repeat-python.jsonl","bytes":10902360,"records":1590,"sha256":"bfe4e01b85b35a5c5ff7b8e9943b878576769003e5626463d6b778069a041e2d"},
+    {"file":"fine-java.tsv","bytes":20259401,"records":3173,"sha256":"2ae4cebc605b2504769657568a09e8cf9abc47f34e5c7d5bae6ced101cc5ed88"},
+    {"file":"fine-python.jsonl","bytes":21787113,"records":3173,"sha256":"41f9179b2bb5c480ad8e5fd1ec006857a3bbcbcdad2361e2a715754e5b73d699"}
+  ]
+}

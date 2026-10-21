@@ -1,0 +1,908 @@
+{
+  "primary": {
+    "records": 1590,
+    "numeric": 147521,
+    "exact": 147511,
+    "nonexact": 10,
+    "shape": 20617,
+    "nested_physics": 131472,
+    "max_absolute": 8.326672684688674e-17,
+    "max_relative": 3.922873245574419e-16,
+    "zero_reference_nonexact": 0,
+    "by_kind": {
+      "HEADER": {
+        "records": 1,
+        "numeric": 114,
+        "exact": 114,
+        "nonexact": 0,
+        "shape": 3,
+        "nested_physics": 0,
+        "max_absolute": 0.0,
+        "max_relative": 0.0,
+        "zero_reference_nonexact": 0
+      },
+      "SAMPLE": {
+        "records": 1584,
+        "numeric": 147312,
+        "exact": 147302,
+        "nonexact": 10,
+        "shape": 20592,
+        "nested_physics": 131472,
+        "max_absolute": 8.326672684688674e-17,
+        "max_relative": 3.922873245574419e-16,
+        "zero_reference_nonexact": 0
+      },
+      "EVENT": {
+        "records": 3,
+        "numeric": 33,
+        "exact": 33,
+        "nonexact": 0,
+        "shape": 9,
+        "nested_physics": 0,
+        "max_absolute": 0.0,
+        "max_relative": 0.0,
+        "zero_reference_nonexact": 0
+      },
+      "RESULT": {
+        "records": 1,
+        "numeric": 62,
+        "exact": 62,
+        "nonexact": 0,
+        "shape": 13,
+        "nested_physics": 0,
+        "max_absolute": 0.0,
+        "max_relative": 0.0,
+        "zero_reference_nonexact": 0
+      },
+      "END": {
+        "records": 1,
+        "numeric": 0,
+        "exact": 0,
+        "nonexact": 0,
+        "shape": 0,
+        "nested_physics": 0,
+        "max_absolute": 0.0,
+        "max_relative": 0.0,
+        "zero_reference_nonexact": 0
+      }
+    },
+    "differences": [
+      {
+        "location": {
+          "run": "primary",
+          "record": 969,
+          "kind": "SAMPLE",
+          "sample_index": 968
+        },
+        "field": "sample.physics.basicDrag.noseSkinFriction.smoothCorrectedCf",
+        "python": 0.004052622138323412,
+        "java": 0.004052622138323413,
+        "absolute_difference": 8.673617379884035e-19,
+        "relative_difference": 2.1402482352999113e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "primary",
+          "record": 969,
+          "kind": "SAMPLE",
+          "sample_index": 968
+        },
+        "field": "sample.physics.basicDrag.noseSkinFriction.selectedCf",
+        "python": 0.004052622138323412,
+        "java": 0.004052622138323413,
+        "absolute_difference": 8.673617379884035e-19,
+        "relative_difference": 2.1402482352999113e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "primary",
+          "record": 969,
+          "kind": "SAMPLE",
+          "sample_index": 968
+        },
+        "field": "sample.physics.basicDrag.bodySkinFriction.smoothCorrectedCf",
+        "python": 0.004052622138323412,
+        "java": 0.004052622138323413,
+        "absolute_difference": 8.673617379884035e-19,
+        "relative_difference": 2.1402482352999113e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "primary",
+          "record": 969,
+          "kind": "SAMPLE",
+          "sample_index": 968
+        },
+        "field": "sample.physics.basicDrag.bodySkinFriction.selectedCf",
+        "python": 0.004052622138323412,
+        "java": 0.004052622138323413,
+        "absolute_difference": 8.673617379884035e-19,
+        "relative_difference": 2.1402482352999113e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "primary",
+          "record": 969,
+          "kind": "SAMPLE",
+          "sample_index": 968
+        },
+        "field": "sample.physics.basicDrag.finSkinFriction.smoothCorrectedCf",
+        "python": 0.004052622138323412,
+        "java": 0.004052622138323413,
+        "absolute_difference": 8.673617379884035e-19,
+        "relative_difference": 2.1402482352999113e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "primary",
+          "record": 969,
+          "kind": "SAMPLE",
+          "sample_index": 968
+        },
+        "field": "sample.physics.basicDrag.finSkinFriction.selectedCf",
+        "python": 0.004052622138323412,
+        "java": 0.004052622138323413,
+        "absolute_difference": 8.673617379884035e-19,
+        "relative_difference": 2.1402482352999113e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "primary",
+          "record": 969,
+          "kind": "SAMPLE",
+          "sample_index": 968
+        },
+        "field": "sample.physics.basicDrag.noseFrictionCd",
+        "python": 0.025883694997073235,
+        "java": 0.025883694997073242,
+        "absolute_difference": 6.938893903907228e-18,
+        "relative_difference": 2.680797275926731e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "primary",
+          "record": 969,
+          "kind": "SAMPLE",
+          "sample_index": 968
+        },
+        "field": "sample.physics.basicDrag.bodyFrictionCd",
+        "python": 0.11914709086670831,
+        "java": 0.11914709086670834,
+        "absolute_difference": 2.7755575615628914e-17,
+        "relative_difference": 2.3295218887618084e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "primary",
+          "record": 969,
+          "kind": "SAMPLE",
+          "sample_index": 968
+        },
+        "field": "sample.physics.basicDrag.finFrictionCd",
+        "python": 0.06722875359705606,
+        "java": 0.06722875359705607,
+        "absolute_difference": 1.3877787807814457e-17,
+        "relative_difference": 2.0642637361675205e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "primary",
+          "record": 969,
+          "kind": "SAMPLE",
+          "sample_index": 968
+        },
+        "field": "sample.physics.basicDrag.frictionCd",
+        "python": 0.2122595394608376,
+        "java": 0.21225953946083767,
+        "absolute_difference": 8.326672684688674e-17,
+        "relative_difference": 3.922873245574419e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      }
+    ],
+    "samples": 1584,
+    "events": 3
+  },
+  "repeat": {
+    "records": 1590,
+    "numeric": 147521,
+    "exact": 147511,
+    "nonexact": 10,
+    "shape": 20617,
+    "nested_physics": 131472,
+    "max_absolute": 8.326672684688674e-17,
+    "max_relative": 3.922873245574419e-16,
+    "zero_reference_nonexact": 0,
+    "by_kind": {
+      "HEADER": {
+        "records": 1,
+        "numeric": 114,
+        "exact": 114,
+        "nonexact": 0,
+        "shape": 3,
+        "nested_physics": 0,
+        "max_absolute": 0.0,
+        "max_relative": 0.0,
+        "zero_reference_nonexact": 0
+      },
+      "SAMPLE": {
+        "records": 1584,
+        "numeric": 147312,
+        "exact": 147302,
+        "nonexact": 10,
+        "shape": 20592,
+        "nested_physics": 131472,
+        "max_absolute": 8.326672684688674e-17,
+        "max_relative": 3.922873245574419e-16,
+        "zero_reference_nonexact": 0
+      },
+      "EVENT": {
+        "records": 3,
+        "numeric": 33,
+        "exact": 33,
+        "nonexact": 0,
+        "shape": 9,
+        "nested_physics": 0,
+        "max_absolute": 0.0,
+        "max_relative": 0.0,
+        "zero_reference_nonexact": 0
+      },
+      "RESULT": {
+        "records": 1,
+        "numeric": 62,
+        "exact": 62,
+        "nonexact": 0,
+        "shape": 13,
+        "nested_physics": 0,
+        "max_absolute": 0.0,
+        "max_relative": 0.0,
+        "zero_reference_nonexact": 0
+      },
+      "END": {
+        "records": 1,
+        "numeric": 0,
+        "exact": 0,
+        "nonexact": 0,
+        "shape": 0,
+        "nested_physics": 0,
+        "max_absolute": 0.0,
+        "max_relative": 0.0,
+        "zero_reference_nonexact": 0
+      }
+    },
+    "differences": [
+      {
+        "location": {
+          "run": "repeat",
+          "record": 969,
+          "kind": "SAMPLE",
+          "sample_index": 968
+        },
+        "field": "sample.physics.basicDrag.noseSkinFriction.smoothCorrectedCf",
+        "python": 0.004052622138323412,
+        "java": 0.004052622138323413,
+        "absolute_difference": 8.673617379884035e-19,
+        "relative_difference": 2.1402482352999113e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "repeat",
+          "record": 969,
+          "kind": "SAMPLE",
+          "sample_index": 968
+        },
+        "field": "sample.physics.basicDrag.noseSkinFriction.selectedCf",
+        "python": 0.004052622138323412,
+        "java": 0.004052622138323413,
+        "absolute_difference": 8.673617379884035e-19,
+        "relative_difference": 2.1402482352999113e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "repeat",
+          "record": 969,
+          "kind": "SAMPLE",
+          "sample_index": 968
+        },
+        "field": "sample.physics.basicDrag.bodySkinFriction.smoothCorrectedCf",
+        "python": 0.004052622138323412,
+        "java": 0.004052622138323413,
+        "absolute_difference": 8.673617379884035e-19,
+        "relative_difference": 2.1402482352999113e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "repeat",
+          "record": 969,
+          "kind": "SAMPLE",
+          "sample_index": 968
+        },
+        "field": "sample.physics.basicDrag.bodySkinFriction.selectedCf",
+        "python": 0.004052622138323412,
+        "java": 0.004052622138323413,
+        "absolute_difference": 8.673617379884035e-19,
+        "relative_difference": 2.1402482352999113e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "repeat",
+          "record": 969,
+          "kind": "SAMPLE",
+          "sample_index": 968
+        },
+        "field": "sample.physics.basicDrag.finSkinFriction.smoothCorrectedCf",
+        "python": 0.004052622138323412,
+        "java": 0.004052622138323413,
+        "absolute_difference": 8.673617379884035e-19,
+        "relative_difference": 2.1402482352999113e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "repeat",
+          "record": 969,
+          "kind": "SAMPLE",
+          "sample_index": 968
+        },
+        "field": "sample.physics.basicDrag.finSkinFriction.selectedCf",
+        "python": 0.004052622138323412,
+        "java": 0.004052622138323413,
+        "absolute_difference": 8.673617379884035e-19,
+        "relative_difference": 2.1402482352999113e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "repeat",
+          "record": 969,
+          "kind": "SAMPLE",
+          "sample_index": 968
+        },
+        "field": "sample.physics.basicDrag.noseFrictionCd",
+        "python": 0.025883694997073235,
+        "java": 0.025883694997073242,
+        "absolute_difference": 6.938893903907228e-18,
+        "relative_difference": 2.680797275926731e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "repeat",
+          "record": 969,
+          "kind": "SAMPLE",
+          "sample_index": 968
+        },
+        "field": "sample.physics.basicDrag.bodyFrictionCd",
+        "python": 0.11914709086670831,
+        "java": 0.11914709086670834,
+        "absolute_difference": 2.7755575615628914e-17,
+        "relative_difference": 2.3295218887618084e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "repeat",
+          "record": 969,
+          "kind": "SAMPLE",
+          "sample_index": 968
+        },
+        "field": "sample.physics.basicDrag.finFrictionCd",
+        "python": 0.06722875359705606,
+        "java": 0.06722875359705607,
+        "absolute_difference": 1.3877787807814457e-17,
+        "relative_difference": 2.0642637361675205e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "repeat",
+          "record": 969,
+          "kind": "SAMPLE",
+          "sample_index": 968
+        },
+        "field": "sample.physics.basicDrag.frictionCd",
+        "python": 0.2122595394608376,
+        "java": 0.21225953946083767,
+        "absolute_difference": 8.326672684688674e-17,
+        "relative_difference": 3.922873245574419e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      }
+    ],
+    "samples": 1584,
+    "events": 3
+  },
+  "fine": {
+    "records": 3173,
+    "numeric": 294740,
+    "exact": 294714,
+    "nonexact": 26,
+    "shape": 41196,
+    "nested_physics": 262861,
+    "max_absolute": 8.881784197001252e-16,
+    "max_relative": 4.3829501452845633e-16,
+    "zero_reference_nonexact": 0,
+    "by_kind": {
+      "HEADER": {
+        "records": 1,
+        "numeric": 114,
+        "exact": 114,
+        "nonexact": 0,
+        "shape": 3,
+        "nested_physics": 0,
+        "max_absolute": 0.0,
+        "max_relative": 0.0,
+        "zero_reference_nonexact": 0
+      },
+      "SAMPLE": {
+        "records": 3167,
+        "numeric": 294531,
+        "exact": 294505,
+        "nonexact": 26,
+        "shape": 41171,
+        "nested_physics": 262861,
+        "max_absolute": 8.881784197001252e-16,
+        "max_relative": 4.3829501452845633e-16,
+        "zero_reference_nonexact": 0
+      },
+      "EVENT": {
+        "records": 3,
+        "numeric": 33,
+        "exact": 33,
+        "nonexact": 0,
+        "shape": 9,
+        "nested_physics": 0,
+        "max_absolute": 0.0,
+        "max_relative": 0.0,
+        "zero_reference_nonexact": 0
+      },
+      "RESULT": {
+        "records": 1,
+        "numeric": 62,
+        "exact": 62,
+        "nonexact": 0,
+        "shape": 13,
+        "nested_physics": 0,
+        "max_absolute": 0.0,
+        "max_relative": 0.0,
+        "zero_reference_nonexact": 0
+      },
+      "END": {
+        "records": 1,
+        "numeric": 0,
+        "exact": 0,
+        "nonexact": 0,
+        "shape": 0,
+        "nested_physics": 0,
+        "max_absolute": 0.0,
+        "max_relative": 0.0,
+        "zero_reference_nonexact": 0
+      }
+    },
+    "differences": [
+      {
+        "location": {
+          "run": "fine",
+          "record": 459,
+          "kind": "SAMPLE",
+          "sample_index": 458
+        },
+        "field": "sample.physics.basicDrag.noseSkinFriction.smoothCorrectedCf",
+        "python": 0.003384785926407356,
+        "java": 0.003384785926407357,
+        "absolute_difference": 8.673617379884035e-19,
+        "relative_difference": 2.562530561302084e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "fine",
+          "record": 459,
+          "kind": "SAMPLE",
+          "sample_index": 458
+        },
+        "field": "sample.physics.basicDrag.noseSkinFriction.selectedCf",
+        "python": 0.003384785926407356,
+        "java": 0.003384785926407357,
+        "absolute_difference": 8.673617379884035e-19,
+        "relative_difference": 2.562530561302084e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "fine",
+          "record": 459,
+          "kind": "SAMPLE",
+          "sample_index": 458
+        },
+        "field": "sample.physics.basicDrag.bodySkinFriction.smoothCorrectedCf",
+        "python": 0.003384785926407356,
+        "java": 0.003384785926407357,
+        "absolute_difference": 8.673617379884035e-19,
+        "relative_difference": 2.562530561302084e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "fine",
+          "record": 459,
+          "kind": "SAMPLE",
+          "sample_index": 458
+        },
+        "field": "sample.physics.basicDrag.bodySkinFriction.selectedCf",
+        "python": 0.003384785926407356,
+        "java": 0.003384785926407357,
+        "absolute_difference": 8.673617379884035e-19,
+        "relative_difference": 2.562530561302084e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "fine",
+          "record": 459,
+          "kind": "SAMPLE",
+          "sample_index": 458
+        },
+        "field": "sample.physics.basicDrag.finSkinFriction.smoothCorrectedCf",
+        "python": 0.003384785926407356,
+        "java": 0.003384785926407357,
+        "absolute_difference": 8.673617379884035e-19,
+        "relative_difference": 2.562530561302084e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "fine",
+          "record": 459,
+          "kind": "SAMPLE",
+          "sample_index": 458
+        },
+        "field": "sample.physics.basicDrag.finSkinFriction.selectedCf",
+        "python": 0.003384785926407356,
+        "java": 0.003384785926407357,
+        "absolute_difference": 8.673617379884035e-19,
+        "relative_difference": 2.562530561302084e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "fine",
+          "record": 459,
+          "kind": "SAMPLE",
+          "sample_index": 458
+        },
+        "field": "sample.physics.basicDrag.noseFrictionCd",
+        "python": 0.02161829145654298,
+        "java": 0.021618291456542985,
+        "absolute_difference": 6.938893903907228e-18,
+        "relative_difference": 3.2097327940349826e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "fine",
+          "record": 459,
+          "kind": "SAMPLE",
+          "sample_index": 458
+        },
+        "field": "sample.physics.basicDrag.bodyFrictionCd",
+        "python": 0.09951270623637626,
+        "java": 0.09951270623637627,
+        "absolute_difference": 1.3877787807814457e-17,
+        "relative_difference": 1.394574455130386e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "fine",
+          "record": 459,
+          "kind": "SAMPLE",
+          "sample_index": 458
+        },
+        "field": "sample.physics.basicDrag.finFrictionCd",
+        "python": 0.05615005082101333,
+        "java": 0.05615005082101334,
+        "absolute_difference": 1.3877787807814457e-17,
+        "relative_difference": 2.471553917564915e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "fine",
+          "record": 459,
+          "kind": "SAMPLE",
+          "sample_index": 458
+        },
+        "field": "sample.physics.basicDrag.totalCd0",
+        "python": 0.4803432830969058,
+        "java": 0.4803432830969059,
+        "absolute_difference": 5.551115123125783e-17,
+        "relative_difference": 1.1556558233387194e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "fine",
+          "record": 459,
+          "kind": "SAMPLE",
+          "sample_index": 458
+        },
+        "field": "sample.physics.basicDrag.frictionCd",
+        "python": 0.17728104851393256,
+        "java": 0.1772810485139326,
+        "absolute_difference": 2.7755575615628914e-17,
+        "relative_difference": 1.565625646299559e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "fine",
+          "record": 2635,
+          "kind": "SAMPLE",
+          "sample_index": 2634
+        },
+        "field": "sample.physics.basicDrag.noseSkinFriction.smoothCorrectedCf",
+        "python": 0.003627219665721142,
+        "java": 0.003627219665721141,
+        "absolute_difference": 8.673617379884035e-19,
+        "relative_difference": 2.3912578170695377e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "fine",
+          "record": 2635,
+          "kind": "SAMPLE",
+          "sample_index": 2634
+        },
+        "field": "sample.physics.basicDrag.noseSkinFriction.selectedCf",
+        "python": 0.003627219665721142,
+        "java": 0.003627219665721141,
+        "absolute_difference": 8.673617379884035e-19,
+        "relative_difference": 2.3912578170695377e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "fine",
+          "record": 2635,
+          "kind": "SAMPLE",
+          "sample_index": 2634
+        },
+        "field": "sample.physics.basicDrag.bodySkinFriction.smoothCorrectedCf",
+        "python": 0.003627219665721142,
+        "java": 0.003627219665721141,
+        "absolute_difference": 8.673617379884035e-19,
+        "relative_difference": 2.3912578170695377e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "fine",
+          "record": 2635,
+          "kind": "SAMPLE",
+          "sample_index": 2634
+        },
+        "field": "sample.physics.basicDrag.bodySkinFriction.selectedCf",
+        "python": 0.003627219665721142,
+        "java": 0.003627219665721141,
+        "absolute_difference": 8.673617379884035e-19,
+        "relative_difference": 2.3912578170695377e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "fine",
+          "record": 2635,
+          "kind": "SAMPLE",
+          "sample_index": 2634
+        },
+        "field": "sample.physics.basicDrag.finSkinFriction.smoothCorrectedCf",
+        "python": 0.003627219665721142,
+        "java": 0.003627219665721141,
+        "absolute_difference": 8.673617379884035e-19,
+        "relative_difference": 2.3912578170695377e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "fine",
+          "record": 2635,
+          "kind": "SAMPLE",
+          "sample_index": 2634
+        },
+        "field": "sample.physics.basicDrag.finSkinFriction.selectedCf",
+        "python": 0.003627219665721142,
+        "java": 0.003627219665721141,
+        "absolute_difference": 8.673617379884035e-19,
+        "relative_difference": 2.3912578170695377e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "fine",
+          "record": 2635,
+          "kind": "SAMPLE",
+          "sample_index": 2634
+        },
+        "field": "sample.physics.basicDrag.noseFrictionCd",
+        "python": 0.023166691665399863,
+        "java": 0.02316669166539986,
+        "absolute_difference": 3.469446951953614e-18,
+        "relative_difference": 1.4976013848085764e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "fine",
+          "record": 2635,
+          "kind": "SAMPLE",
+          "sample_index": 2634
+        },
+        "field": "sample.physics.basicDrag.bodyFrictionCd",
+        "python": 0.10664025817220156,
+        "java": 0.10664025817220153,
+        "absolute_difference": 2.7755575615628914e-17,
+        "relative_difference": 2.6027295968103814e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "fine",
+          "record": 2635,
+          "kind": "SAMPLE",
+          "sample_index": 2634
+        },
+        "field": "sample.physics.basicDrag.finFrictionCd",
+        "python": 0.06017177245398111,
+        "java": 0.060171772453981094,
+        "absolute_difference": 1.3877787807814457e-17,
+        "relative_difference": 2.306361810835484e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "fine",
+          "record": 2635,
+          "kind": "SAMPLE",
+          "sample_index": 2634
+        },
+        "field": "sample.physics.basicDrag.totalCd0",
+        "python": 0.48949461510263215,
+        "java": 0.4894946151026321,
+        "absolute_difference": 5.551115123125783e-17,
+        "relative_difference": 1.134050294294225e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      },
+      {
+        "location": {
+          "run": "fine",
+          "record": 2635,
+          "kind": "SAMPLE",
+          "sample_index": 2634
+        },
+        "field": "sample.physics.dynamics.forces.dragForceWorldN.2",
+        "python": 3.8551846849251277,
+        "java": 3.8551846849251272,
+        "absolute_difference": 4.440892098500626e-16,
+        "relative_difference": 1.1519271997177676e-16,
+        "rtol": 0.0,
+        "atol": 2e-15
+      },
+      {
+        "location": {
+          "run": "fine",
+          "record": 2635,
+          "kind": "SAMPLE",
+          "sample_index": 2634
+        },
+        "field": "sample.physics.dynamics.derivative.velocityDerivativeWorldMS2.2",
+        "python": -3.3582246171849253,
+        "java": -3.358224617184926,
+        "absolute_difference": 8.881784197001252e-16,
+        "relative_difference": 2.6447856261760484e-16,
+        "rtol": 0.0,
+        "atol": 2e-15
+      },
+      {
+        "location": {
+          "run": "fine",
+          "record": 2635,
+          "kind": "SAMPLE",
+          "sample_index": 2634
+        },
+        "field": "sample.physics.dynamics.forces.netForceWorldN.2",
+        "python": -2.0077112386556015,
+        "java": -2.007711238655602,
+        "absolute_difference": 4.440892098500626e-16,
+        "relative_difference": 2.2119177364740583e-16,
+        "rtol": 0.0,
+        "atol": 2e-15
+      },
+      {
+        "location": {
+          "run": "fine",
+          "record": 2635,
+          "kind": "SAMPLE",
+          "sample_index": 2634
+        },
+        "field": "sample.physics.dynamics.accelerationWorldMS2.2",
+        "python": -3.3582246171849253,
+        "java": -3.358224617184926,
+        "absolute_difference": 8.881784197001252e-16,
+        "relative_difference": 2.6447856261760484e-16,
+        "rtol": 0.0,
+        "atol": 2e-15
+      },
+      {
+        "location": {
+          "run": "fine",
+          "record": 2635,
+          "kind": "SAMPLE",
+          "sample_index": 2634
+        },
+        "field": "sample.physics.basicDrag.frictionCd",
+        "python": 0.18997872229158255,
+        "java": 0.18997872229158247,
+        "absolute_difference": 8.326672684688674e-17,
+        "relative_difference": 4.3829501452845633e-16,
+        "rtol": 3e-15,
+        "atol": 0.0
+      }
+    ],
+    "samples": 3167,
+    "events": 3
+  }
+}

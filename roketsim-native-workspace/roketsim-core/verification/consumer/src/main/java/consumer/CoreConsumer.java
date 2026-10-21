@@ -187,5 +187,32 @@ public final class CoreConsumer {
             || !result.eventsOfType(FlightEventType.GROUND).isEmpty())
             throw new AssertionError("Simulation lifecycle/result consumer failed");
         System.out.println("LIFECYCLE_CONSUMER: PASS");
+        // J-011: source-derived NAT-022 primary fixture, using only this packaged JAR.
+        var demoLaunch=new LaunchConditions3DOF(new double[]{0,0,0},new double[]{0,0,0},new double[]{0,0,1});
+        var demoConfig=new SimulationRunConfiguration3DOF(demoLaunch,physicsContext,statistics,eventProfile,
+            new FixedStepConfig(.010),new SimulationRunLimits3DOF(5000),
+            TerminalEventHandlingModel.REJECT_INTERIOR_CANDIDATE_ACCEPT_ENDPOINT);
+        var demo=new SimulationResult3DOF(new SimulationEngine3DOF().run(demoConfig));
+        if(demo.terminationReason()!=SimulationTerminationReason.TERMINAL_EVENT || demo.stepsPerformed()!=1584
+            || demo.samples().size()!=1584 || demo.events().size()!=3
+            || demo.burnoutEvent().timeS()!=1.43
+            || !(demo.burnoutEvent().timeS()<demo.apogeeEvent().timeS() && demo.apogeeEvent().timeS()<demo.groundEvent().timeS())
+            || demo.groundEvent()!=demo.terminalEvent() || demo.events().get(2)!=demo.groundEvent()
+            || demo.groundEvent().interpolationFraction()>=1
+            || demo.lastAcceptedSample().point().timeS()!=15.829999999999707
+            || demo.terminationTimeS()!=15.832349589466348
+            || demo.lastAcceptedSample().point().state().positionWorldM().get(2)<=0
+            || demo.groundEvent().estimatedState().positionWorldM().get(2)!=0
+            || demo.recordedData()!=demo.execution().recordedData()
+            || demo.initialSample()!=demo.samples().get(0))
+            throw new AssertionError("NAT-022 independent primary trajectory failed");
+        for(var type:FlightEventType.values())if(demo.eventsOfType(type).size()!=1)
+            throw new AssertionError("NAT-022 consumer event cardinality failed");
+        try { demo.samples().clear();throw new AssertionError("Mutable trajectory history"); }
+        catch(UnsupportedOperationException expected) { /* Required immutable List boundary. */ }
+        var copiedPosition=demo.lastAcceptedSample().point().state().positionWorldM().toArray();copiedPosition[2]=-999;
+        if(demo.lastAcceptedSample().point().state().positionWorldM().get(2)<=0)
+            throw new AssertionError("Mutable stored trajectory vector");
+        System.out.println("NATIVE_TRAJECTORY_CONSUMER: PASS samples="+demo.samples().size()+" ground="+demo.terminationTimeS());
     }
 }
