@@ -1,6 +1,7 @@
-# RoketSim Contracts
+# RoketSim veri sözleşmeleri
 
-Bu alan, RoketSim Java uygulaması ile bağımsız Native motor arasındaki motor-neutral, sürümlenmiş JSON sözleşmeleri için ayrılmıştır.
-
-Henüz şema veya örnek sözleşme tanımlanmamıştır. Kullanıcı girdileri güvenilmeyen veri kabul edilecek ve sözleşme doğrulama kuralları sonraki görevlerde açıkça belirlenecektir.
-
+Önceki yerel JSON arayüzünün [şemaları](../schemas/integration/) ve
+[istek ile bağlantı örnekleri](../examples/integration/) ilgili proje
+dizinlerindedir. Güncel Java çekirdeğiyle ilişkisi
+[ikincil mimari belgede](../docs/architecture.md#başvuru-motoru-ve-eski-entegrasyon)
+açıklanır.

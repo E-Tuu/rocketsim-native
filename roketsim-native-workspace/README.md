@@ -1,86 +1,58 @@
 # RoketSim Native
 
-RoketSim Native, model roketler için Python ile geliştirilmiş bir uçuş simülasyonu
-motorudur. Güncel sürüm sabit adımlı, doğrulanmış bir 3DOF balistik yetenek sunar;
-OpenRocket ileride parite ve referans hedefidir, uygulama otoritesi değildir.
-# Yazar Notu 
+## RoketSim Native nedir?
 
-Bu demo içerisinde 1 adet motor örneği ( AeroTech F50-4T ), 2 adet (CARDBOARD, POLYSTYRENE) malzeme çeşiti ve basic roket componentleri (nose (conical), body (Cylindrical), fin (Trapezoidal, (square kenar kesiti). Bu componentler liste oluşturulup arttırılacaktı. bu demo sadece bunları karşılar. 
-Python - Java köprüsü olarak json kullanıldı. (Burası eksik ve yetersiz. şimdilik deneme yapılabilinmesi için konulmuştur. Entegrasyon yapılamazsa tekrar düzenleme yapılacaktır.)
-demo içerisinde birçok model es geçilmiştir. eklenecek modeller aşağıda (dokümantasyon) ve diğer modül md.lerinde açıklanmaktadır. 
-integration kısmında özellikle [schemas/integration/v1.1/], [examples/integration/request-v1.1-explicit-demo.json] ve [Java17CliBridgeExample.java] bakmanız daha iyi olacaktır.
+RoketSim Native, roket uçuşunu hesaplayan bağımsız bir Java 17 fizik
+çekirdeğidir. Bir roketin konumunu, hızını ve uçuş olaylarını, verilen
+araç ve çevre koşulları altında simüle eder.
 
-## Yetenekler
+## Projenin amacı
 
-- Standart atmosfer, yerçekimi, sabit rüzgâr ve bağıl hava akışı
-- Araç geometrisi, AeroTech F50-4T itki modeli ve değişken motor/roket kütlesi
-- Basic Drag V1 ve 3DOF öteleme dinamiği
-- Klasik sabit adımlı RK4 integrasyonu
-- BURNOUT, APOGEE ve GROUND olayları
-- Yörünge kaydı ve değiştirilemez simülasyon sonucu
+Amaç, uçuşu etkileyen fiziksel varsayımları görünür kılmak ve aynı
+girdilerle tekrarlanabilir sonuçlar üretmektir. Modeller uygulama
+arayüzünden bağımsızdır. Böylece bir sonucun hangi araç geometrisine,
+motor verisine ve çevre koşuluna dayandığı incelenebilir.
 
-## Mimari
+## Hangi fizik modelleri mevcut?
 
-```text
-Environment
-  ↓
-Propulsion
-  ↓
-Aerodynamic
-  ↓
-Dynamic
-  ↓
-RK4
-  ↓
-events/recorder
-  ↓
-Simulation Engine 
-  ↓
-Simulation Results
-```
+- **Geometri ve kütle.** Tek kademeli ve tek motorlu roketler için konik burun,
+  silindirik gövde, bir trapez kanat takımı ve motor yuvası modellenir.
+  Yapısal kütle, eksenel kütle merkezi ve uygun girdilerle atalet hesaplanabilir.
+- **Motor ve itki.** Kaynaklı itki-zaman eğrilerinden itki, impuls, motor
+  kütle tüketimi ve motor kütle merkezi değerlendirilir.
+- **Atmosfer ve aerodinamik.** Kuru standart atmosfer, sabit rüzgâr ve
+  bağıl hava akışı kullanılır. Gövde sürüklemesi ve statik stabilite
+  ayrı değerlendirilir.
+- **Uçuş.** Sabit itki yönüyle üç boyutlu öteleme, RK4 ile ilerletilir.
+  İdeal kılavuz, serbest uçuş, isteğe bağlı paraşüt, yer teması ve
+  kullanıcı iptali desteklenir.
 
-## Çalıştırma
+## Geçerlilik sınırları
 
-Proje Python 3.12 veya üzerini ve `numpy` paketini gerektirir. Depo kökünden:
+Basic Drag modeli Mach 0–1 aralığında, sınırlar dâhil, geçerlidir. Statik
+basınç merkezi ve normal kuvvet eğimi (CP/CNa) hesabı Mach 0,8'in altındadır.
+Atalet hesabı, dönme hareketi veya 6DOF uçuş çözümü sağlamaz. Süpersonik
+aerodinamik, genel bileşen ağacı ve çarpma sonrası hareket kapsam dışındadır.
 
-```powershell
-cd roketsim-native-engine
-python -m pip install --group dev -e .
-python -m pytest
-```
+Doğrulamada kullanılan L/M/N araçları sentetiktir. Motor kaynak kayıtları
+uçuş sertifikasyonu sağlamaz. Bu yayın ağacı üç özgün TEKNOFEST Rev1 eğrisini
+içerir. Kaynağı izlenebilir haricî motor verileri genel motor modeliyle
+kullanılabilir. Sayısal doğrulama belirtilen modelleri ve
+senaryoları kapsar. OpenRocket eşdeğerliği henüz doğrulanmamıştır.
 
-JSON CLI, kurulu ortamdan tek bir isteği stdin üzerinden alır:
+## Gelecek geliştirmeler
 
-```powershell
-Get-Content ..\examples\integration\request-v1.json -Raw |
-  python -m roketsim_native.integration.cli
-```
+Uygulama ve kullanıcı arayüzü entegrasyonu, daha geniş araç bileşenleri,
+genişletilmiş aerodinamik ve dönme dinamiği geliştirme alanlarıdır.
+OpenRocket karşılaştırması uygulama entegrasyonu aşamasına ertelenmiştir.
 
-## Java 17 Entegrasyonu
+## Fizik modülleri
 
-Java frontend, yerel JSON CLI sürecini `ProcessBuilder` ile başlatır; istek stdin'e,
-tek JSON yanıt stdout'a yazılır. Şema 1.1, `capabilities` sorgusunu ve SI birimli açık
-araç yapılandırmasıyla `simulate` işlemini destekler; şema 1.0 preset istekleriyle
-uyumluluk korunur. Sözleşmeler `schemas/integration/`, standart kütüphane örneği
-ise `examples/integration/Java17CliBridgeExample.java` altındadır. Bu sınır bir ağ
-veya sunucu API'si değildir.
+- [Geometri, kütle ve atalet](docs/geometry-mass.md)
+- [Motor ve itki](docs/propulsion.md)
+- [Atmosfer ve aerodinamik](docs/aerodynamics-environment.md)
+- [Uçuş, kılavuz ve kurtarma](docs/flight-simulation.md)
 
-## Dokümantasyon
-
-- [environment.md](docs/environment.md)
-- [vehicle-propulsion.md](docs/vehicle-propulsion.md)
-- [aerodynamics.md](docs/aerodynamics.md)
-- [dynamics-numerics.md](docs/dynamics-numerics.md)
-- [simulation-engine.md](docs/simulation-engine.md)
-- [demo-validation.md](docs/demo-validation.md)
-
-Ayrıntılı tarihsel doğrulama kayıtları `docs/archive/nat/` altında korunur.
-
-## Güncel Sınırlamalar
-
-- Simülasyon ignition anında başlar; Liftoff ve launch rail fiziği yoktur.
-- Recovery modellenmez.
-- Model 3DOF'tur; attitude ve momentler yoktur.
-- İntegrasyon sabit adımlıdır.
-- Aerodinamik kapsam Basic Drag V1 ile sınırlıdır.
-- Henüz OpenRocket paritesi iddiası yoktur.
+İkincil başvurular arasında [model sınırları ve mimari](docs/architecture.md),
+[doğrulama ve tarihsel kayıtlar](docs/verification.md) ve
+[yol haritası](docs/roadmap.md) bulunur.

@@ -29,7 +29,7 @@
 | Tam depo denetimi | 1431 başarılı, 0 başarısız, 0 atlanan |
 
 Ayrıntılı fixture lineage'i, event-state semantiği ve adım duyarlılığı değerleri
-[arşivlenmiş NAT-022 kaydında](archive/nat/nat-022-end-to-end-native-trajectory.md)
+[arşivlenmiş NAT-022 kaydında](../nat/nat-022-end-to-end-native-trajectory.md)
 korunmaktadır.
 
 **FIRST NATIVE 3DOF DEMO BASELINE: VERIFIED**

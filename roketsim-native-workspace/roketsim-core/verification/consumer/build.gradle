@@ -1,0 +1,5 @@
+plugins { id 'application' }
+java { toolchain { languageVersion = JavaLanguageVersion.of(17) } }
+tasks.withType(JavaCompile).configureEach { options.release = 17; options.encoding = 'UTF-8' }
+dependencies { implementation files(providers.gradleProperty('coreJar').get()) }
+application { mainClass = 'consumer.CoreConsumer' }

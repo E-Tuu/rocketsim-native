@@ -1,0 +1,982 @@
+[
+  {
+    "op": "drag",
+    "selector": "boundary_layer_model",
+    "kind": "BoundaryLayerModel",
+    "input": "FULLY_TURBULENT",
+    "status": "OK",
+    "value": 0.4740271634476429,
+    "metadata_preserved": true
+  },
+  {
+    "op": "drag",
+    "selector": "boundary_layer_model",
+    "kind": "str",
+    "input": "fully_turbulent",
+    "status": "OK",
+    "value": 0.4740271634476429,
+    "metadata_preserved": true
+  },
+  {
+    "op": "drag",
+    "selector": "boundary_layer_model",
+    "kind": "str",
+    "input": "FULLY_TURBULENT",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "boundary_layer_model",
+    "kind": "str",
+    "input": " fully_turbulent",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "boundary_layer_model",
+    "kind": "str",
+    "input": "fully_turbulent ",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "boundary_layer_model",
+    "kind": "str",
+    "input": "unknown",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "boundary_layer_model",
+    "kind": "str",
+    "input": "",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "boundary_layer_model",
+    "kind": "NoneType",
+    "input": null,
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "boundary_layer_model",
+    "kind": "int",
+    "input": 1,
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "boundary_layer_model",
+    "kind": "bool",
+    "input": true,
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "reynolds_length_policy",
+    "kind": "ReynoldsLengthPolicy",
+    "input": "AERODYNAMIC_LENGTH",
+    "status": "OK",
+    "value": 0.4740271634476429,
+    "metadata_preserved": true
+  },
+  {
+    "op": "drag",
+    "selector": "reynolds_length_policy",
+    "kind": "str",
+    "input": "aerodynamic_length",
+    "status": "OK",
+    "value": 0.4740271634476429,
+    "metadata_preserved": true
+  },
+  {
+    "op": "drag",
+    "selector": "reynolds_length_policy",
+    "kind": "str",
+    "input": "AERODYNAMIC_LENGTH",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "reynolds_length_policy",
+    "kind": "str",
+    "input": " aerodynamic_length",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "reynolds_length_policy",
+    "kind": "str",
+    "input": "aerodynamic_length ",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "reynolds_length_policy",
+    "kind": "str",
+    "input": "unknown",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "reynolds_length_policy",
+    "kind": "str",
+    "input": "",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "reynolds_length_policy",
+    "kind": "NoneType",
+    "input": null,
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "reynolds_length_policy",
+    "kind": "int",
+    "input": 1,
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "reynolds_length_policy",
+    "kind": "bool",
+    "input": true,
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "low_reynolds_continuation",
+    "kind": "LowReynoldsContinuation",
+    "input": "MINIMUM_EVALUATION_REYNOLDS",
+    "status": "OK",
+    "value": 0.4740271634476429,
+    "metadata_preserved": true
+  },
+  {
+    "op": "drag",
+    "selector": "low_reynolds_continuation",
+    "kind": "str",
+    "input": "minimum_evaluation_reynolds",
+    "status": "OK",
+    "value": 0.4740271634476429,
+    "metadata_preserved": true
+  },
+  {
+    "op": "drag",
+    "selector": "low_reynolds_continuation",
+    "kind": "str",
+    "input": "MINIMUM_EVALUATION_REYNOLDS",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "low_reynolds_continuation",
+    "kind": "str",
+    "input": " minimum_evaluation_reynolds",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "low_reynolds_continuation",
+    "kind": "str",
+    "input": "minimum_evaluation_reynolds ",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "low_reynolds_continuation",
+    "kind": "str",
+    "input": "unknown",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "low_reynolds_continuation",
+    "kind": "str",
+    "input": "",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "low_reynolds_continuation",
+    "kind": "NoneType",
+    "input": null,
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "low_reynolds_continuation",
+    "kind": "int",
+    "input": 1,
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "low_reynolds_continuation",
+    "kind": "bool",
+    "input": true,
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "nose_pressure_model",
+    "kind": "NosePressureModel",
+    "input": "TD13_CONICAL_SUBSONIC_TO_SONIC",
+    "status": "OK",
+    "value": 0.4740271634476429,
+    "metadata_preserved": true
+  },
+  {
+    "op": "drag",
+    "selector": "nose_pressure_model",
+    "kind": "str",
+    "input": "td13_conical_subsonic_to_sonic",
+    "status": "OK",
+    "value": 0.4740271634476429,
+    "metadata_preserved": true
+  },
+  {
+    "op": "drag",
+    "selector": "nose_pressure_model",
+    "kind": "str",
+    "input": "TD13_CONICAL_SUBSONIC_TO_SONIC",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "nose_pressure_model",
+    "kind": "str",
+    "input": " td13_conical_subsonic_to_sonic",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "nose_pressure_model",
+    "kind": "str",
+    "input": "td13_conical_subsonic_to_sonic ",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "nose_pressure_model",
+    "kind": "str",
+    "input": "unknown",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "nose_pressure_model",
+    "kind": "str",
+    "input": "",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "nose_pressure_model",
+    "kind": "NoneType",
+    "input": null,
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "nose_pressure_model",
+    "kind": "int",
+    "input": 1,
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "nose_pressure_model",
+    "kind": "bool",
+    "input": true,
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "fin_edge_model",
+    "kind": "FinEdgeModel",
+    "input": "TD13_SQUARE",
+    "status": "OK",
+    "value": 0.4740271634476429,
+    "metadata_preserved": true
+  },
+  {
+    "op": "drag",
+    "selector": "fin_edge_model",
+    "kind": "str",
+    "input": "td13_square",
+    "status": "OK",
+    "value": 0.4740271634476429,
+    "metadata_preserved": true
+  },
+  {
+    "op": "drag",
+    "selector": "fin_edge_model",
+    "kind": "str",
+    "input": "TD13_SQUARE",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "fin_edge_model",
+    "kind": "str",
+    "input": " td13_square",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "fin_edge_model",
+    "kind": "str",
+    "input": "td13_square ",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "fin_edge_model",
+    "kind": "str",
+    "input": "unknown",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "fin_edge_model",
+    "kind": "str",
+    "input": "",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "fin_edge_model",
+    "kind": "NoneType",
+    "input": null,
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "fin_edge_model",
+    "kind": "int",
+    "input": 1,
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "fin_edge_model",
+    "kind": "bool",
+    "input": true,
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "base_drag_model",
+    "kind": "BaseDragModel",
+    "input": "TD13_SUBSONIC_TO_SONIC",
+    "status": "OK",
+    "value": 0.4740271634476429,
+    "metadata_preserved": true
+  },
+  {
+    "op": "drag",
+    "selector": "base_drag_model",
+    "kind": "str",
+    "input": "td13_subsonic_to_sonic",
+    "status": "OK",
+    "value": 0.4740271634476429,
+    "metadata_preserved": true
+  },
+  {
+    "op": "drag",
+    "selector": "base_drag_model",
+    "kind": "str",
+    "input": "TD13_SUBSONIC_TO_SONIC",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "base_drag_model",
+    "kind": "str",
+    "input": " td13_subsonic_to_sonic",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "base_drag_model",
+    "kind": "str",
+    "input": "td13_subsonic_to_sonic ",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "base_drag_model",
+    "kind": "str",
+    "input": "unknown",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "base_drag_model",
+    "kind": "str",
+    "input": "",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "base_drag_model",
+    "kind": "NoneType",
+    "input": null,
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "base_drag_model",
+    "kind": "int",
+    "input": 1,
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "base_drag_model",
+    "kind": "bool",
+    "input": true,
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "plume_treatment",
+    "kind": "PlumeTreatment",
+    "input": "IGNORED",
+    "status": "OK",
+    "value": 0.4740271634476429,
+    "metadata_preserved": true
+  },
+  {
+    "op": "drag",
+    "selector": "plume_treatment",
+    "kind": "str",
+    "input": "ignored",
+    "status": "OK",
+    "value": 0.4740271634476429,
+    "metadata_preserved": true
+  },
+  {
+    "op": "drag",
+    "selector": "plume_treatment",
+    "kind": "str",
+    "input": "IGNORED",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "plume_treatment",
+    "kind": "str",
+    "input": " ignored",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "plume_treatment",
+    "kind": "str",
+    "input": "ignored ",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "plume_treatment",
+    "kind": "str",
+    "input": "unknown",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "plume_treatment",
+    "kind": "str",
+    "input": "",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "plume_treatment",
+    "kind": "NoneType",
+    "input": null,
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "plume_treatment",
+    "kind": "int",
+    "input": 1,
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "drag",
+    "selector": "plume_treatment",
+    "kind": "bool",
+    "input": true,
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_BASIC_DRAG_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "static",
+    "selector": "normal_force_model",
+    "kind": "StaticNormalForceModel",
+    "input": "EXTENDED_BARROWMAN_SUBSONIC",
+    "status": "OK",
+    "value": 0.6979861012805668,
+    "metadata_preserved": true
+  },
+  {
+    "op": "static",
+    "selector": "normal_force_model",
+    "kind": "str",
+    "input": "extended_barrowman_subsonic",
+    "status": "OK",
+    "value": 0.6979861012805668,
+    "metadata_preserved": true
+  },
+  {
+    "op": "static",
+    "selector": "normal_force_model",
+    "kind": "str",
+    "input": "EXTENDED_BARROWMAN_SUBSONIC",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_STATIC_STABILITY_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "static",
+    "selector": "normal_force_model",
+    "kind": "str",
+    "input": " extended_barrowman_subsonic",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_STATIC_STABILITY_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "static",
+    "selector": "normal_force_model",
+    "kind": "str",
+    "input": "extended_barrowman_subsonic ",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_STATIC_STABILITY_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "static",
+    "selector": "normal_force_model",
+    "kind": "str",
+    "input": "unknown",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_STATIC_STABILITY_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "static",
+    "selector": "normal_force_model",
+    "kind": "str",
+    "input": "",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_STATIC_STABILITY_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "static",
+    "selector": "normal_force_model",
+    "kind": "NoneType",
+    "input": null,
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_STATIC_STABILITY_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "static",
+    "selector": "normal_force_model",
+    "kind": "int",
+    "input": 1,
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_STATIC_STABILITY_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "static",
+    "selector": "normal_force_model",
+    "kind": "bool",
+    "input": true,
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_STATIC_STABILITY_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "static",
+    "selector": "fin_center_of_pressure_model",
+    "kind": "FinCenterOfPressureModel",
+    "input": "EXTENDED_BARROWMAN_MACH_DEPENDENT",
+    "status": "OK",
+    "value": 0.6979861012805668,
+    "metadata_preserved": true
+  },
+  {
+    "op": "static",
+    "selector": "fin_center_of_pressure_model",
+    "kind": "str",
+    "input": "extended_barrowman_mach_dependent",
+    "status": "OK",
+    "value": 0.6979861012805668,
+    "metadata_preserved": true
+  },
+  {
+    "op": "static",
+    "selector": "fin_center_of_pressure_model",
+    "kind": "str",
+    "input": "EXTENDED_BARROWMAN_MACH_DEPENDENT",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_STATIC_STABILITY_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "static",
+    "selector": "fin_center_of_pressure_model",
+    "kind": "str",
+    "input": " extended_barrowman_mach_dependent",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_STATIC_STABILITY_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "static",
+    "selector": "fin_center_of_pressure_model",
+    "kind": "str",
+    "input": "extended_barrowman_mach_dependent ",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_STATIC_STABILITY_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "static",
+    "selector": "fin_center_of_pressure_model",
+    "kind": "str",
+    "input": "unknown",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_STATIC_STABILITY_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "static",
+    "selector": "fin_center_of_pressure_model",
+    "kind": "str",
+    "input": "",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_STATIC_STABILITY_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "static",
+    "selector": "fin_center_of_pressure_model",
+    "kind": "NoneType",
+    "input": null,
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_STATIC_STABILITY_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "static",
+    "selector": "fin_center_of_pressure_model",
+    "kind": "int",
+    "input": 1,
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_STATIC_STABILITY_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "static",
+    "selector": "fin_center_of_pressure_model",
+    "kind": "bool",
+    "input": true,
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_STATIC_STABILITY_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "static",
+    "selector": "body_lift_treatment",
+    "kind": "BodyLiftTreatment",
+    "input": "LINEARIZED_ZERO_AOA",
+    "status": "OK",
+    "value": 0.6979861012805668,
+    "metadata_preserved": true
+  },
+  {
+    "op": "static",
+    "selector": "body_lift_treatment",
+    "kind": "str",
+    "input": "linearized_zero_aoa",
+    "status": "OK",
+    "value": 0.6979861012805668,
+    "metadata_preserved": true
+  },
+  {
+    "op": "static",
+    "selector": "body_lift_treatment",
+    "kind": "str",
+    "input": "LINEARIZED_ZERO_AOA",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_STATIC_STABILITY_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "static",
+    "selector": "body_lift_treatment",
+    "kind": "str",
+    "input": " linearized_zero_aoa",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_STATIC_STABILITY_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "static",
+    "selector": "body_lift_treatment",
+    "kind": "str",
+    "input": "linearized_zero_aoa ",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_STATIC_STABILITY_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "static",
+    "selector": "body_lift_treatment",
+    "kind": "str",
+    "input": "unknown",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_STATIC_STABILITY_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "static",
+    "selector": "body_lift_treatment",
+    "kind": "str",
+    "input": "",
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_STATIC_STABILITY_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "static",
+    "selector": "body_lift_treatment",
+    "kind": "NoneType",
+    "input": null,
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_STATIC_STABILITY_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "static",
+    "selector": "body_lift_treatment",
+    "kind": "int",
+    "input": 1,
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_STATIC_STABILITY_PROFILE",
+    "field": "model_profile"
+  },
+  {
+    "op": "static",
+    "selector": "body_lift_treatment",
+    "kind": "bool",
+    "input": true,
+    "status": "ERROR",
+    "category": "AerodynamicEvaluationError",
+    "code": "UNSUPPORTED_STATIC_STABILITY_PROFILE",
+    "field": "model_profile"
+  }
+]

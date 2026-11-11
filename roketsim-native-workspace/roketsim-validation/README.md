@@ -1,6 +1,7 @@
-# RoketSim Validation
+# RoketSim doğrulama kayıtları
 
-Bu alan, doğrulama fixture'ları ile commit edilebilir benchmark ve reference result kayıtları için ayrılmıştır.
-
-Henüz doğrulama verisi veya kabul toleransı tanımlanmamıştır. Toleranslar deterministic reference capture ve fark sınıflandırması tamamlanmadan dondurulmayacaktır.
-
+[Doğrulama özeti](../docs/verification.md) sonuçları ve tarihsel kanıtları
+bir araya getirir. Senaryolar ve kontroller
+[Java testlerinde](../roketsim-core/src/test/java/),
+[Java–Python karşılaştırma araçlarında](../roketsim-core/verification/) ve
+[Python testlerinde](../roketsim-native-engine/tests/) bulunur.
